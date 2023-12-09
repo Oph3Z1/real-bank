@@ -86,3 +86,123 @@ body {
   bottom: 3.2vw;
   position: relative;
 }
+
+.name-on-card2 {
+  color: #545454;
+  font-family: regular;
+  font-size: .9522vw;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1.2159vw; /* 127.687% */
+  letter-spacing: .0571vw;
+}
+
+.card-number2 {
+  color: #A4A4A4;
+  font-family: regular;
+  font-size: 1.1165vw;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1.0256vw; /* 127.687% */
+  letter-spacing: .067vw;
+}
+
+.exp2 {
+  color: #A4A4A4;
+  font-family: regular;
+  font-size: 1.1165vw;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1.4256vw; /* 127.687% */
+  letter-spacing: .067vw;
+}
+
+.send-text {
+  color: #000;
+  text-align: center;
+  font-family: regular;
+  font-size: 1.0573vw;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1.3501vw; /* 127.687% */
+}
+
+.withdraw-text {
+  color: #000;
+  text-align: center;
+  font-family: regular;
+  font-size: 1.0573vw;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1.3501vw; /* 127.687% */
+}
+
+.deposit-text {
+  color: #000;
+  text-align: center;
+  font-family: regular;
+  font-size: 1.0573vw;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1.3501vw; /* 127.687% */
+}
+
+.logout-text {
+  color: #000;
+  text-align: center;
+  font-family: regular;
+  font-size: 1.0573vw;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1.3501vw; /* 127.687% */
+}
+
+.fast-action-text {
+  color: #000;
+  text-align: center;
+  font-family: regular;
+  font-size: 1.3061vw;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1.6677vw; /* 127.687% */
+}
+
+.action-s-text {
+  color: #000;
+  text-align: center;
+  font-family: regular;
+  font-size: 1.006vw;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1.2845vw; /* 127.687% */
+}
+
+.action-s-text2 {
+  color: #595959;
+  text-align: center;
+  font-family: regular;
+  font-size: .5534vw;
+  font-style: normal;
+  font-weight: 500;
+  line-height: .7066vw; /* 127.687% */
+}
+
+.action-amount-text {
+  color: #C75EA9;
+  text-align: center;
+  font-family: regular;
+  font-size: 1.3155vw;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1.6797vw; /* 127.687% */
+}
+
+.action-text {
+  color: #FFF;
+  text-align: center;
+  font-family: regular;
+  font-size: .4722vw;
+  font-style: normal;
+  font-weight: 600;
+  line-height: .603vw; /* 127.687% */
+}

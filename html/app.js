@@ -9,7 +9,10 @@ const app = Vue.createApp({
         show: true,
         CurrentScreen: 'BankScreen', // 'Password' - 'BankScreen'
         CurrentMenu: 'Dashboard',
-        CardStyle: 1, // '1' - '2'
+        CardStyle: 2, // '1' - '2'
+        FirstFastAction: {type: 'deposit', amount: 500}, // type --> 'deposit' - 'withdraw'
+        SecondFastAction: {type: 'withdraw', amount: 500}, // type --> 'deposit' - 'withdraw'
+        ThirdFastAction: {type: 'deposit', amount: 1500}, // type --> 'deposit' - 'withdraw'
     }),
 
     methods: {
