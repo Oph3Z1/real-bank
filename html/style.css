@@ -1,0 +1,88 @@
+@font-face {
+  src: url("../html/fonts/TTCommons.otf");
+  font-family: "regular";
+}
+
+*{
+  overflow: hidden;
+}
+
+html {
+  user-select: none;  
+}
+  
+body {
+  overflow: hidden;
+}
+
+::-webkit-scrollbar {
+  width: 0vw;
+  background: transparent;
+}
+
+.pin-input {
+  color: #000;
+  text-align: center;
+  font-family: regular;
+  font-size: 3.4605vw;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 4.4186vw;
+}
+
+.profile-pic {
+  width: 100%;
+  height: 80%;
+  border-radius: 50%;
+  top: -.2vw;
+  position: relative;
+}
+
+.dashboard-label {
+  color: #000;
+  font-family: regular;
+  font-size: 1.1144vw;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+}
+
+.mycards-label {
+  color: #000;
+  font-family: regular;
+  font-size: 1.1144vw;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+}
+
+.invoices-label {
+  color: #000;
+  font-family: regular;
+  font-size: 1.1144vw;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+}
+
+.loans-label {
+  color: #000;
+  font-family: regular;
+  font-size: 1.1144vw;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+}
+
+.exp {
+  color: #646464;
+  font-family: regular;
+  font-size: .925vw;
+  font-style: normal;
+  font-weight: 700;
+  line-height: .9262vw; /* 127.687% */
+  letter-spacing: 0.836px;
+  right: -16.75vw;
+  bottom: 3.2vw;
+  position: relative;
+}

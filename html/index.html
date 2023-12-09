@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>real-bank</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@next"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/vuex@4.0.0/dist/vuex.global.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@3.3.15/dist/vuetify.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vuetify@3.3.15/dist/vuetify.min.css">
+</head>
+<body>
+    <div id="app">
+        <div v-if="show" class="w-full h-[100vh]">
+            <div v-if="CurrentScreen == 'Password'" class="w-full h-full flex items-center justify-center" style="background-image: url(./img/login-backgrond.png); background-size: 100% 100%;">
+                <div class="w-[40%] h-[50%] flex flex-col">
+                    <div class="w-full h-[5%]"></div>
+                    <div class="w-full h-[15%] flex items-center justify-center">
+                        <h2 style="
+                        color: #000;
+                        text-align: center;
+                        font-family: regular;
+                        font-size: 3.5551vw;
+                        font-style: normal;
+                        font-weight: 600;
+                        line-height: 4.5394vw; /* 127.687% */
+                        ">
+                        Two-Factor Authentication 
+                        </h2>
+                    </div>
+                    <div class="w-full h-[10%]">
+                        <h2 style="
+                        color: #000;
+                        text-align: center;
+                        font-family: regular;
+                        font-size: 1.891vw;
+                        font-style: normal;
+                        font-weight: 400;
+                        line-height: 2.4146vw;  /* 127.687% */
+                        ">
+                        Please enter your 8-digit password.
+                        </h2>
+                    </div>
+                    <div class="w-full h-[10%]"></div>
+                    <div class="w-full h-[25%] flex items-center justify-center">
+                        <input class="w-[95%] h-[95%] pin-input" type="number" style="border: .0618vw solid #8B8B8B; border-radius: .1853vw;">
+                    </div>
+                    <div class="w-full h-[8%]"></div>
+                    <div class="w-full h-[16.8%] flex items-center justify-center">
+                        <div class="w-[94.5%] h-full flex items-center justify-center hover:cursor-pointer" 
+                        style="
+                        background: black; 
+                        color: white; 
+                        font-size: 1.4949vw; 
+                        font-family: regular; 
+                        text-align: center; 
+                        font-weight: 700; 
+                        font-style: normal; 
+                        cursor: pointer;
+                        line-height: 1.9089vw;">
+                        Confirm
+                    </div>
+                    </div>
+                    <div class="w-full h-[10.2%]"></div>
+                </div>
+            </div>
+            <div v-if="CurrentScreen == 'BankScreen'" class="w-full h-full flex flex-col" style="background-image: url(./img/BankScreen.png); background-size: 100% 100%;">
+                <div class="w-full h-[6%]"></div>
+                <div class="w-full h-[94%] flex flex-wrap">
+                    <div class="w-[20%] h-full border">  <!-- Left menu -->
+                        <div class="w-full h-[8%] flex flex-wrap border">  <!-- LM - Personal details -->
+                            <div class="w-[9%] h-full"></div>
+                            <div class="w-[16%] h-full flex items-center">
+                                <img src="./img/example-logo.png" class="profile-pic">
+                            </div>
+                            <div class="w-[5.3%] h-full"></div>
+                            <div class="w-[50%] h-full flex flex-col">
+                                <div class="w-full h-[50%] items-center">
+                                    <span 
+                                    style="
+                                    color: #000;
+                                    font-family: regular;
+                                    font-size: 1.5203vw;
+                                    font-style: normal;
+                                    font-weight: 700;
+                                    line-height: normal;
+                                    ">
+                                    URSU A.
+                                    </span>
+                                </div>
+                                <div class="w-full h-[50%]">
+                                    <span 
+                                    style="
+                                    color: #797979;
+                                    font-family: regular;
+                                    font-size: .9196vw;
+                                    font-style: normal;
+                                    font-weight: 500;
+                                    line-height: normal;
+                                    ">
+                                    Welcome to the City Bank!
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="w-[19.7%] h-full"></div>
+                        </div>
+                        <div class="w-full h-[4%]"></div>
+                        <div class="w-full h-[35%] flex flex-wrap">
+                            <div class="w-[10%] h-full"></div>
+                            <div class="w-[72%] h-full flex flex-col border">  <!-- LM - Menu Items -->
+
+                                <div class="w-full h-[17%] flex flex-wrap rounded-[.4208vw] hover:cursor-pointer" @click="CurrentMenu = 'Dashboard'" :style="{background: CurrentMenu == 'Dashboard' ? '#EFECEF' : ''}"> <!-- MI - Dashboard -->
+                                    <div class="w-[6%] h-full"></div>
+                                    <div class="w-[14%] h-full flex items-center justify-center">
+                                        <img :src="CurrentMenu == 'Dashboard' ? './img/Dashboard-icon.png' : './img/Dashboard-gray-icon.png'">
+                                    </div>
+                                    <div class="w-[15%] h-full"></div>
+                                    <div class="w-[50%] h-full flex items-center">
+                                        <span class="dashboard-label" :style="{color: CurrentMenu == 'Dashboard' ? '#000' : '#959595'}">
+                                        Dashboard
+                                        </span>
+                                    </div>
+                                    <div class="w-[15%] h-full"></div>
+                                </div>
+
+                                <div class="w-full h-[8%] "></div>
+
+                                <div class="w-full h-[17%] flex flex-wrap rounded-[.4208vw] hover:cursor-pointer" @click="CurrentMenu = 'Invoices'" :style="{background: CurrentMenu == 'Invoices' ? '#EFECEF' : ''}">  <!-- MI - Invoices -->
+                                    <div class="w-[6%] h-full"></div>
+                                    <div class="w-[14%] h-full flex items-center justify-center">
+                                        <img :src="CurrentMenu == 'Invoices' ? './img/Invoices-icon.png' : './img/Invoices-gray-icon.png'">
+                                    </div>
+                                    <div class="w-[15%] h-full"></div>
+                                    <div class="w-[50%] h-full flex items-center ">
+                                        <span class="invoices-label" :style="{color: CurrentMenu == 'Invoices' ? '#000' : '#959595'}">
+                                        Invoices
+                                        </span>
+                                    </div>
+                                    <div class="w-[15%] h-full"></div>
+                                </div>
+
+                                <div class="w-full h-[8%] "></div>
+
+                                <div class="w-full h-[17%] flex flex-wrap rounded-[.4208vw] hover:cursor-pointer" @click="CurrentMenu = 'Loans'" :style="{background: CurrentMenu == 'Loans' ? '#EFECEF' : ''}">  <!-- MI - Lonas/Credits --> 
+                                    <div class="w-[6%] h-full"></div>
+                                    <div class="w-[14%] h-full flex items-center justify-center ">
+                                        <img :src="CurrentMenu == 'Loans' ? './img/Loan-icon.png' : './img/Loan-gray-icon.png'">
+                                    </div>
+                                    <div class="w-[15%] h-full"></div>
+                                    <div class="w-[50%] h-full flex items-center ">
+                                        <span class="loans-label" :style="{color: CurrentMenu == 'Loans' ? '#000' : '#959595'}">
+                                        Loans
+                                        </span>
+                                    </div>
+                                    <div class="w-[15%] h-full"></div>
+                                </div>
+                                
+                                <div class="w-full h-[33%] "></div>
+                            </div>
+                            <div class="w-[18%] h-full"></div>
+                        </div>
+                        <div class="w-full h-[53%]"></div>
+                    </div>
+                    <div class="w-[28%] h-full border">  <!-- Middle menu -->
+                        <div class="w-full h-[7%] border"></div>
+                        <div class="w-full h-[26.8%] flex flex-wrap border"> <!-- Credit Card Box -->
+                            <div class="w-[7.5%] h-full border"></div>
+                            <div class="w-[78.5%] h-full border rounded-[1.5vw]" :style="{background: CardStyle == 1 ? 'url(img/FirstCard.png)' : 'url(img/SecondCard.png)'}" style="background-size: 100% 100%;">
+                                <div class="w-full h-full flex flex-col" v-if="CardStyle == 1">
+                                    <div class="w-full h-[70%]"></div>
+                                    <div class="w-full h-[11%]">
+                                        <div class="w-[45%] h-full flex items-center justify-center"> 
+                                        <h1 
+                                        style="
+                                        color: #646464;
+                                        font-family: regular;
+                                        font-size: 1.4248vw;
+                                        font-style: normal;
+                                        font-weight: 600;
+                                        line-height: 1.4363vw; /* 127.687% */
+                                        letter-spacing: .0675vw;
+                                        ">URSU ARTS</h1> 
+                                        </div>
+                                        <div class="w-[60%] h-full"></div>
+                                    </div>
+                                    <div class="w-[50%] h-[2%]"></div>
+                                    <div class="w-full h-[11%] flex flex-wrap">
+                                        <div class="w-[71%] h-full flex items-center justify-end">
+                                            <h1 
+                                            style="
+                                            color: #A4A4A4;
+                                            font-family: regular;
+                                            font-size: 1.4248vw;
+                                            font-style: normal;
+                                            font-weight: 600;
+                                            line-height: 1.4363vw; /* 127.687% */
+                                            letter-spacing: .0675vw;
+                                            ">XXXX XXXX XXXX 5544</h1>
+                                        </div>
+                                        <div class="w-[29%] h-full flex flex-wrap">
+                                            <div class="w-[20%] h-full"></div>
+                                            <div class="w-[60%] h-full flex items-center justify-end">
+                                                <h1 
+                                                style="
+                                                color: #A4A4A4;
+                                                font-family: regular;
+                                                font-size: 1.4248vw;
+                                                font-style: normal;
+                                                font-weight: 600;
+                                                line-height: 1.4363vw; /* 127.687% */
+                                                letter-spacing: .0675vw;
+                                                ">09/24</h1>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="w-full h-[6%]"></div>
+                                    <div class="exp">Exp</div>
+                                </div>
+                            </div>
+                            <div class="w-[14%] h-full border"></div>
+                        </div>
+                    </div> 
+                    <div class="w-[52%] h-full border">  <!-- Right menu -->
+                        <div class=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="./app.js"></script>
+</body>
+</html>
