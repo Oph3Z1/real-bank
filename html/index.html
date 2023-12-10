@@ -11,6 +11,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/vuetify@3.3.15/dist/vuetify.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vuetify@3.3.15/dist/vuetify.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 </head>
 <body>
     <div id="app">
@@ -259,13 +260,13 @@
                             </div>
                             <div class="w-[7.5%] h-full"></div>
                             <div class="w-[12.5%] h-full flex items-center justify-center"> <!-- Withdraw Money -->
-                                <div class="w-full h-full rounded-[50%] bg-[#D9D9D9] hover:cursor-pointer flex items-center justify-center">
+                                <div class="w-full h-full rounded-[50%] bg-[#D9D9D9] hover:cursor-pointer flex items-center justify-center" @click="SelectActionMethod(true, 'withdraw')">
                                     <img src="./img/Withdraw-icon.png" style="width: 1.7708vw; height: 1.3542vw;">
                                 </div>
                             </div>
                             <div class="w-[7.7%] h-full"></div>
                             <div class="w-[12.7%] h-full flex items-center justify-center"> <!-- Deposit Money -->
-                                <div class="w-full h-full rounded-[50%] bg-[#D9D9D9] hover:cursor-pointer flex items-center justify-center">
+                                <div class="w-full h-full rounded-[50%] bg-[#D9D9D9] hover:cursor-pointer flex items-center justify-center" @click="SelectActionMethod(true, 'deposit')">
                                     <img src="./img/Loan-icon.png" style="width: 1.5625vw; height: 1.3542vw;">
                                 </div>
                             </div>
@@ -297,108 +298,177 @@
                             </div>
                             <div class="w-[15.6%] h-full"></div>
                         </div>
-                        <div class="w-full h-[13.6%]"></div>
-                        <div class="w-full h-[2%] flex flex-wrap">  <!-- Fast Action Text -->
-                            <div class="w-[10%] h-full"></div>
-                            <div class="w-[33%] h-full flex items-center justify-start"> <!-- FAT - Content  -->
-                                <span class="fast-action-text">Fast Actions</span>
+                        <div class="w-full h-[41.6%] grid border">
+                            <div class="w-full h-full box1">
+                                <div class="w-full h-[32%]"></div>
+                                <div class="w-full h-[6%] flex flex-wrap">  <!-- Fast Action Text -->
+                                    <div class="w-[10%] h-full"></div>
+                                    <div class="w-[33%] h-full flex items-center justify-start"> <!-- FAT - Content  -->
+                                        <span class="fast-action-text">Fast Actions</span>
+                                    </div>
+                                    <div class="w-[57%] h-full"></div>
+                                </div>
+                                <div class="w-full h-[7%]"></div>
+                                <div class="w-full h-[55%] flex flex-wrap">  <!-- Fast Action Items -->
+                                    <div class="w-[10%] h-full"></div>
+                                    <div class="w-[23%] h-full">  <!-- FAI - First Item -->
+                                        <div class="w-full h-full flex items-center justify-center rounded-[1vw] bg-[#F0ECF0]">
+                                            <div class="w-[70%] h-[90%] flex flex-col">
+                                                <div class="w-full h-[36%] flex items-center justify-center">
+                                                    <div class="w-[75%] h-[88%] rounded-[50%] flex items-center justify-center bg-[#D9D9D9]">
+                                                        <img v-if="FirstFastAction.type == 'deposit'" src="./img/Loan-icon.png" style="width: 1.5625vw; height: 1.3542vw;">
+                                                        <img v-else src="./img/Withdraw-icon.png" style="width: 1.7708vw; height: 1.3542vw;">
+                                                    </div>
+                                                </div>
+                                                <div class="w-full h-[9.8%]"></div>
+                                                <div class="w-full h-[9.5%] flex items-center justify-center">
+                                                    <span class="action-s-text">{{ FirstFastAction.type[0].toUpperCase() + FirstFastAction.type.slice(1) }}</span>
+                                                </div>
+                                                <div class="w-full h-[6.5%] flex items-center justify-center">
+                                                    <span class="action-s-text2">{{ FirstFastAction.amount }}$ Fast {{ FirstFastAction.type[0].toUpperCase() + FirstFastAction.type.slice(1) }}</span>
+                                                </div>
+                                                <div class="w-full h-[9%]"></div>
+                                                <div class="w-full h-[10%] flex items-center justify-center">
+                                                    <span class="action-amount-text">{{FirstFastAction.amount}}$</span>
+                                                </div>
+                                                <div class="w-full h-[8.4%]"></div>
+                                                <div class="w-full h-[10.8%] flex items-center justify-center">
+                                                    <div class="w-[90%] h-full flex items-center justify-center bg-black hover:cursor-pointer rounded-[.2vw]">
+                                                        <span class="action-text">{{ FirstFastAction.type[0].toUpperCase() + FirstFastAction.type.slice(1) }}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="w-[4.1%] h-full"></div>
+                                    <div class="w-[23%] h-full">  <!-- FAI - Second Item -->
+                                        <div class="w-full h-full flex items-center justify-center rounded-[1vw] bg-[#F0ECF0]">
+                                            <div class="w-[70%] h-[90%] flex flex-col">
+                                                <div class="w-full h-[36%] flex items-center justify-center">
+                                                    <div class="w-[75%] h-[88%] rounded-[50%] flex items-center justify-center bg-[#D9D9D9]">
+                                                        <img v-if="SecondFastAction.type == 'deposit'" src="./img/Loan-icon.png" style="width: 1.5625vw; height: 1.3542vw;">
+                                                        <img v-else src="./img/Withdraw-icon.png" style="width: 1.7708vw; height: 1.3542vw;">
+                                                    </div>
+                                                </div>
+                                                <div class="w-full h-[9.8%]"></div>
+                                                <div class="w-full h-[9.5%] flex items-center justify-center">
+                                                    <span class="action-s-text">{{ SecondFastAction.type[0].toUpperCase() + SecondFastAction.type.slice(1) }}</span>
+                                                </div>
+                                                <div class="w-full h-[6.5%] flex items-center justify-center">
+                                                    <span class="action-s-text2">{{ SecondFastAction.amount }}$ Fast {{ SecondFastAction.type[0].toUpperCase() + SecondFastAction.type.slice(1) }}</span>
+                                                </div>
+                                                <div class="w-full h-[9%]"></div>
+                                                <div class="w-full h-[10%] flex items-center justify-center">
+                                                    <span class="action-amount-text">{{ SecondFastAction.amount }}$</span>
+                                                </div>
+                                                <div class="w-full h-[8.4%]"></div>
+                                                <div class="w-full h-[10.8%] flex items-center justify-center">
+                                                    <div class="w-[90%] h-full flex items-center justify-center bg-black hover:cursor-pointer rounded-[.2vw]">
+                                                        <span class="action-text">{{ SecondFastAction.type[0].toUpperCase() + SecondFastAction.type.slice(1) }}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="w-[4.1%] h-full"></div>
+                                    <div class="w-[23%] h-full">  <!-- FAI - Third Item -->
+                                        <div class="w-full h-full flex items-center justify-center rounded-[1vw] bg-[#F0ECF0]">
+                                            <div class="w-[70%] h-[90%] flex flex-col">
+                                                <div class="w-full h-[36%] flex items-center justify-center">
+                                                    <div class="w-[75%] h-[88%] rounded-[50%] flex items-center justify-center bg-[#D9D9D9]">
+                                                        <img v-if="ThirdFastAction.type == 'deposit'" src="./img/Loan-icon.png" style="width: 1.5625vw; height: 1.3542vw;">
+                                                        <img v-else src="./img/Withdraw-icon.png" style="width: 1.7708vw; height: 1.3542vw;">
+                                                    </div>
+                                                </div>
+                                                <div class="w-full h-[9.8%]"></div>
+                                                <div class="w-full h-[9.5%] flex items-center justify-center">
+                                                    <span class="action-s-text">{{ ThirdFastAction.type[0].toUpperCase() + ThirdFastAction.type.slice(1) }}</span>
+                                                </div>
+                                                <div class="w-full h-[6.5%] flex items-center justify-center">
+                                                    <span class="action-s-text2">{{ ThirdFastAction.amount }}$ Fast {{ ThirdFastAction.type[0].toUpperCase() + ThirdFastAction.type.slice(1) }}</span>
+                                                </div>
+                                                <div class="w-full h-[9%]"></div>
+                                                <div class="w-full h-[10%] flex items-center justify-center">
+                                                    <span class="action-amount-text">{{ ThirdFastAction.amount }}$</span>
+                                                </div>
+                                                <div class="w-full h-[8.4%]"></div>
+                                                <div class="w-full h-[10.8%] flex items-center justify-center">
+                                                    <div class="w-[90%] h-full flex items-center justify-center bg-black hover:cursor-pointer rounded-[.2vw]">
+                                                        <span class="action-text">{{ ThirdFastAction.type[0].toUpperCase() + ThirdFastAction.type.slice(1) }}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="w-[12.8%] h-full"></div>
+                                </div>
                             </div>
-                            <div class="w-[57%] h-full"></div>
+                            <div class="w-full h-full box2" v-if="DWPopup">
+                                <div class="w-full h-[6.2%]"></div>
+                                <div class="w-full h-[60.8%] flex flex-wrap">
+                                    <div class="w-[7.75%] h-full"></div>
+                                    <div class="w-[81.75%] h-full flex items-center justify-center">
+                                        <div class="w-[98%] h-full flex flex-col border-[#C7C7C7] border-[.1vw] rounded-[.7vw] bg-[#F6F2F6] popup-open" :class="{'animate__animated animate__bounceInDown' : DWPopup}" v-if="CheckAnimationStatus">  <!-- Deposit/Withdraw PopUp -->
+                                            <div class="w-full h-[7.4%]"></div>
+                                            <div class="w-full h-[11.5%] flex flex-wrap">  <!-- Deposit/Withdraw Exit & Header -->
+                                                <div class="w-[4.2%] h-full"></div>
+                                                <div class="w-[7%] h-full flex items-center justify-center">
+                                                    <img src="./img/Loan-icon.png" style="width: 1.5625vw; height: 1.3542vw;" v-if="DWType == 'deposit'">
+                                                    <img src="./img/Withdraw-icon.png" style="width: 1.7708vw; height: 1.3542vw;" v-else>
+                                                </div>
+                                                <div class="w-[2%] h-full"></div>
+                                                <div class="w-[22%] h-full flex items-center justify-start">
+                                                    <span style="color: #000; text-align: center; font-family: regular; font-size: 1.2202vw; font-style: normal; font-weight: 600; line-height: 1.5581vw;">{{ DWType === 'withdraw' ? 'Withdraw' : 'Deposit' }}</span>
+                                                </div>
+                                                <div class="w-[55.2%] h-full"></div>
+                                                <div class="w-[7%] h-full flex items-center justify-center hover:cursor-pointer" @click="SelectActionMethod(false, '')"> 
+                                                    <img src="./img/Close-icon.png" style="width: 1.5104vw; height: 1.4583vw;">
+                                                </div>
+                                                <div class="w-[2.6%] h-full"></div>
+                                            </div>
+                                            <div class="w-full h-[5.4%]"></div>
+                                            <div class="w-full h-[3%] flex flex-wrap">
+                                                <div class="w-[4.2%] h-full"></div>
+                                                <div class="w-[92.9%] h-full flex items-center justify-center">
+                                                    <div class="w-[99%] h-[30%] rounded-[2vw] bg-[#C7C7C7]"></div>
+                                                </div>
+                                                <div class="w-[4.2%] h-full"></div>
+                                            </div>
+                                            <div class="w-full h-[10%]"></div>
+                                            <div class="w-full h-[21%] flex flex-wrap">  <!-- Deposit/Withdraw Amount => Input etc. -->
+                                                <div class="w-[5%] h-full"></div>
+                                                <div class="w-[11.9%] h-full flex items-center justify-center">
+                                                    <div class="w-full h-full flex items-center justify-center border-[.1vw] border-[#D7D7D7] rounded-[.2vw]">
+                                                        <span style="color: #262626; text-align: center; font-family: regular; font-size: 1.3253vw; font-style: normal; font-weight: 600; line-height: 1.9476vw;">$</span>
+                                                    </div>
+                                                </div>
+                                                <div class="w-[1%] h-full"></div>
+                                                <div class="w-[78.8%] h-full flex items-center justify-center border-[.1vw] border-[#D7D7D7] rounded-[.2vw]">
+                                                    <input class="w-full h-full dw-input" type="number">
+                                                </div>
+                                                <div class="w-[3.3%] h-full"></div>
+                                            </div>
+                                            <div class="w-full h-[8.8%]"></div>
+                                            <div class="w-full h-[22%] flex flex-wrap">  <!-- Deposit/Withdraw Button -->
+                                                <div class="w-[5%] h-full"></div>
+                                                <div class="w-[91.7%] h-full flex items-center justify-center">
+                                                    <div class="w-full h-full flex items-center justify-center hover:cursor-pointer bg-black">
+                                                        <span class="w-full" style="color: #FFF; text-align: center; font-family: regular; font-size: .8513vw; font-style: normal; font-weight: 700; line-height: 1.087vw;">
+                                                            {{ DWType == 'withdraw' ? 'Withdraw Money' : DWType == 'deposit' ? 'Deposit Money' : '' }}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="w-[3.3%] h-full"></div>
+                                            </div>
+                                            <div class="w-full h-[11.1%]"></div>
+                                        </div>
+                                    </div>
+                                    <div class="w-[10.6%] h-full"></div>
+                                </div>
+                                <div class="w-full h-[33%]"></div>
+                            </div>
                         </div>
-                        <div class="w-full h-[3%]"></div>
-                        <div class="w-full h-[22.5%] flex flex-wrap">  <!-- Fast Action Items -->
-                            <div class="w-[10%] h-full"></div>
-                            <div class="w-[23%] h-full">  <!-- FAI - First Item -->
-                                <div class="w-full h-full flex items-center justify-center rounded-[1vw] bg-[#F0ECF0]">
-                                    <div class="w-[70%] h-[90%] flex flex-col">
-                                        <div class="w-full h-[36%] flex items-center justify-center">
-                                            <div class="w-[85%] h-[100%] rounded-[50%] flex items-center justify-center bg-[#D9D9D9]">
-                                                <img v-if="FirstFastAction.type == 'deposit'" src="./img/Loan-icon.png" style="width: 1.5625vw; height: 1.3542vw;">
-                                                <img v-else src="./img/Withdraw-icon.png" style="width: 1.7708vw; height: 1.3542vw;">
-                                            </div>
-                                        </div>
-                                        <div class="w-full h-[9.8%]"></div>
-                                        <div class="w-full h-[9.5%] flex items-center justify-center">
-                                            <span class="action-s-text">{{ FirstFastAction.type[0].toUpperCase() + FirstFastAction.type.slice(1) }}</span>
-                                        </div>
-                                        <div class="w-full h-[6.5%] flex items-center justify-center">
-                                            <span class="action-s-text2">{{ FirstFastAction.amount }}$ Fast {{ FirstFastAction.type[0].toUpperCase() + FirstFastAction.type.slice(1) }}</span>
-                                        </div>
-                                        <div class="w-full h-[9%]"></div>
-                                        <div class="w-full h-[10%] flex items-center justify-center">
-                                            <span class="action-amount-text">{{FirstFastAction.amount}}$</span>
-                                        </div>
-                                        <div class="w-full h-[8.4%]"></div>
-                                        <div class="w-full h-[10.8%] flex items-center justify-center">
-                                            <div class="w-[90%] h-full flex items-center justify-center bg-black hover:cursor-pointer rounded-[.2vw]">
-                                                <span class="action-text">{{ FirstFastAction.type[0].toUpperCase() + FirstFastAction.type.slice(1) }}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="w-[4.1%] h-full"></div>
-                            <div class="w-[23%] h-full">  <!-- FAI - Second Item -->
-                                <div class="w-full h-full flex items-center justify-center rounded-[1vw] bg-[#F0ECF0]">
-                                    <div class="w-[70%] h-[90%] flex flex-col">
-                                        <div class="w-full h-[36%] flex items-center justify-center">
-                                            <div class="w-[85%] h-[100%] rounded-[50%] flex items-center justify-center bg-[#D9D9D9]">
-                                                <img v-if="SecondFastAction.type == 'deposit'" src="./img/Loan-icon.png" style="width: 1.5625vw; height: 1.3542vw;">
-                                                <img v-else src="./img/Withdraw-icon.png" style="width: 1.7708vw; height: 1.3542vw;">
-                                            </div>
-                                        </div>
-                                        <div class="w-full h-[9.8%]"></div>
-                                        <div class="w-full h-[9.5%] flex items-center justify-center">
-                                            <span class="action-s-text">{{ SecondFastAction.type[0].toUpperCase() + SecondFastAction.type.slice(1) }}</span>
-                                        </div>
-                                        <div class="w-full h-[6.5%] flex items-center justify-center">
-                                            <span class="action-s-text2">{{ SecondFastAction.amount }}$ Fast {{ SecondFastAction.type[0].toUpperCase() + SecondFastAction.type.slice(1) }}</span>
-                                        </div>
-                                        <div class="w-full h-[9%]"></div>
-                                        <div class="w-full h-[10%] flex items-center justify-center">
-                                            <span class="action-amount-text">{{ SecondFastAction.amount }}$</span>
-                                        </div>
-                                        <div class="w-full h-[8.4%]"></div>
-                                        <div class="w-full h-[10.8%] flex items-center justify-center">
-                                            <div class="w-[90%] h-full flex items-center justify-center bg-black hover:cursor-pointer rounded-[.2vw]">
-                                                <span class="action-text">{{ SecondFastAction.type[0].toUpperCase() + SecondFastAction.type.slice(1) }}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="w-[4.1%] h-full"></div>
-                            <div class="w-[23%] h-full">  <!-- FAI - Third Item -->
-                                <div class="w-full h-full flex items-center justify-center rounded-[1vw] bg-[#F0ECF0]">
-                                    <div class="w-[70%] h-[90%] flex flex-col">
-                                        <div class="w-full h-[36%] flex items-center justify-center">
-                                            <div class="w-[85%] h-[100%] rounded-[50%] flex items-center justify-center bg-[#D9D9D9]">
-                                                <img v-if="ThirdFastAction.type == 'deposit'" src="./img/Loan-icon.png" style="width: 1.5625vw; height: 1.3542vw;">
-                                                <img v-else src="./img/Withdraw-icon.png" style="width: 1.7708vw; height: 1.3542vw;">
-                                            </div>
-                                        </div>
-                                        <div class="w-full h-[9.8%]"></div>
-                                        <div class="w-full h-[9.5%] flex items-center justify-center">
-                                            <span class="action-s-text">{{ ThirdFastAction.type[0].toUpperCase() + ThirdFastAction.type.slice(1) }}</span>
-                                        </div>
-                                        <div class="w-full h-[6.5%] flex items-center justify-center">
-                                            <span class="action-s-text2">{{ ThirdFastAction.amount }}$ Fast {{ ThirdFastAction.type[0].toUpperCase() + ThirdFastAction.type.slice(1) }}</span>
-                                        </div>
-                                        <div class="w-full h-[9%]"></div>
-                                        <div class="w-full h-[10%] flex items-center justify-center">
-                                            <span class="action-amount-text">{{ ThirdFastAction.amount }}$</span>
-                                        </div>
-                                        <div class="w-full h-[8.4%]"></div>
-                                        <div class="w-full h-[10.8%] flex items-center justify-center">
-                                            <div class="w-[90%] h-full flex items-center justify-center bg-black hover:cursor-pointer rounded-[.2vw]">
-                                                <span class="action-text">{{ ThirdFastAction.type[0].toUpperCase() + ThirdFastAction.type.slice(1) }}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="w-[12.8%] h-full"></div>
-                        </div>
+                        <div class="w-full h-[8%]"></div>
                     </div> 
                     <div class="w-[52%] h-full border">  <!-- Right menu -->
                         <div class=""></div>

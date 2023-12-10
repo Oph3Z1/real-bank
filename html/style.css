@@ -20,6 +20,11 @@ body {
   background: transparent;
 }
 
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+}
+
 .pin-input {
   color: #000;
   text-align: center;
@@ -201,8 +206,24 @@ body {
   color: #FFF;
   text-align: center;
   font-family: regular;
-  font-size: .4722vw;
+  font-size: .5122vw;
   font-style: normal;
   font-weight: 600;
   line-height: .603vw; /* 127.687% */
+}
+
+.box1, .box2 {
+  grid-area: 1 / 1;
+}
+
+.dw-input {
+  color: #262626;
+  text-align: left;
+  font-family: regular;
+  font-size: 1.3253vw;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1.9476vw; /* 127.687% */
+  outline: none;
+  margin: 0 .5vw 0 .5vw;
 }

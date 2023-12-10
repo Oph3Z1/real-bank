@@ -13,11 +13,25 @@ const app = Vue.createApp({
         FirstFastAction: {type: 'deposit', amount: 500}, // type --> 'deposit' - 'withdraw'
         SecondFastAction: {type: 'withdraw', amount: 500}, // type --> 'deposit' - 'withdraw'
         ThirdFastAction: {type: 'deposit', amount: 1500}, // type --> 'deposit' - 'withdraw'
+        DWPopup: false,
+        DWType: null,
     }),
 
     methods: {
+        SelectActionMethod(status, type) {
+            this.DWPopup = status
+            this.DWType = type
+        },
 
+        CheckAnimationStatus() {
+            if (this.DWPopup) {
+                return true
+            } else {
+                return false
+            }
+        },
     },  
+
     computed: {
         
     },
@@ -35,11 +49,11 @@ const app = Vue.createApp({
             window.addEventListener('keyup', this.onKeyUp);
             switch (event.data.message) {
                 case "OPEN":
-                    this.Show = true
+                    this.show = true
                 break;
                 
                 case "CLOSE":
-                    this.Show = false
+                    this.show = false
                 break;
             }   
         });
