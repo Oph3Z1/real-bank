@@ -15,6 +15,21 @@ const app = Vue.createApp({
         ThirdFastAction: {type: 'deposit', amount: 1500}, // type --> 'deposit' - 'withdraw'
         DWPopup: false,
         DWType: null,
+        MiddleMenuSection: 'Transfer', // 'Main' - 'Transfer'
+        SearchPlayers: [
+            {id: 1,  firstname: 'Oph3Z', lastname: 'Test', iban: 2001,  pp: './img/example-logo.png'},
+            {id: 2,  firstname: 'Yusuf', lastname: 'Test', iban: 2002,  pp: './img/second-example-logo.png'},
+            {id: 3,  firstname: 'Oph3Z', lastname: 'Test', iban: 2003,  pp: './img/example-logo.png'},
+            {id: 4,  firstname: 'Yusuf', lastname: 'Test', iban: 2004,  pp: './img/second-example-logo.png'},
+            {id: 5,  firstname: 'Oph3Z', lastname: 'Test', iban: 2005,  pp: './img/example-logo.png'},
+            {id: 6,  firstname: 'Yusuf', lastname: 'Test', iban: 2006,  pp: './img/second-example-logo.png'},
+            {id: 7,  firstname: 'Oph3Z', lastname: 'Test', iban: 2007,  pp: './img/third-example-logo.png'},
+            {id: 8,  firstname: 'Yusuf', lastname: 'Test', iban: 2008,  pp: './img/second-example-logo.png'},
+            {id: 9,  firstname: 'Oph3Z', lastname: 'Test', iban: 2009,  pp: './img/example-logo.png'},
+            {id: 10, firstname: 'Yusuf', lastname: 'Test', iban: 2010,  pp: './img/second-example-logo.png'},
+        ],
+        SearchBar: '',
+        isSelectDivExpanded: false,
     }),
 
     methods: {
@@ -30,10 +45,36 @@ const app = Vue.createApp({
                 return false
             }
         },
+
+        CheckSearchBarEquality(player) {
+            const search = this.SearchBar.toLowerCase();
+            const fullName = (player.firstname + ' ' + player.lastname).toLowerCase();
+            const iban = player.iban.toString();
+        
+            return (
+                fullName.includes(search) || 
+                iban.includes(search) || 
+                !isNaN(search) && iban.includes(search)    
+            );
+        },
+
+        toggleSelectDivHeight(id) {
+            if (!this.isSelectDivExpanded) {
+                this.isSelectDivExpanded = id 
+            } else if (this.isSelectDivExpanded == id) {
+                this.isSelectDivExpanded = false
+            }
+        },
     },  
 
     computed: {
-        
+        SearchBarFunction() {
+            if (!this.SearchBar) {
+                return this.SearchPlayers;
+            }
+          
+            return this.SearchPlayers.filter((player) => this.CheckSearchBarEquality(player));
+        },
     },
 
     watch: {

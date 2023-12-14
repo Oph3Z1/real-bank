@@ -227,3 +227,54 @@ input[type=number]::-webkit-outer-spin-button {
   outline: none;
   margin: 0 .5vw 0 .5vw;
 }
+
+.send-money-text {
+  color: #000;
+  font-family: regular;
+  font-size: 1.6299vw;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 2.0811vw; /* 127.687% */
+}
+
+.send-money-description-text {
+  color: #222;
+  font-family: regular;
+  font-size: .9857vw;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1.2587vw; /* 127.687% */
+}
+
+.search-bar {
+  color: rgba(0, 0, 0, 0.46);
+  font-family: regular;
+  font-size: .6032vw;
+  font-style: normal;
+  font-weight: 500;
+  outline: none;
+  line-height: .7703vw; /* 127.687% */
+}
+
+.search-bar-playername {
+  color: #000;
+  text-align: center;
+  font-family: regular;
+  font-size: .8163vw;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1.0423vw; /* 127.687% */
+}
+
+.search-bar-user {
+  color: #222;
+  font-family: regular;
+  font-size: .5297vw;
+  font-style: normal;
+  font-weight: 500;
+  line-height: .6764vw; /* 127.687% */
+}
+
+.expand-transition {
+  overflow: hidden;
+}
