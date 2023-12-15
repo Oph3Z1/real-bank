@@ -113,14 +113,14 @@
                             <div class="w-[10%] h-full"></div>
                             <div class="w-[72%] h-full flex flex-col border">  <!-- LM - Menu Items -->
 
-                                <div class="w-full h-[17%] flex flex-wrap rounded-[.4208vw] hover:cursor-pointer" @click="CurrentMenu = 'Dashboard'" :style="{background: CurrentMenu == 'Dashboard' ? '#EFECEF' : ''}"> <!-- MI - Dashboard -->
+                                <div class="w-full h-[17%] flex flex-wrap rounded-[.4208vw] hover:cursor-pointer" @click="MiddleMenuSection = 'Main'" :style="{background: MiddleMenuSection == 'Main' ? '#EFECEF' : ''}"> <!-- MI - Dashboard -->
                                     <div class="w-[6%] h-full"></div>
                                     <div class="w-[14%] h-full flex items-center justify-center">
-                                        <img :src="CurrentMenu == 'Dashboard' ? './img/Dashboard-icon.png' : './img/Dashboard-gray-icon.png'">
+                                        <img :src="MiddleMenuSection == 'Main' ? './img/Dashboard-icon.png' : './img/Dashboard-gray-icon.png'">
                                     </div>
                                     <div class="w-[15%] h-full"></div>
                                     <div class="w-[50%] h-full flex items-center">
-                                        <span class="dashboard-label" :style="{color: CurrentMenu == 'Dashboard' ? '#000' : '#959595'}">
+                                        <span class="dashboard-label" :style="{color: MiddleMenuSection == 'Main' ? '#000' : '#959595'}">
                                         Dashboard
                                         </span>
                                     </div>
@@ -129,14 +129,14 @@
 
                                 <div class="w-full h-[8%] "></div>
 
-                                <div class="w-full h-[17%] flex flex-wrap rounded-[.4208vw] hover:cursor-pointer" @click="CurrentMenu = 'Invoices'" :style="{background: CurrentMenu == 'Invoices' ? '#EFECEF' : ''}">  <!-- MI - Invoices -->
+                                <div class="w-full h-[17%] flex flex-wrap rounded-[.4208vw] hover:cursor-pointer" @click="MiddleMenuSection = 'Invoices'" :style="{background: MiddleMenuSection == 'Invoices' ? '#EFECEF' : ''}">  <!-- MI - Invoices -->
                                     <div class="w-[6%] h-full"></div>
                                     <div class="w-[14%] h-full flex items-center justify-center">
-                                        <img :src="CurrentMenu == 'Invoices' ? './img/Invoices-icon.png' : './img/Invoices-gray-icon.png'">
+                                        <img :src="MiddleMenuSection == 'Invoices' ? './img/Invoices-icon.png' : './img/Invoices-gray-icon.png'">
                                     </div>
                                     <div class="w-[15%] h-full"></div>
                                     <div class="w-[50%] h-full flex items-center ">
-                                        <span class="invoices-label" :style="{color: CurrentMenu == 'Invoices' ? '#000' : '#959595'}">
+                                        <span class="invoices-label" :style="{color: MiddleMenuSection == 'Invoices' ? '#000' : '#959595'}">
                                         Invoices
                                         </span>
                                     </div>
@@ -508,37 +508,129 @@
                         <div class="w-full h-[71.5%] flex flex-wrap">  <!-- Transfer - Player list -->
                             <div class="w-[4%] h-full"></div>
                             <div class="w-[84%] h-full block overflow-y-auto overflow-x-hidden">
-                                <div class="w-full h-[10%] mb-[.7042vw] rounded-[.8333vw] bg-[#F0ECF0] flex flex-wrap select-div expand-transition" v-for="data in SearchBarFunction" :style="{ height: isSelectDivExpanded == data.id ? '24%' : '10%' }">
-                                    <div class="w-[3.5%] h-full" :class="{'h-[41.6666667%]': isSelectDivExpanded == data.id, 'h-full': isSelectDivExpanded != data.id}"></div>
-                                    <div class="w-[12%] h-full flex items-center justify-center" :class="{'h-[41.6666667%]': isSelectDivExpanded == data.id, 'h-full': isSelectDivExpanded != data.id}">
-                                        <div class="w-full h-[75%] rounded-[50%]">
-                                            <img class="w-full h-full" :src="data.pp">
+                                <div class="w-full h-[10%] mb-[.7042vw] rounded-[.8333vw] bg-[#F0ECF0] flex flex-col select-div expand-transition" v-for="data in SearchBarFunction" :style="{ height: SelectPlayer == data.id ? '24%' : '10%' }">
+                                    <div class="w-full flex flex-wrap" :class="{'h-[41.55%]': SelectPlayer == data.id, 'h-full': SelectPlayer != data.id}">
+                                        <div class="w-[3.5%] h-full"></div>
+                                        <div class="w-[12%] h-full flex items-center justify-center">
+                                            <div class="w-full h-[75%] rounded-[50%]">
+                                                <img class="w-full h-full" :src="data.pp">
+                                            </div>
                                         </div>
+                                        <div class="w-[3%] h-full"></div>
+                                        <div class="w-[30%] h-full flex flex-col">
+                                            <div class="w-full h-[27%]"></div>
+                                            <div class="w-full h-[22%] flex items-center justify-start">
+                                                <span class="search-bar-playername">{{ data.firstname + ' ' + data.lastname }}</span>
+                                            </div>
+                                            <div class="w-full h-[5%]"></div>
+                                            <div class="w-full h-[18%] flex items-center justify-start">
+                                                <span class="search-bar-user w-full">User</span>
+                                            </div>
+                                            <div class="w-full h-[28%]"></div>
+                                        </div>
+                                        <div class="w-[24%] h-full"></div>
+                                        <div class="w-[23.5%] h-full flex items-center justify-center" v-if="SelectPlayer != data.id">
+                                            <div class="w-full h-[40%] flex items-center justify-center bg-black rounded-[.2vw] hover:cursor-pointer" @click="SelectTransferPlayer(data.id)">
+                                                <span style="color: #FFF; text-align: center; font-family: regular; font-size: .6054vw; font-style: normal; font-weight: 600; line-height: .773vw;">Select</span>
+                                            </div>
+                                        </div>
+                                        <div class="w-[23.5%] h-full flex items-center justify-end" v-else>
+                                            <img class="hover:cursor-pointer" src="./img/Close-icon-circle.png" style="width: .9896vw; height: .9896vw;" @click="SelectTransferPlayer(data.id)">
+                                        </div>
+                                        <div class="w-[4%] h-full"></div>
                                     </div>
-                                    <div class="w-[3%] h-full" :class="{'h-[41.6666667%]': isSelectDivExpanded == data.id, 'h-full': isSelectDivExpanded != data.id}"></div>
-                                    <div class="w-[30%] h-full flex flex-col" :class="{'h-[41.6666667%]': isSelectDivExpanded == data.id, 'h-full': isSelectDivExpanded != data.id}">
-                                        <div class="w-full h-[27%]"></div>
-                                        <div class="w-full h-[22%] flex items-center justify-start">
-                                            <span class="search-bar-playername">{{ data.firstname + ' ' + data.lastname }}</span>
-                                        </div>
+                                    <div class="w-full h-[58.45%] flex flex-col" v-if="SelectPlayer == data.id">
                                         <div class="w-full h-[5%]"></div>
-                                        <div class="w-full h-[18%] flex items-center justify-start">
-                                            <span class="search-bar-user">User</span>
+                                        <div class="w-full h-[35%] flex flex-wrap items-center justify-start">
+                                            <div class="w-[4%] h-full"></div>
+                                            <div class="w-[8%] h-full flex items-center justify-center rounded-[.1vw] border-[.0321vw] border-[#D7D7D7]">
+                                                <span style="color: #262626; text-align: center; font-family: regular; font-size: .8951vw; font-style: normal; font-weight: 600; line-height: 1.1429vw;">$</span>
+                                            </div>
+                                            <div class="w-[2%] h-full"></div>
+                                            <div class="w-[40%] h-full flex items-center justify-center rounded-[.1vw] border-[.0321vw] border-[#D7D7D7]">
+                                                <input class="w-full h-full outline-none" type="number" style="color: #262626; font-family: regular; font-size: .8951vw; font-style: normal; font-weight: 600; line-height: 1.1429vw; margin: 0 .5vw 0 .5vw;">
+                                            </div>
+                                            <div class="w-[46%] h-full"></div>
                                         </div>
-                                        <div class="w-full h-[28%]"></div>
-                                    </div>
-                                    <div class="w-[24%] h-full" :class="{'h-[41.6666667%]': isSelectDivExpanded == data.id, 'h-full': !isSelectDivExpanded != data.id}"></div>
-                                    <div class="w-[23.5%] h-full flex items-center justify-center" :class="{'h-[41.6666667%]': isSelectDivExpanded == data.id, 'h-full': isSelectDivExpanded != data.id}">
-                                        <div class="w-full h-[40%] flex items-center justify-center bg-black rounded-[.2vw] hover:cursor-pointer" @click="toggleSelectDivHeight(data.id)">
-                                            <span style="color: #FFF; text-align: center; font-family: regular; font-size: .6054vw; font-style: normal; font-weight: 600; line-height: .773vw;">Select</span>
+                                        <div class="w-full h-[10%]"></div>
+                                        <div class="w-full h-[35%] flex flex-wrap">
+                                            <div class="w-[4%] h-full"></div>
+                                            <div class="w-[50%] h-full flex items-center justify-center">
+                                                <div class="w-full h-full flex items-center justify-center rounded-[.1vw] bg-[#000000] hover:cursor-pointer">
+                                                    <span class="w-full" style="color: #FFF; text-align: center; font-family: regular; font-size: .5996vw; font-style: normal; font-weight: 700; line-height: .6379vw;">Send Money</span>
+                                                </div>
+                                            </div>
+                                            <div class="w-[46%] h-full"></div>
                                         </div>
+                                        <div class="w-full h-[15%]"></div>
                                     </div>
-                                    <div class="w-[4%] h-full" :class="{'h-[41.6666667%]': isSelectDivExpanded == data.id, 'h-full': isSelectDivExpanded != data.id}"></div>
                                 </div>
                             </div>
                             <div class="w-[12%] h-full"></div>
                         </div>
                         <div class="w-full h-[4.5%]"></div>
+                    </div>
+                    <div class="w-[28%] h-full border" v-if="MiddleMenuSection == 'Invoices'">  <!-- Middle menu - Invoices -->
+                        <div class="w-full h-[7%]"></div>
+                        <div class="w-full h-[9%] flex flex-wrap">  <!-- Header -->
+                            <div class="w-[5.5%] h-full"></div>
+                            <div class="w-[77.5%] h-full flex flex-col">
+                                <div class="w-full h-[35%] flex items-center justify-center">
+                                    <h1 class="w-full send-money-text">Your İnvoices</h1>
+                                </div>
+                                <div class="w-full h-[16%]"></div>
+                                <div class="w-full h-[49%] flex items-center justify-start">
+                                    <span class="w-full send-money-description-text">You can check and pay your bills in this section!</span>  <!-- Max 18-20 words -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="w-full h-[4%]"></div>
+                        <div class="w-full h-[73.5%] flex flex-wrap" v-if="Invoices.length !== 0">  <!-- Invoices - List -->
+                            <div class="w-[4%] h-full"></div>
+                            <div class="w-[84%] h-full block overflow-y-auto overflow-x-hidden">
+                                <div class="w-full h-[14%] mb-[.7042vw] rounded-[.8333vw] bg-[#F0ECF0] flex flex-wrap" v-for="data in Invoices">
+                                    <div class="w-[3.5%] h-full"></div>
+                                    <div class="w-[17%] h-full flex items-center justify-center">
+                                        <div class="w-[85%] h-[63%] flex items-center justify-center rounded-[50%] bg-[#D9D9D945]">
+                                            <div class="w-[40%] h-[40%] rounded-[.2vw]" :class="{'bg-[#5EA7C7]': data.type == 'lspd', 'bg-[#C75E5E]': data.type == 'ems', 'bg-[#5EC7C0]': data.type == 'player', 'bg-[#C7A95E]': data.type == 'company'}"></div>
+                                        </div>
+                                    </div>
+                                    <div class="w-[3%] h-full"></div>
+                                    <div class="w-[35%] h-full flex flex-col">
+                                        <div class="w-full h-[27%]"></div>
+                                        <div class="w-full h-[22%] flex items-center justify-start">
+                                            <span class="invoice-name">{{ data.invoicename }}</span>
+                                        </div>
+                                        <div class="w-full h-[5%]"></div>
+                                        <div class="w-full h-[24%]">
+                                            <span class="invoice-description w-full h-full block box-border overflow-auto">{{ data.description }}</span>
+                                        </div>
+                                        <div class="w-full h-[22%]"></div>
+                                    </div>
+                                    <div class="w-[5%] h-full"></div>
+                                    <div class="w-[33.5%] h-full flex flex-col">
+                                        <div class="w-full h-[25%]"></div>
+                                        <div class="w-full h-[50%] flex flex-wrap">
+                                            <div class="w-[49%] h-full flex items-center justify-center">
+                                                <span class="invoice-price overflow-auto" :class="{'text-[#5EA7C7]': data.type == 'lspd', 'text-[#C75E5E]': data.type == 'ems', 'text-[#5EC7C0]': data.type == 'player', 'text-[#C7A95E]': data.type == 'company'}">{{ '$' + PE3D(data.price) }}</span>
+                                            </div>
+                                            <div class="w-[2%] h-full"></div>
+                                            <div class="w-[49%] h-full flex items-center justify-center">
+                                                <div class="w-full h-[50%] flex items-center justify-center bg-[#5EA7C7] rounded-[.2vw] hover:cursor-pointer" :class="{'bg-[#5EA7C7]': data.type == 'lspd', 'bg-[#C75E5E]': data.type == 'ems', 'bg-[#5EC7C0]': data.type == 'player', 'bg-[#C7A95E]': data.type == 'company'}">
+                                                    <span class="w-full" style="color: #FFF; text-align: center; font-family: regular; font-size: .6367vw; font-style: normal; font-weight: 600; line-height: .813vw;">Pay</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="w-full h-[25%]"></div>
+                                    </div>
+                                    <div class="w-[2%] h-full"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="w-full h-[73.5%] flex items-start justify-center" v-else>
+                            <span style="color: #B3B3B3; text-align: center; font-family: regular; font-size: 1.6299vw; font-style: normal; font-weight: 600; line-height: 2.0811vw;">You don't have an invoice</span>
+                        </div>
+                        <div class="w-full h-[6.5%]"></div>
                     </div>
                     <div class="w-[52%] h-full border">  <!-- Right menu -->
                         <div class=""></div>

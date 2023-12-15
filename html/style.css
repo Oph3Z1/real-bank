@@ -20,6 +20,40 @@ body {
   background: transparent;
 }
 
+.invoice-description::-webkit-scrollbar {
+  width: .15vw;
+}
+
+.invoice-description::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 1vh;
+}
+
+.invoice-description::-webkit-scrollbar-thumb {
+  background: #00000044;
+}
+
+.invoice-description::-webkit-scrollbar-thumb:hover {
+  background: #00000044;
+}
+
+.invoice-price::-webkit-scrollbar {
+  height: .05vw;
+}
+
+.invoice-price::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 1vh;
+}
+
+.invoice-price::-webkit-scrollbar-thumb {
+  background: transparent;
+}
+
+.invoice-price::-webkit-scrollbar-thumb:hover {
+  background: transparent;
+}
+
 input[type=number]::-webkit-inner-spin-button, 
 input[type=number]::-webkit-outer-spin-button { 
   -webkit-appearance: none; 
@@ -277,4 +311,33 @@ input[type=number]::-webkit-outer-spin-button {
 
 .expand-transition {
   overflow: hidden;
+}
+
+.invoice-name {
+  color: #000;
+  text-align: center;
+  font-family: regular;
+  font-size: .8585vw;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1.0961vw; /* 127.687% */
+}
+
+.invoice-description {
+  color: #222;
+  font-family: regular;
+  font-size: .5571vw;
+  font-style: normal;
+  font-weight: 500;
+  line-height: .7113vw; /* 127.687% */
+}
+
+.invoice-price {
+  text-align: center;
+  font-family: regular;
+  font-size: .7561vw;
+  font-style: normal;
+  font-weight: 600;
+  line-height: .9654vw; /* 127.687% */
+  white-space: nowrap;
 }

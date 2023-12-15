@@ -15,7 +15,7 @@ const app = Vue.createApp({
         ThirdFastAction: {type: 'deposit', amount: 1500}, // type --> 'deposit' - 'withdraw'
         DWPopup: false,
         DWType: null,
-        MiddleMenuSection: 'Transfer', // 'Main' - 'Transfer'
+        MiddleMenuSection: 'Invoices', // 'Main' - 'Transfer'
         SearchPlayers: [
             {id: 1,  firstname: 'Oph3Z', lastname: 'Test', iban: 2001,  pp: './img/example-logo.png'},
             {id: 2,  firstname: 'Yusuf', lastname: 'Test', iban: 2002,  pp: './img/second-example-logo.png'},
@@ -29,10 +29,21 @@ const app = Vue.createApp({
             {id: 10, firstname: 'Yusuf', lastname: 'Test', iban: 2010,  pp: './img/second-example-logo.png'},
         ],
         SearchBar: '',
-        isSelectDivExpanded: false,
+        SelectPlayer: false,
+        Invoices: [
+            {id: 1, invoicename: 'LSPD', price: 100000, description:'You have been fined for driving at high speed', type: 'lspd'},
+            {id: 2, invoicename: 'EMS', price: 100000, description:'All your costs in the hospital', type: 'ems'},
+            {id: 3, invoicename: 'Yusuf Karaçolak', price: 100000, description:'Sender description', type: 'player'},
+            {id: 4, invoicename: 'Mechanic', price: 100000, description:'Fixed your car', type: 'company'},
+        ],
     }),
 
     methods: {
+        PE3D(s) {
+            s = parseInt(s)
+            return s.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+        },
+        
         SelectActionMethod(status, type) {
             this.DWPopup = status
             this.DWType = type
@@ -58,11 +69,11 @@ const app = Vue.createApp({
             );
         },
 
-        toggleSelectDivHeight(id) {
-            if (!this.isSelectDivExpanded) {
-                this.isSelectDivExpanded = id 
-            } else if (this.isSelectDivExpanded == id) {
-                this.isSelectDivExpanded = false
+        SelectTransferPlayer(id) {
+            if (!this.SelectPlayer) {
+                this.SelectPlayer = id 
+            } else if (this.SelectPlayer == id) {
+                this.SelectPlayer = false
             }
         },
     },  
