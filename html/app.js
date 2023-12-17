@@ -36,18 +36,19 @@ const app = Vue.createApp({
             {id: 3, invoicename: 'Yusuf Karaçolak', price: 100000, description:'Sender description', type: 'player'},
             {id: 4, invoicename: 'Mechanic', price: 100000, description:'Fixed your car', type: 'company'},
         ],
-        SelectCreditType: null,
+        SelectCreditType: 'Home',
         RequireCreditPoint: true,
+        SelectCredit: false,
         AvailableCredits: [
-            {id: 1, type: 'home', label: 'Normal Home Credit', description: 'This is a normal loan and the amount is low', price: 100000, requiredcreditpoint: 300},
-            {id: 2, type: 'home', label: 'Premium Home Credit', description: 'This is a premium loan and the amount is high', price: 1000000, requiredcreditpoint: 600},
-            {id: 3, type: 'home', label: 'Ultra Home Credit', description: 'This is a ultra loan and the amount is very high', price: 2500000, requiredcreditpoint: 900},
-            {id: 4, type: 'car', label: 'Normal Car Credit', description: 'This is a normal loan and the amount is low', price: 100000, requiredcreditpoint: 300},
-            {id: 5, type: 'car', label: 'Premium Car Credit', description: 'This is a premium loan and the amount is high', price: 1000000, requiredcreditpoint: 600},
-            {id: 6, type: 'car', label: 'Ultra Car Credit', description: 'This is a ultra loan and the amount is very high', price: 2500000, requiredcreditpoint: 900},
-            {id: 7, type: 'open', label: 'Normal Open Credit', description: 'This is a normal loan and the amount is low', price: 100000, requiredcreditpoint: 300},
-            {id: 8, type: 'open', label: 'Premium Open Credit', description: 'This is a premium loan and the amount is high', price: 1000000, requiredcreditpoint: 600},
-            {id: 9, type: 'open', label: 'Ultra Open Credit', description: 'This is a ultra loan and the amount is very high', price: 2500000, requiredcreditpoint: 900},
+            {id: 1, type: 'Home', label: 'Normal Home Credit', description: 'This is a normal loan and the amount is low', price: 100000, requiredcreditpoint: 300},
+            {id: 2, type: 'Home', label: 'Premium Home Credit', description: 'This is a premium loan and the amount is high', price: 1000000, requiredcreditpoint: 600},
+            {id: 3, type: 'Home', label: 'Ultra Home Credit', description: 'This is a ultra loan and the amount is very high', price: 2500000, requiredcreditpoint: 900},
+            {id: 4, type: 'Car', label: 'Normal Car Credit', description: 'This is a normal loan and the amount is low', price: 100000, requiredcreditpoint: 300},
+            {id: 5, type: 'Car', label: 'Premium Car Credit', description: 'This is a premium loan and the amount is high', price: 1000000, requiredcreditpoint: 600},
+            {id: 6, type: 'Car', label: 'Ultra Car Credit', description: 'This is a ultra loan and the amount is very high', price: 2500000, requiredcreditpoint: 900},
+            {id: 7, type: 'Open', label: 'Normal Open Credit', description: 'This is a normal loan and the amount is low', price: 100000, requiredcreditpoint: 300},
+            {id: 8, type: 'Open', label: 'Premium Open Credit', description: 'This is a premium loan and the amount is high', price: 1000000, requiredcreditpoint: 600},
+            {id: 9, type: 'Open', label: 'Ultra Open Credit', description: 'This is a ultra loan and the amount is very high', price: 2500000, requiredcreditpoint: 900},
         ],
     }),
 
@@ -89,6 +90,16 @@ const app = Vue.createApp({
                 this.SelectPlayer = false
             }
         },
+
+        GetSelectedCreditIMG(type) {
+            if (type == 'Home') {
+                return `./img/House-icon.png`;
+            } else if (type == 'Car') {
+                return `./img/Car-icon.png`;
+            } else if (type == 'Open') {
+                return `./img/Withdraw-icon.png`;
+            }
+        }
     },  
 
     computed: {
@@ -99,6 +110,10 @@ const app = Vue.createApp({
           
             return this.SearchPlayers.filter((player) => this.CheckSearchBarEquality(player));
         },
+
+        ShowAvailableCredits() {
+            return this.AvailableCredits.filter(credit => credit.type === this.SelectCreditType);
+        }
     },
 
     watch: {
