@@ -158,7 +158,6 @@
                                     </div>
                                     <div class="w-[15%] h-full"></div>
                                 </div>
-                                
                                 <div class="w-full h-[33%] "></div>
                             </div>
                             <div class="w-[18%] h-full"></div>
@@ -583,6 +582,7 @@
                                     <span class="w-full send-money-description-text">You can check and pay your bills in this section!</span>  <!-- Max 18-20 words -->
                                 </div>
                             </div>
+                            <div class="w-[17%] h-full"></div>
                         </div>
                         <div class="w-full h-[4%]"></div>
                         <div class="w-full h-[73.5%] flex flex-wrap" v-if="Invoices.length !== 0">  <!-- Invoices - List -->
@@ -632,8 +632,187 @@
                         </div>
                         <div class="w-full h-[6.5%]"></div>
                     </div>
+                    <div class="w-[28%] h-full border" v-if="MiddleMenuSection == 'Credit'">  <!-- Middle menu - Credit -->
+                        <div class="w-full h-[7%]"></div>
+                        <div class="w-full h-[12%] flex flex-wrap">  <!-- Header -->
+                            <div class="w-[5.5%] h-full"></div>
+                            <div class="w-[77.5%] h-full flex flex-col">
+                                <div class="w-full h-[35%] flex items-center justify-center">
+                                    <h1 class="w-full send-money-text">Get Credit</h1>
+                                </div>
+                                <div class="w-full h-[16%]"></div>
+                                <div class="w-full h-full flex items-center justify-start">
+                                    <span class="w-full credit-description">Unlock financial possibilities with our hassle-free loan options. Borrow the money you need and repay it later.</span>  <!-- Max 20 words -->
+                                </div>
+                            </div>
+                            <div class="w-[17%] h-full"></div>
+                        </div>
+                        <div class="w-full h-[73.5%] flex flex-col">  <!-- Middle menu - Content -->
+                            <div class="w-full h-[8.5%] flex flex-wrap">
+                                <div class="w-[6%] h-full"></div>
+                                <div class="w-[11.5%] h-full flex items-center justify-center">
+                                    <div class="w-full h-full flex items-center justify-center rounded-[50%] bg-[#D9D9D945]">
+                                        <img src="./img/Select-credit-icon.png" style="width: 1.3021vw; height: 1.1458vw;">
+                                    </div>
+                                </div>
+                                <div class="w-[2.8%] h-full"></div>
+                                <div class="w-[16.5%] h-full flex items-center justify-center">
+                                    <div class="w-full h-[5%] bg-[#000000]"></div>
+                                </div>
+                                <div class="w-[3.2%] h-full"></div>
+                                <div class="w-[11.5%] h-full flex items-center justify-center">
+                                    <div class="w-full h-full flex items-center justify-center rounded-[50%] bg-[#D9D9D945]">
+                                        <img src="./img/Thumbsup-icon.png" style="width: 1.3542vw; height: 1.1979vw;">
+                                    </div>
+                                </div>
+                                <div class="w-[3%] h-full"></div>
+                                <div class="w-[17%] h-full flex items-center justify-center">
+                                    <div class="w-full h-[5%] bg-[#000000] opacity-[.13]"></div>
+                                </div>
+                                <div class="w-[3.3%] h-full"></div>
+                                <div class="w-[11.5%] h-full flex items-center justify-center">
+                                    <div class="w-full h-full flex items-center justify-center rounded-[50%] bg-[#D9D9D945]">
+                                        <img src="./img/Money-icon.png" style="width: 1.4583vw; height: .8854vw;">
+                                    </div>
+                                </div>
+                                <div class="w-[14%] h-full"></div>
+                            </div>
+                            <div class="w-full h-[1%]"></div>
+                            <div class="w-full h-[2.2%] flex flex-wrap">
+                                <div class="w-[4.5%] h-full"></div>
+                                <div class="w-[22%] h-full flex items-center justify-start">
+                                    <span style="color: #000; text-align: center; font-family: regular; font-size: .9356vw; font-style: normal; font-weight: 600; line-height: 1.1946vw;">Select Credit</span>
+                                </div>
+                                <div class="w-[12.5%] h-full"></div>
+                                <div class="w-[19%] h-full flex items-center justify-start">
+                                    <span style="color: #000; text-align: center; font-family: regular; font-size: .9356vw; font-style: normal; font-weight: 600; line-height: 1.1946vw; margin-left: .6vw;">Accept</span>
+                                </div>
+                                <div class="w-[14.5%] h-full"></div>
+                                <div class="w-[21%] h-full flex items-center justify-start">
+                                    <span style="color: #000; text-align: center; font-family: regular; font-size: .9356vw; font-style: normal; font-weight: 600; line-height: 1.1946vw;">Get Money</span>
+                                </div>
+                                <div class="w-[6.5%] h-full"></div>
+                            </div>
+                            <div class="w-full h-[6%]"></div>
+                            <div class="w-full h-[33%] flex flex-wrap">
+                                <div class="w-[4%] h-full"></div>
+                                <div class="w-[25.5%] h-full flex items-center justify-center">  <!-- Credit Content - Home Credit -->
+                                    <div class="w-full h-full flex flex-col bg-[#F0ECF0] rounded-[.5vw]">
+                                        <div class="w-full h-[4.5%]"></div>
+                                        <div class="w-full h-[32%] flex flex-wrap">
+                                            <div class="w-[21%] h-full"></div>
+                                            <div class="w-[59%] h-full flex items-center justify-center">
+                                                <div class="w-full h-full flex items-center justify-center rounded-[50%] bg-[#D9D9D945]">
+                                                    <img src="./img/House-icon.png" style="width: 1.4063vw; height: 1.4583vw;">
+                                                </div>
+                                            </div>
+                                            <div class="w-[20%] h-full"></div>
+                                        </div>
+                                        <div class="w-full h-[9%]"></div>
+                                        <div class="w-full h-[7%] flex items-center justify-center">
+                                            <span style="color: #000; text-align: center; font-family: regular; font-size: 1.0607vw; font-style: normal; font-weight: 600; line-height: 1.3544vw;">Home Credit</span>
+                                        </div>
+                                        <div class="w-full h-[3%]"></div>
+                                        <div class="w-full h-[15%] flex items-center justify-center">
+                                            <span style="color: #595959; text-align: center; font-family: regular; font-size: .5835vw; font-style: normal; font-weight: 500; line-height: .5vw;">Different types of mortgage loans if you want to buy a house</span>
+                                        </div>
+                                        <div class="w-full h-[11%]"></div>
+                                        <div class="w-full h-[10%] flex items-center justify-center">
+                                            <div class="w-[69%] h-full flex items-center justify-center bg-[#000000] rounded-[.2vw] hover:cursor-pointer" :class="{'bg-[#9E5EC7]': SelectCreditType == 'Home'}" @click="SelectCreditType = 'Home'">
+                                                <span style="color: #FFF; text-align: center; font-family: regular; letter-spacing: .06vw; font-size: .5979vw; font-style: normal; font-weight: 600; line-height: .6358vw;">{{SelectCreditType == 'Home' ? 'Selected' : 'Select'}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="w-full h-[8.5%]"></div>
+                                    </div>
+                                </div>
+                                <div class="w-[4.5%] h-full"></div>
+                                <div class="w-[25.5%] h-full flex items-center justify-center">  <!-- Credit Content - Installment Credit -->
+                                    <div class="w-full h-full flex flex-col bg-[#F0ECF0] rounded-[.5vw]">
+                                        <div class="w-full h-[4.5%]"></div>
+                                        <div class="w-full h-[32%] flex flex-wrap">
+                                            <div class="w-[21%] h-full"></div>
+                                            <div class="w-[59%] h-full flex items-center justify-center">
+                                                <div class="w-full h-full flex items-center justify-center rounded-[50%] bg-[#D9D9D945]">
+                                                    <img src="./img/Car-icon.png" style="width: 1.7708vw; height: 1.0417vw;">
+                                                </div>
+                                            </div>
+                                            <div class="w-[20%] h-full"></div>
+                                        </div>
+                                        <div class="w-full h-[9%]"></div>
+                                        <div class="w-full h-[7%] flex items-center justify-center">
+                                            <span style="color: #000; text-align: center; font-family: regular; font-size: 1.0607vw; font-style: normal; font-weight: 600; line-height: 1.3544vw;">Car Credit</span>
+                                        </div>
+                                        <div class="w-full h-[3%]"></div>
+                                        <div class="w-full h-[15%] flex items-center justify-center">
+                                            <span style="color: #595959; text-align: center; font-family: regular; font-size: .5835vw; font-style: normal; font-weight: 500; line-height: .5vw;">Different types of car/installment loans if you want to buy a vehicle</span>
+                                        </div>
+                                        <div class="w-full h-[11%]"></div>
+                                        <div class="w-full h-[10%] flex items-center justify-center">
+                                            <div class="w-[69%] h-full flex items-center justify-center bg-[#000000] rounded-[.2vw] hover:cursor-pointer" :class="{'bg-[#9E5EC7]': SelectCreditType == 'Car'}" @click="SelectCreditType = 'Car'">
+                                                <span style="color: #FFF; text-align: center; font-family: regular; letter-spacing: .06vw; font-size: .5979vw; font-style: normal; font-weight: 600; line-height: .6358vw;">{{SelectCreditType == 'Car' ? 'Selected' : 'Select'}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="w-full h-[8.5%]"></div>
+                                    </div>
+                                </div>
+                                <div class="w-[5%] h-full"></div>
+                                <div class="w-[25.5%] h-full flex items-center justify-center">  <!-- Credit Content - Open Credit -->
+                                    <div class="w-full h-full flex flex-col bg-[#F0ECF0] rounded-[.5vw]">
+                                        <div class="w-full h-[4.5%]"></div>
+                                        <div class="w-full h-[32%] flex flex-wrap">
+                                            <div class="w-[21%] h-full"></div>
+                                            <div class="w-[59%] h-full flex items-center justify-center">
+                                                <div class="w-full h-full flex items-center justify-center rounded-[50%] bg-[#D9D9D945]">
+                                                    <img src="./img/Withdraw-icon.png" style="width: 1.7708vw; height: 1.3542vw;">
+                                                </div>
+                                            </div>
+                                            <div class="w-[20%] h-full"></div>
+                                        </div>
+                                        <div class="w-full h-[9%]"></div>
+                                        <div class="w-full h-[7%] flex items-center justify-center">
+                                            <span style="color: #000; text-align: center; font-family: regular; font-size: 1.0607vw; font-style: normal; font-weight: 600; line-height: .9544vw;">Open Credit</span>
+                                        </div>
+                                        <div class="w-full h-[3%]"></div>
+                                        <div class="w-full h-[15%] flex items-center justify-center">
+                                            <span style="color: #595959; text-align: center; font-family: regular; font-size: .5835vw; font-style: normal; font-weight: 500; line-height: .5vw;">Different types of open credit where you can do anything</span>
+                                        </div>
+                                        <div class="w-full h-[11%]"></div>
+                                        <div class="w-full h-[10%] flex items-center justify-center">
+                                            <div class="w-[69%] h-full flex items-center justify-center bg-[#000000] rounded-[.2vw] hover:cursor-pointer" :class="{'bg-[#9E5EC7]': SelectCreditType == 'Open'}" @click="SelectCreditType = 'Open'">
+                                                <span style="color: #FFF; text-align: center; font-family: regular; letter-spacing: .06vw; font-size: .5979vw; font-style: normal; font-weight: 600; line-height: .6358vw;">{{SelectCreditType == 'Open' ? 'Selected' : 'Select'}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="w-full h-[8.5%]"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="w-full h-[4.5%]"></div>
+                            <div class="w-full h-[2.7%] flex flex-wrap">  <!-- Credit Lower - Header -->
+                                <div class="w-[5%] h-full"></div>
+                                <div class="w-[40%] h-full flex items-center justify-start">
+                                    <span style="color: #000; text-align: center; font-family: regular; font-size: 1.3137vw; font-style: normal; font-weight: 600; line-height: 1.6774vw;">Home Credit</span>
+                                </div>
+                                <div class="w-[55%] h-full"></div>
+                            </div>
+                            <div class="w-full h-[2%]"></div>
+                            <div class="w-full h-[6%] flex flex-wrap">  <!-- Credit Lower - Description -->
+                                <div class="w-[5%] h-full"></div>
+                                <div class="w-[80%] h-full flex items-center justify-start">
+                                    <span style="color: #222; font-family: regular; font-size: .7945vw; font-style: normal; font-weight: 600; line-height: .8145vw;">Select the loan that suits you below. And please look twice before you approve everything. There is no turning back.</span>
+                                </div>
+                                <div class="w-[15%] h-full"></div>
+                            </div>
+                            <div class="w-full h-[2%]"></div>
+                            <div class="w-full h-[32.1%] flex flex-wrap">
+                                <div class="w-[5%] h-full"></div>
+                                <div class="w-[84%] h-full block overflow-auto border">
+                                    <div class="w-full h-[30%] bg-red"></div>
+                                </div>
+                                <div class="w-[11%] h-full"></div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="w-[52%] h-full border">  <!-- Right menu -->
-                        <div class=""></div>
                     </div>
                 </div>
             </div>

@@ -15,7 +15,7 @@ const app = Vue.createApp({
         ThirdFastAction: {type: 'deposit', amount: 1500}, // type --> 'deposit' - 'withdraw'
         DWPopup: false,
         DWType: null,
-        MiddleMenuSection: 'Invoices', // 'Main' - 'Transfer'
+        MiddleMenuSection: 'Credit', // 'Main' - 'Transfer' - 'Invoices' - 'Credit'
         SearchPlayers: [
             {id: 1,  firstname: 'Oph3Z', lastname: 'Test', iban: 2001,  pp: './img/example-logo.png'},
             {id: 2,  firstname: 'Yusuf', lastname: 'Test', iban: 2002,  pp: './img/second-example-logo.png'},
@@ -35,6 +35,19 @@ const app = Vue.createApp({
             {id: 2, invoicename: 'EMS', price: 100000, description:'All your costs in the hospital', type: 'ems'},
             {id: 3, invoicename: 'Yusuf Karaçolak', price: 100000, description:'Sender description', type: 'player'},
             {id: 4, invoicename: 'Mechanic', price: 100000, description:'Fixed your car', type: 'company'},
+        ],
+        SelectCreditType: null,
+        RequireCreditPoint: true,
+        AvailableCredits: [
+            {id: 1, type: 'home', label: 'Normal Home Credit', description: 'This is a normal loan and the amount is low', price: 100000, requiredcreditpoint: 300},
+            {id: 2, type: 'home', label: 'Premium Home Credit', description: 'This is a premium loan and the amount is high', price: 1000000, requiredcreditpoint: 600},
+            {id: 3, type: 'home', label: 'Ultra Home Credit', description: 'This is a ultra loan and the amount is very high', price: 2500000, requiredcreditpoint: 900},
+            {id: 4, type: 'car', label: 'Normal Car Credit', description: 'This is a normal loan and the amount is low', price: 100000, requiredcreditpoint: 300},
+            {id: 5, type: 'car', label: 'Premium Car Credit', description: 'This is a premium loan and the amount is high', price: 1000000, requiredcreditpoint: 600},
+            {id: 6, type: 'car', label: 'Ultra Car Credit', description: 'This is a ultra loan and the amount is very high', price: 2500000, requiredcreditpoint: 900},
+            {id: 7, type: 'open', label: 'Normal Open Credit', description: 'This is a normal loan and the amount is low', price: 100000, requiredcreditpoint: 300},
+            {id: 8, type: 'open', label: 'Premium Open Credit', description: 'This is a premium loan and the amount is high', price: 1000000, requiredcreditpoint: 600},
+            {id: 9, type: 'open', label: 'Ultra Open Credit', description: 'This is a ultra loan and the amount is very high', price: 2500000, requiredcreditpoint: 900},
         ],
     }),
 
