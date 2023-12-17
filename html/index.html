@@ -805,17 +805,17 @@
                             <div class="w-full h-[2%]"></div>
                             <div class="w-full h-[32.1%] flex flex-wrap">
                                 <div class="w-[5%] h-full"></div>
-                                <div class="w-[84%] h-full block overflow-auto border">  <!-- Credit Lower - v-for Function -->
-                                    <div class="w-full h-[30%] mb-[.7042vw] bg-[#F0ECF0] rounded-[.8333vw] flex flex-col" v-for="data in ShowAvailableCredits" :style="{height: SelectCredit == data.id ? '44%' : '30%'}">
-                                        <div class="w-full flex flex-wrap" :class="{'h-[44.55%]': SelectCredit == data.id, 'h-full': SelectCredit !== data.id}">
-                                            <div class="w-[5%] h-full border"></div>
-                                            <div class="w-[16%] h-full flex items-center justify-center border">
-                                                <div class="w-[90%] h-[90%] flex items-center justify-center rounded-[50%] bg-[#D9D9D975]">
+                                <div class="w-[84%] h-full block overflow-auto">  <!-- Credit Lower - v-for Function -->
+                                    <div class="w-full h-[30%] mb-[.4042vw] bg-[#F0ECF0] rounded-[.8333vw] flex flex-col" v-for="data in ShowAvailableCredits" :style="{height: SelectCredit == data.id ? '75%' : '30%'}">
+                                        <div class="w-full flex flex-wrap border" :class="{'h-[40%]': SelectCredit == data.id, 'h-full': SelectCredit !== data.id}">
+                                            <div class="w-[5%] h-full"></div>
+                                            <div class="w-[16%] h-full flex items-center justify-center">
+                                                <div class="w-[80%] h-[80%] flex items-center justify-center rounded-[50%] bg-[#D9D9D975]">
                                                     <img :src="GetSelectedCreditIMG(SelectCreditType)" :style="{width: SelectCreditType == 'Home' ? '1.4063vw' : SelectCreditType == 'Car' ? '1.7708vw' : SelectCreditType == 'Open' ? '1.7708vw' : '', height: SelectCreditType == 'Home' ? '1.4583vw' : SelectCreditType == 'Car' ? '1.0417vw' : SelectCreditType == 'Open' ? '1.3542vw' : ''}">
                                                 </div>
                                             </div>
                                             <div class="w-[3%] h-full"></div>
-                                            <div class="w-[35%] h-full flex flex-col border">
+                                            <div class="w-[35%] h-full flex flex-col">
                                                 <div class="w-full h-[15%]"></div>
                                                 <div class="w-full h-[35%] flex items-center justify-start">
                                                     <span style="color: #000; text-align: center; font-family: regular; font-size: .8163vw; font-style: normal; font-weight: 600; line-height: 1.0423vw;">{{ data.label }}</span>
@@ -825,6 +825,28 @@
                                                 </div>
                                                 <div class="w-full h-[15%]"></div>
                                             </div>
+                                            <div class="w-[4%] h-full"></div>
+                                            <div class="w-[32%] h-full flex flex-col">
+                                                <div class="w-full h-[20%]"></div>
+                                                <div class="w-full h-[60%] flex flex-wrap">
+                                                    <div class="w-[50%] h-full flex items-center justify-start">
+                                                        <span style="color: #9E5EC7; text-align: center; font-family: regular; font-size: .7189vw; font-style: normal; font-weight: 600; line-height: .918vw;">{{ '$' + PE3D(data.price) }}</span>
+                                                    </div>
+                                                    <div class="w-[50%] h-full flex items-center justify-center">
+                                                        <div class="w-full h-[60%] flex items-center justify-center bg-[#9E5EC7] rounded-[.2vw] hover:cursor-pointer" v-if="SelectCredit != data.id" @click="SelectCredit = data.id">
+                                                            <span class="w-full" style="color: #FFF; text-align: center; font-family: regular; font-size: .6054vw; font-style: normal; font-weight: 600; line-height: .773vw; letter-spacing: .03vw;">Select</span>
+                                                        </div>
+                                                        <div class="w-full h-[60%] flex items-center justify-center bg-[#9E5EC7] rounded-[.2vw] hover:cursor-pointer" v-if="SelectCredit == data.id">
+                                                            <span class="w-full" style="color: #FFF; text-align: center; font-family: regular; font-size: .6054vw; font-style: normal; font-weight: 600; line-height: .773vw; letter-spacing: .03vw;">Confirm</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="w-full h-[20%]"></div>
+                                            </div>
+                                            <div class="w-[5%] h-full"></div>
+                                        </div>
+                                        <div class="w-full h-[60%] flex flex-col" v-if="SelectCredit == data.id">
+
                                         </div>
                                     </div>  
                                 </div>
