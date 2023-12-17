@@ -41,15 +41,15 @@ const app = Vue.createApp({
         SelectCredit: false,
         ConfirmCredit: false,
         AvailableCredits: [
-            {id: 1, type: 'Home', label: 'Normal Home Credit', description: 'This is a normal loan and the amount is low', price: 100000, requiredcreditpoint: 300},
-            {id: 2, type: 'Home', label: 'Premium Home Credit', description: 'This is a premium loan and the amount is high', price: 1000000, requiredcreditpoint: 600},
-            {id: 3, type: 'Home', label: 'Ultra Home Credit', description: 'This is a ultra loan and the amount is very high', price: 2500000, requiredcreditpoint: 900},
-            {id: 4, type: 'Car', label: 'Normal Car Credit', description: 'This is a normal loan and the amount is low', price: 50000, requiredcreditpoint: 300},
-            {id: 5, type: 'Car', label: 'Premium Car Credit', description: 'This is a premium loan and the amount is high', price: 150000, requiredcreditpoint: 600},
-            {id: 6, type: 'Car', label: 'Ultra Car Credit', description: 'This is a ultra loan and the amount is very high', price: 400000, requiredcreditpoint: 900},
-            {id: 7, type: 'Open', label: 'Normal Open Credit', description: 'This is a normal loan and the amount is low', price: 25000, requiredcreditpoint: 300},
-            {id: 8, type: 'Open', label: 'Premium Open Credit', description: 'This is a premium loan and the amount is high', price: 90000, requiredcreditpoint: 600},
-            {id: 9, type: 'Open', label: 'Ultra Open Credit', description: 'This is a ultra loan and the amount is very high', price: 130000, requiredcreditpoint: 900},
+            {id: 1, type: 'Home', label: 'Normal Home Credit',  description: 'This is a normal loan and the amount is low',      price: 100000,  requiredcreditpoint: 300, paybacktime: 1, paybackpercent: 1.2}, // paybackpercent --> 1 = 100%, 2 = 200%   ∥    paybacktime --> weeks          
+            {id: 2, type: 'Home', label: 'Premium Home Credit', description: 'This is a premium loan and the amount is high',    price: 1000000, requiredcreditpoint: 600, paybacktime: 2, paybackpercent: 1.4}, // paybackpercent --> 1 = 100%, 2 = 200%   ∥    paybacktime --> weeks  
+            {id: 3, type: 'Home', label: 'Ultra Home Credit',   description: 'This is a ultra loan and the amount is very high', price: 2500000, requiredcreditpoint: 900, paybacktime: 4, paybackpercent: 1.6}, // paybackpercent --> 1 = 100%, 2 = 200%   ∥    paybacktime --> weeks  
+            {id: 4, type: 'Car',  label: 'Normal Car Credit',   description: 'This is a normal loan and the amount is low',      price: 50000,   requiredcreditpoint: 300, paybacktime: 1, paybackpercent: 1.2}, // paybackpercent --> 1 = 100%, 2 = 200%   ∥    paybacktime --> weeks  
+            {id: 5, type: 'Car',  label: 'Premium Car Credit',  description: 'This is a premium loan and the amount is high',    price: 150000,  requiredcreditpoint: 600, paybacktime: 2, paybackpercent: 1.4}, // paybackpercent --> 1 = 100%, 2 = 200%   ∥    paybacktime --> weeks  
+            {id: 6, type: 'Car',  label: 'Ultra Car Credit',    description: 'This is a ultra loan and the amount is very high', price: 400000,  requiredcreditpoint: 900, paybacktime: 4, paybackpercent: 1.6}, // paybackpercent --> 1 = 100%, 2 = 200%   ∥    paybacktime --> weeks  
+            {id: 7, type: 'Open', label: 'Normal Open Credit',  description: 'This is a normal loan and the amount is low',      price: 25000,   requiredcreditpoint: 300, paybacktime: 1, paybackpercent: 1.2}, // paybackpercent --> 1 = 100%, 2 = 200%   ∥    paybacktime --> weeks  
+            {id: 8, type: 'Open', label: 'Premium Open Credit', description: 'This is a premium loan and the amount is high',    price: 90000,   requiredcreditpoint: 600, paybacktime: 2, paybackpercent: 1.4}, // paybackpercent --> 1 = 100%, 2 = 200%   ∥    paybacktime --> weeks  
+            {id: 9, type: 'Open', label: 'Ultra Open Credit',   description: 'This is a ultra loan and the amount is very high', price: 130000,  requiredcreditpoint: 900, paybacktime: 4, paybackpercent: 1.6}, // paybackpercent --> 1 = 100%, 2 = 200%   ∥    paybacktime --> weeks  
         ],
     }),
 
@@ -100,7 +100,31 @@ const app = Vue.createApp({
             } else if (type == 'Open') {
                 return `./img/Withdraw-icon.png`;
             }
-        }
+        },
+
+        CalculateCreditPercent(percent) {
+            if (percent == 1.1) {
+                return '10%';
+            } else if (percent == 1.2) {
+                return '20%';
+            } else if (percent == 1.3) {
+                return '30%';
+            } else if (percent == 1.4) {
+                return '40%';
+            } else if (percent == 1.5) {
+                return '50%';
+            } else if (percent == 1.6) {
+                return '60%';
+            } else if (percent == 1.7) {
+                return '70%';
+            } else if (percent == 1.8) {
+                return '80%';
+            } else if (percent == 1.9) {
+                return '90%';
+            } else if (percent == 2.0) {
+                return '100%';
+            }
+        }, 
     },  
 
     computed: {

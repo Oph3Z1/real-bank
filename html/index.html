@@ -807,7 +807,7 @@
                                 <div class="w-[5%] h-full"></div>
                                 <div class="w-[84%] h-full block overflow-auto">  <!-- Credit Lower - v-for Function -->
                                     <div class="w-full h-[30%] mb-[.4042vw] bg-[#F0ECF0] rounded-[.8333vw] flex flex-col" v-for="data in ShowAvailableCredits" :style="{height: SelectCredit == data.id ? '75%' : '30%'}">
-                                        <div class="w-full flex flex-wrap border" :class="{'h-[40%]': SelectCredit == data.id, 'h-full': SelectCredit !== data.id}">
+                                        <div class="w-full flex flex-wrap" :class="{'h-[40%]': SelectCredit == data.id, 'h-full': SelectCredit !== data.id}">
                                             <div class="w-[5%] h-full"></div>
                                             <div class="w-[16%] h-full flex items-center justify-center">
                                                 <div class="w-[80%] h-[80%] flex items-center justify-center rounded-[50%] bg-[#D9D9D975]">
@@ -846,7 +846,25 @@
                                             <div class="w-[5%] h-full"></div>
                                         </div>
                                         <div class="w-full h-[60%] flex flex-col" v-if="SelectCredit == data.id">
-
+                                            <div class="w-full h-[8%]"></div>
+                                            <div class="w-full h-[70%] flex flex-wrap">
+                                                <div class="w-[5%] h-full"></div>
+                                                <div class="w-[90%] h-full bg-[#E7E2E7] rounded-[.25vw] flex flex-wrap">
+                                                    <div class="w-[6%] h-full"></div>
+                                                    <div class="w-[88%] h-full flex items-center justify-center">
+                                                        <div class="w-full h-[60%] flex flex-wrap">
+                                                            <div class="w-[50%] h-full flex items-center justify-center bg-[#D9D7D9] rounded-[.25vw]">
+                                                                <span style="color: #393939; text-align: center; font-family: regular; font-size: .773vw; font-style: normal; font-weight: 600; line-height: 1.1147vw;">{{data.paybacktime > 1 ? ''+data.paybacktime+' Weeks ' : ''+data.paybacktime+' Week '}} {{CalculateCreditPercent(data.paybackpercent)}} = <span style="color: #9E5EC7; text-align: center; font-family: regular; font-size: .773vw; font-style: normal; font-weight: 600; line-height: 1.1147vw;"> ${{ PE3D(data.price*data.paybackpercent) }}</span></span>
+                                                            </div>
+                                                            <div class="w-[50%] h-full flex items-center justify-start">
+                                                                <span style="color: #222; font-family: regular; font-size: .46vw; font-style: normal; font-weight: 400; line-height: .4851vw; margin-left: .5vw;">Read everything and think carefully before you approve. Once you approve, there is no going back!</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="w-[6%] h-full"></div>
+                                                </div>
+                                                <div class="w-[5%] h-full"></div>
+                                            </div>
                                         </div>
                                     </div>  
                                 </div>
