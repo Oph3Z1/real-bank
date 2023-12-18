@@ -139,15 +139,15 @@ const app = Vue.createApp({
         ConfirmCreditWithdraw() {
             if (this.RequireCreditPoint) {
                 if (this.PlayersCreditPoint >= this.SelectedCreditReq) {
-                    this.PlayersMoney = this.PlayersMoney + this.SelectedCreditPrice
-                    this.PlayersCreditPoint = this.PlayersCreditPoint - this.SelectedCreditReq
+                    this.PlayersMoney += this.SelectedCreditPrice
+                    this.PlayersCreditPoint -= this.SelectedCreditReq
                     this.ConfirmCredit = true
                 } else {
                     console.log("You don't have enough credit point to withdraw money. Required Credit Point: " + this.SelectedCreditReq)
                 }
             } else {
-                this.PlayersMoney = this.PlayersMoney + this.SelectedCreditPrice
-                this.PlayersCreditPoint = this.PlayersCreditPoint - this.SelectedCreditReq
+                this.PlayersMoney += this.SelectedCreditPrice
+                this.PlayersCreditPoint -= this.SelectedCreditReq
                 this.ConfirmCredit = true
             }
         }, 
