@@ -36,10 +36,12 @@ const app = Vue.createApp({
             {id: 3, invoicename: 'Yusuf Karaçolak', price: 100000, description:'Sender description', type: 'player'},
             {id: 4, invoicename: 'Mechanic', price: 100000, description:'Fixed your car', type: 'company'},
         ],
-        SelectCreditType: null,
-        RequireCreditPoint: true,
-        SelectCredit: false,
-        ConfirmCredit: false,
+        SelectCreditType: null, // Dont Touch
+        RequireCreditPoint: true, // true => System will require credit point to withdraw money via credit system | false => System will not check credit point to withdraw money via credit system
+        SelectCredit: false, // Dont Touch
+        SelectedCreditPrice: 0, // Dont Touch
+        SelectedCreditReq: false, // Dont Touch
+        ConfirmCredit: false, // Dont Touch
         AvailableCredits: [
             {id: 1, type: 'Home', label: 'Normal Home Credit',  description: 'This is a normal loan and the amount is low',      price: 100000,  requiredcreditpoint: 300, paybacktime: 1, paybackpercent: 1.2}, // paybackpercent --> 1 = 100%, 2 = 200%   ∥    paybacktime --> weeks          
             {id: 2, type: 'Home', label: 'Premium Home Credit', description: 'This is a premium loan and the amount is high',    price: 1000000, requiredcreditpoint: 600, paybacktime: 2, paybackpercent: 1.4}, // paybackpercent --> 1 = 100%, 2 = 200%   ∥    paybacktime --> weeks  
@@ -51,6 +53,8 @@ const app = Vue.createApp({
             {id: 8, type: 'Open', label: 'Premium Open Credit', description: 'This is a premium loan and the amount is high',    price: 90000,   requiredcreditpoint: 600, paybacktime: 2, paybackpercent: 1.4}, // paybackpercent --> 1 = 100%, 2 = 200%   ∥    paybacktime --> weeks  
             {id: 9, type: 'Open', label: 'Ultra Open Credit',   description: 'This is a ultra loan and the amount is very high', price: 130000,  requiredcreditpoint: 900, paybacktime: 4, paybackpercent: 1.6}, // paybackpercent --> 1 = 100%, 2 = 200%   ∥    paybacktime --> weeks  
         ],
+        PlayersCreditPoint: 1000, // Players current credit point - dont touch
+        PlayersMoney: 10000000, // Players current money - dont touch
     }),
 
     methods: {
@@ -125,6 +129,37 @@ const app = Vue.createApp({
                 return '100%';
             }
         }, 
+
+        SelectCreditFunction(id, price, creditreq) {
+            this.SelectCredit = id
+            this.SelectedCreditPrice = price
+            this.SelectedCreditReq = creditreq
+        },
+
+        ConfirmCreditWithdraw() {
+            if (this.RequireCreditPoint) {
+                if (this.PlayersCreditPoint >= this.SelectedCreditReq) {
+                    this.PlayersMoney = this.PlayersMoney + this.SelectedCreditPrice
+                    this.PlayersCreditPoint = this.PlayersCreditPoint - this.SelectedCreditReq
+                    this.ConfirmCredit = true
+                } else {
+                    console.log("You don't have enough credit point to withdraw money. Required Credit Point: " + this.SelectedCreditReq)
+                }
+            } else {
+                this.PlayersMoney = this.PlayersMoney + this.SelectedCreditPrice
+                this.PlayersCreditPoint = this.PlayersCreditPoint - this.SelectedCreditReq
+                this.ConfirmCredit = true
+            }
+        }, 
+
+        ClearAll() {
+            this.ConfirmCredit = false
+            this.SelectCredit = false
+            this.SelectedCreditPrice = 0
+            this.SelectedCreditReq = false
+            this.SelectCreditType = null
+            this.MiddleMenuSection = 'Main'
+        },
     },  
 
     computed: {
