@@ -57,13 +57,13 @@ const app = Vue.createApp({
         PlayersCreditPoint: 1000, // Players current credit point - dont touch
         PlayersMoney: 10000000, // Players current money - dont touch
         LastTransactions: [
-            {id: 1, type: 'withdraw', amount: 900, pp: './img/second-example-logo.png', date: '10.07.2023'},
-            {id: 2, type: 'withdraw', amount: 200, pp: './img/second-example-logo.png', date: '10.08.2023'},
-            {id: 3, type: 'withdraw', amount: 1200, pp: './img/second-example-logo.png', date: '10.01.2023'},
-            {id: 4, type: 'withdraw', amount: 890, pp: './img/second-example-logo.png', date: '10.04.2023'},
-            {id: 5, type: 'withdraw', amount: 550, pp: './img/second-example-logo.png', date: '10.02.2023'},
-            {id: 6, type: 'withdraw', amount: 500, pp: './img/second-example-logo.png', date: '10.01.2023'},
-            {id: 6, type: 'withdraw', amount: 500, pp: './img/second-example-logo.png', date: '10.12.2023'},
+            {id: 1, name: 'Oph3Z Test', sendedto: 'Yusuf Karaçolak', sendedtoiban: '123456', type: 'Withdraw', amount: 1000,  description: '',  pp: './img/second-example-logo.png', date: '10.07.2023'},
+            {id: 2, name: 'Oph3Z Test', sendedto: 'Yusuf Karaçolak', sendedtoiban: '123456', type: 'TransferIn', amount: 1250,  description: '',  pp: './img/second-example-logo.png', date: '10.08.2023'},
+            {id: 3, name: 'Oph3Z Test', sendedto: 'Yusuf Karaçolak', sendedtoiban: '123456', type: 'Withdraw', amount: 1200, description: '',  pp: './img/second-example-logo.png', date: '10.01.2023'},
+            {id: 4, name: 'Oph3Z Test', sendedto: 'Yusuf Karaçolak', sendedtoiban: '123456', type: 'Withdraw', amount: 890,  description: '',  pp: './img/second-example-logo.png', date: '10.04.2023'},
+            {id: 5, name: 'Oph3Z Test', sendedto: 'Yusuf Karaçolak', sendedtoiban: '123456', type: 'Withdraw', amount: 550,  description: '',  pp: './img/second-example-logo.png', date: '10.02.2023'},
+            {id: 6, name: 'Oph3Z Test', sendedto: 'Yusuf Karaçolak', sendedtoiban: '123456', type: 'Withdraw', amount: 500,  description: '',  pp: './img/second-example-logo.png', date: '10.01.2023'},
+            {id: 6, name: 'Oph3Z Test', sendedto: 'Yusuf Karaçolak', sendedtoiban: '123456', type: 'Withdraw', amount: 500,  description: '',  pp: './img/second-example-logo.png', date: '10.12.2023'},
         ],
 
     }),
@@ -190,7 +190,7 @@ const app = Vue.createApp({
             const allMonths = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
 
             const monthlyWithdrawals = this.LastTransactions
-                .filter(transaction => transaction.type === 'withdraw')
+                .filter(transaction => transaction.type === 'Withdraw')
                 .sort((a, b) => {
                 const dateA = new Date(a.date.split('.').reverse().join('-'));
                 const dateB = new Date(b.date.split('.').reverse().join('-'));
@@ -219,6 +219,22 @@ const app = Vue.createApp({
                     borderColor: '#9E5EC7',
                     tension: 0.1
                 }],
+            }
+        },
+
+        FontSize() {
+            const length = Math.max(...this.LastTransactions.map(data => data.amount.toString().length));
+
+            if (length <= 3) {
+                return { 'font-size': '1.1257vw' };
+            } else if (length <= 6) {
+                return { 'font-size': '1.0257vw' };
+            } else if (length <= 7) {
+                return { 'font-size': '1.0257vw' };
+            } else if (length >= 8) {
+                return { 'font-size': '.9257vw' };
+            } else {
+                return { 'font-size': 'inherit' };
             }
         },
     },
