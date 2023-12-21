@@ -12,6 +12,7 @@
     <script src="https://cdn.jsdelivr.net/npm/vuetify@3.3.15/dist/vuetify.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vuetify@3.3.15/dist/vuetify.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div id="app">
@@ -802,7 +803,6 @@
                                 </div>
                                 <div class="w-[15%] h-full"></div>
                             </div>
-                            <div class="w-full h-[2%]"></div v-if="!ConfirmCredit">
                             <div class="w-full h-[32.1%] flex flex-wrap" v-if="!ConfirmCredit">
                                 <div class="w-[5%] h-full"></div>
                                 <div class="w-[84%] h-full block overflow-auto">  <!-- Credit Lower - v-for Function -->
@@ -893,7 +893,58 @@
                         </div>
                         <div class="w-full h-[7.5%]"></div>
                     </div>
-                    <div class="w-[52%] h-full border">  <!-- Right menu -->
+                    <div class="w-[52%] h-full flex flex-col border">  <!-- Right menu -->
+                        <div class="w-full h-[7%] border"></div>
+                        <div class="w-full h-[3.5%] flex flex-wrap border">  <!-- Headers -->
+                            <div class="w-[10.5%] h-full"></div>
+                            <div class="w-[20%] h-full flex items-center justify-start border">
+                                <span style="color: #000; text-align: center; font-family: regular; font-size: 1.3063vw; font-style: normal; font-weight: 600; line-height: 1.668vw;">Personal Balance</span>
+                            </div>
+                            <div class="w-[18%] h-full"></div>
+                            <div class="w-[12%] h-full flex items-center justify-start border">
+                                <span style="color: #000; font-family: regular; font-size: 1.3063vw; font-style: normal; font-weight: 600; line-height: 1.668vw;">Debts</span>
+                            </div>
+                            <div class="w-[12%] h-full"></div>
+                            <div class="w-[15%] h-full flex items-center justify-start border">
+                                <span style="color: #000; font-family: regular; font-size: 1.3063vw; font-style: normal; font-weight: 600; line-height: 1.668vw;">Credit Point</span>
+                            </div>
+                            <div class="w-[12.5%] h-full"></div>
+                        </div>
+                        <div class="w-full h-[2%] border"></div>
+                        <div class="w-full h-[5%] flex flex-wrap border">  <!-- Personal Details -->
+                            <div class="w-[10%] h-full"></div>
+                            <div class="w-[30%] h-full flex items-center justify-start">
+                                <span class="w-full" style="color: #000; font-family: regular; font-size: 2.5548vw; font-style: normal; font-weight: 600; line-height: normal;">$ 10,000,000</span>
+                            </div>
+                            <div class="w-[5%] h-full"></div>
+                            <div class="w-[19.5%] h-full flex items-center justify-start">
+                                <span style="color: #000; text-align: center; font-family: regular; font-size: 2.1548vw; font-style: normal; font-weight: 600; line-height: 4.0283vw;">-300K</span>
+                                <div class="w-[35%] h-[70%] flex items-center justify-center hover:cursor-pointer bg-[#000]" style="margin-left: 1vw;">
+                                    <span class="w-full" style="color: white; text-align: center; font-family: regular; font-size: .7257vw; font-style: normal; font-weight: 600; line-height: normal;">Pay</span>
+                                </div>
+                            </div>
+                            <div class="w-[8%] h-full"></div>
+                            <div class="w-[20%] h-full flex items-center justify-start">
+                                <span style="color: #000; text-align: center; font-family: regular; font-size: 2.1548vw; font-style: normal; font-weight: 600; line-height: 4.0283vw;">10.000</span> <img src="./img/Star-icon.png" style="width: 1.8229vw; height: 1.8229vw; margin-left: .5vw;">
+                            </div>
+                            <div class="w-[7.5%] h-full"></div>
+                        </div>
+                        <div class="w-full h-[2%] border"></div>
+                        <div class="w-full h-[3.5%] flex flex-wrap ">  <!-- Monthly/Yearly - Button Container -->
+                            <div class="w-[10%] h-full"></div>
+                            <div class="w-[9%] h-full flex items-center justify-center">
+                                <div class="w-full h-full flex items-center justify-center bg-[#D9D9D9] rounded-[.2vw] hover:cursor-pointer">
+                                    <span style="color: #4A4A4A; text-align: center; font-family: regular; font-size: .8645vw; font-style: normal; font-weight: 600; line-height: normal;">Monthly</span>
+                                </div>
+                            </div>
+                            <div class="w-[81%] h-full"></div>
+                        </div>
+                        <div class="w-full h-[1%] border"></div>
+                        <div class="w-full h-[40%] flex items-center justify-center border">  <!-- Monthly/Yearly - ChartJs -->
+                            <div class="w-full h-full flex items-center justify-center">
+                                <canvas id="chart"></canvas>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

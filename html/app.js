@@ -7,6 +7,7 @@ const store = Vuex.createStore({
 const app = Vue.createApp({
     data: () => ({
         show: true,
+        chartData: null,
         CurrentScreen: 'BankScreen', // 'Password' - 'BankScreen'
         CurrentMenu: 'Dashboard',
         CardStyle: 2, // '1' - '2'
@@ -15,7 +16,7 @@ const app = Vue.createApp({
         ThirdFastAction: {type: 'deposit', amount: 1500}, // type --> 'deposit' - 'withdraw'
         DWPopup: false,
         DWType: null,
-        MiddleMenuSection: 'Credit', // 'Main' - 'Transfer' - 'Invoices' - 'Credit'
+        MiddleMenuSection: 'Main', // 'Main' - 'Transfer' - 'Invoices' - 'Credit'
         SearchPlayers: [
             {id: 1,  firstname: 'Oph3Z', lastname: 'Test', iban: 2001,  pp: './img/example-logo.png'},
             {id: 2,  firstname: 'Yusuf', lastname: 'Test', iban: 2002,  pp: './img/second-example-logo.png'},
@@ -55,6 +56,16 @@ const app = Vue.createApp({
         ],
         PlayersCreditPoint: 1000, // Players current credit point - dont touch
         PlayersMoney: 10000000, // Players current money - dont touch
+        LastTransactions: [
+            {id: 1, type: 'withdraw', amount: 900, pp: './img/second-example-logo.png', date: '10.07.2023'},
+            {id: 2, type: 'withdraw', amount: 200, pp: './img/second-example-logo.png', date: '10.08.2023'},
+            {id: 3, type: 'withdraw', amount: 1200, pp: './img/second-example-logo.png', date: '10.01.2023'},
+            {id: 4, type: 'withdraw', amount: 890, pp: './img/second-example-logo.png', date: '10.04.2023'},
+            {id: 5, type: 'withdraw', amount: 550, pp: './img/second-example-logo.png', date: '10.02.2023'},
+            {id: 6, type: 'withdraw', amount: 500, pp: './img/second-example-logo.png', date: '10.01.2023'},
+            {id: 6, type: 'withdraw', amount: 500, pp: './img/second-example-logo.png', date: '10.12.2023'},
+        ],
+
     }),
 
     methods: {
@@ -173,7 +184,43 @@ const app = Vue.createApp({
 
         ShowAvailableCredits() {
             return this.AvailableCredits.filter(credit => credit.type === this.SelectCreditType);
-        }
+        },
+
+        ChartDataFunction() {
+            const allMonths = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
+
+            const monthlyWithdrawals = this.LastTransactions
+                .filter(transaction => transaction.type === 'withdraw')
+                .sort((a, b) => {
+                const dateA = new Date(a.date.split('.').reverse().join('-'));
+                const dateB = new Date(b.date.split('.').reverse().join('-'));
+                return dateA - dateB; // Tarihe göre sırala
+                })
+                .reduce((acc, transaction) => {
+                const month = transaction.date.split('.')[1];
+                acc[month] = (acc[month] || 0) + transaction.amount;
+                return acc;
+            }, {});
+
+            const chartDataValues = allMonths.map(month => monthlyWithdrawals[month] || 0);
+
+            var ctx = document.getElementById('chart').getContext('2d');
+            var gradient = ctx.createLinearGradient(0, 0, 0, 400);
+            gradient.addColorStop(0, '#9E5EC7');
+            gradient.addColorStop(1, 'rgba(158, 94, 199, 0.01)');
+
+            return {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                datasets: [{
+                    label: 'Data',
+                    data: chartDataValues,
+                    fill: true,
+                    backgroundColor: gradient,
+                    borderColor: '#9E5EC7',
+                    tension: 0.1
+                }],
+            }
+        },
     },
 
     watch: {
@@ -185,6 +232,45 @@ const app = Vue.createApp({
     },
 
     mounted() {
+        this.chartData = this.ChartDataFunction;
+
+        var ctx = document.getElementById('chart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: this.chartData,
+            options: {
+                scales: {
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            font: {
+                                weight: 'bold',
+                                color: 'black'
+                            }
+                        }
+                    },
+                    y: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            font: {
+                                weight: 'bold',
+                                color: 'red'
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false,
+                    }
+                }
+            }
+        });
+
         window.addEventListener("message", event => {
             window.addEventListener('keyup', this.onKeyUp);
             switch (event.data.message) {
@@ -198,7 +284,6 @@ const app = Vue.createApp({
             }   
         });
     },
-    
 });
 
 app.use(store).mount("#app");
@@ -224,5 +309,3 @@ window.postNUI = async (name, data) => {
         // console.log(error)
     }
 };
-
-
