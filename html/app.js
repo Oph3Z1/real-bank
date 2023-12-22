@@ -55,17 +55,17 @@ const app = Vue.createApp({
             {id: 9, type: 'Open', label: 'Ultra Open Credit',   description: 'This is a ultra loan and the amount is very high', price: 130000,  requiredcreditpoint: 900, paybacktime: 4, paybackpercent: 1.6}, // paybackpercent --> 1 = 100%, 2 = 200%   ∥    paybacktime --> weeks  
         ],
         PlayersCreditPoint: 1000, // Players current credit point - dont touch
-        PlayersMoney: 10000000, // Players current money - dont touch
-        LastTransactions: [
-            {id: 1, name: 'Oph3Z Test', sendedto: 'Yusuf Karaçolak', sendedtoiban: '123456', type: 'Withdraw', amount: 1000,  description: '',  pp: './img/second-example-logo.png', date: '10.07.2023'},
-            {id: 2, name: 'Oph3Z Test', sendedto: 'Yusuf Karaçolak', sendedtoiban: '123456', type: 'TransferIn', amount: 1250,  description: '',  pp: './img/second-example-logo.png', date: '10.08.2023'},
-            {id: 3, name: 'Oph3Z Test', sendedto: 'Yusuf Karaçolak', sendedtoiban: '123456', type: 'Withdraw', amount: 1200, description: '',  pp: './img/second-example-logo.png', date: '10.01.2023'},
-            {id: 4, name: 'Oph3Z Test', sendedto: 'Yusuf Karaçolak', sendedtoiban: '123456', type: 'Withdraw', amount: 890,  description: '',  pp: './img/second-example-logo.png', date: '10.04.2023'},
-            {id: 5, name: 'Oph3Z Test', sendedto: 'Yusuf Karaçolak', sendedtoiban: '123456', type: 'Withdraw', amount: 550,  description: '',  pp: './img/second-example-logo.png', date: '10.02.2023'},
-            {id: 6, name: 'Oph3Z Test', sendedto: 'Yusuf Karaçolak', sendedtoiban: '123456', type: 'Withdraw', amount: 500,  description: '',  pp: './img/second-example-logo.png', date: '10.01.2023'},
-            {id: 6, name: 'Oph3Z Test', sendedto: 'Yusuf Karaçolak', sendedtoiban: '123456', type: 'Withdraw', amount: 500,  description: '',  pp: './img/second-example-logo.png', date: '10.12.2023'},
+        PlayersMoney: 19500321, // Players current money - dont touch
+        Debts: 350000, // Players debts (The amount the player need to pay back due to credit/loan) - dont touch
+        LastTransactions: [ // Type => 'Received' - 'Withdraw' - 'Deposit' - 'Transfer' - 'Shopping'
+            {id: 1, name: 'Oph3Z Test', received: '', sendedto: 'Yusuf Karaçolak', type: 'Transfer', amount: 1000,  pp: './img/second-example-logo.png', date: '10.07.2023'},
+            {id: 2, name: 'Oph3Z Test', received: 'Oph3Z Test2', sendedto: 'Yusuf Karaçolak', type: 'Received', amount: 1250,  pp: './img/second-example-logo.png', date: '10.08.2023'},
+            {id: 3, name: 'Oph3Z Test', received: '', sendedto: 'Yusuf Karaçolak', type: 'Withdraw', amount: 1200,  pp: './img/second-example-logo.png', date: '10.01.2023'},
+            {id: 4, name: 'Oph3Z Test', received: '', sendedto: 'Yusuf Karaçolak', type: 'Withdraw', amount: 890,   pp: './img/second-example-logo.png', date: '10.04.2023'},
+            {id: 5, name: 'Oph3Z Test', received: '', sendedto: 'Yusuf Karaçolak', type: 'Withdraw', amount: 550,   pp: './img/second-example-logo.png', date: '10.02.2023'},
+            {id: 6, name: 'Oph3Z Test', received: '', sendedto: 'Yusuf Karaçolak', type: 'Withdraw', amount: 500,   pp: './img/second-example-logo.png', date: '10.01.2023'},
+            {id: 6, name: 'Oph3Z Test', received: '', sendedto: 'Yusuf Karaçolak', type: 'Withdraw', amount: 500,   pp: './img/second-example-logo.png', date: '10.12.2023'},
         ],
-
     }),
 
     methods: {
@@ -171,6 +171,31 @@ const app = Vue.createApp({
             this.SelectCreditType = null
             this.MiddleMenuSection = 'Main'
         },
+
+        DebtsCurrency(value) {
+            const formatter = new Intl.NumberFormat('en-US', {
+              style: 'currency',
+              currency: 'USD',
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0
+            });
+  
+            if (value >= 1000) {
+              return formatter.format(value / 1000) + 'K';
+            } else {
+              return formatter.format(value);
+            }
+        },
+
+        PayDebts() {
+            if (this.PlayersMoney >= this.Debts) {
+                this.PlayersMoney -= this.Debts
+                this.Debts = 0
+                console.log(this.PlayersMoney)
+            } else {
+                console.log("You don't have enough money to pay you'r debts!")
+            }
+        },
     },  
 
     computed: {
@@ -194,7 +219,7 @@ const app = Vue.createApp({
                 .sort((a, b) => {
                 const dateA = new Date(a.date.split('.').reverse().join('-'));
                 const dateB = new Date(b.date.split('.').reverse().join('-'));
-                return dateA - dateB; // Tarihe göre sırala
+                return dateA - dateB;
                 })
                 .reduce((acc, transaction) => {
                 const month = transaction.date.split('.')[1];
