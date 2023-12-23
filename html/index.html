@@ -78,8 +78,10 @@
                     <div class="w-[20%] h-full">  <!-- Left menu -->
                         <div class="w-full h-[8%] flex flex-wrap">  <!-- LM - Personal details -->
                             <div class="w-[9%] h-full"></div>
-                            <div class="w-[16%] h-full flex items-center">
-                                <img src="./img/example-logo.png" class="profile-pic">
+                            <div class="w-[16%] h-full flex items-center justify-center">
+                                <div class="w-full h-[95%] flex items-center justify-center">
+                                    <img :src="PlayersProfilePicture" class="profile-pic">
+                                </div>
                             </div>
                             <div class="w-[5.3%] h-full"></div>
                             <div class="w-[50%] h-full flex flex-col">
@@ -93,7 +95,7 @@
                                     font-weight: 700;
                                     line-height: normal;
                                     ">
-                                    URSU A.
+                                    {{ PlayersName }}
                                     </span>
                                 </div>
                                 <div class="w-full h-[50%] flex items-start justify-center">
@@ -275,7 +277,7 @@
                             </div>
                             <div class="w-[8%] h-full"></div>
                             <div class="w-[12.5%] h-full flex items-center justify-center"> <!-- Log Out -->
-                                <div class="w-full h-full rounded-[50%] bg-[#D9D9D9] hover:cursor-pointer flex items-center justify-center">
+                                <div class="w-full h-full rounded-[50%] bg-[#D9D9D9] hover:cursor-pointer flex items-center justify-center" @click="LogOut()">
                                     <img src="./img/Logout-icon.png" style="width: 1.4063vw; height: 1.4063vw;">
                                 </div>
                             </div>
@@ -960,14 +962,14 @@
                                 <div class="w-full h-[82%] block overflow-y-auto overflow-x-hidden">
                                     <div class="w-full h-[35%] flex flex-wrap mb-[1vw]" v-for="data in LastTransactions">
                                         <div class="w-[10%] h-full flex items-center justify-center">
-                                            <div class="w-full h-full flex items-center justify-center rounded-[50%]">
-                                                <img src="./img/example-logo.png" style="width: 3.3333vw; height: 3.3333vw;">
+                                            <div class="w-full h-full flex items-center justify-center">
+                                                <img class="rounded-[50%]" :src="data.pp" style="width: 3.3333vw; height: 3.3333vw;">
                                             </div>
                                         </div>
                                         <div class="w-[3%] h-full"></div>
                                         <div class="w-[15%] h-full flex flex-col">
                                             <div class="w-full h-[50%] flex items-end justify-center"> 
-                                                <span class="w-full" style="color: #000; text-align: center; font-family: regular; font-size: 1.2984vw; font-style: normal; font-weight: 600; line-height: normal;">{{ data.name }}</span>
+                                                <span class="w-full" style="color: #000; text-align: center; font-family: regular; font-size: 1.0184vw; font-style: normal; font-weight: 600; line-height: normal;">{{ data.name }}</span>
                                             </div>
                                             <div class="w-full h-[50%] flex items-start justify-center">
                                                 <span class="w-full h-full" style="color: #424242; text-align: center; font-family: regular; font-size: .7188vw; font-style: normal; font-weight: 500; line-height: normal;" v-if="data.type == 'Transfer'">Send To: {{ data.sendedto }}</span>

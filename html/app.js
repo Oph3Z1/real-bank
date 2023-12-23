@@ -81,6 +81,9 @@ const app = Vue.createApp({
         PlayersCreditPoint: 1000, // Players current credit point - dont touch
         PlayersMoney: 19500321, // Players current money - dont touch
         Debts: 350000, // Players debts (The amount the player need to pay back due to credit/loan) - dont touch
+        PlayersName: '', // Players name and lastname - dont touch
+        PlayersProfilePicture: './img/example-logo.png',
+        //LastTransactions: 0, // Type => 'Received' - 'Withdraw' - 'Deposit' - 'Transfer' - 'Shopping'
         LastTransactions: [ // Type => 'Received' - 'Withdraw' - 'Deposit' - 'Transfer' - 'Shopping'
             {id: 1, name: 'Oph3Z Test', received: '', sendedto: 'Yusuf Karaçolak', type: 'Transfer', amount: 1000,  pp: './img/second-example-logo.png', date: '10.07.2023'},
             {id: 2, name: 'Oph3Z Test', received: 'Oph3Z Test2', sendedto: 'Yusuf Karaçolak', type: 'Received', amount: 1250,  pp: './img/second-example-logo.png', date: '10.08.2023'},
@@ -204,10 +207,12 @@ const app = Vue.createApp({
               maximumFractionDigits: 0
             });
   
-            if (value >= 1000) {
-              return formatter.format(value / 1000) + 'K';
+            if (value >= 1000000) {
+                return (value / 1000000).toFixed(1) + 'M';
+            } else if (value >= 1000) {
+                return formatter.format(value / 1000) + 'K';
             } else {
-              return formatter.format(value);
+                return formatter.format(value);
             }
         },
 
@@ -215,7 +220,6 @@ const app = Vue.createApp({
             if (this.PlayersMoney >= this.Debts) {
                 this.PlayersMoney -= this.Debts
                 this.Debts = 0
-                console.log(this.PlayersMoney)
             } else {
                 console.log("You don't have enough money to pay you'r debts!")
             }
@@ -296,7 +300,22 @@ const app = Vue.createApp({
                 } else {
                     console.log('You need to enter 8 digits')
                 }
+            } else if (this.PasswordScreenType == 'Change') {
+                if (this.PinInput.toString().length == 8) {
+                    postNUI("ChangePassword", this.PinInput)
+                    this.show = false
+                    this.CurrentScreen = ''
+                    this.PasswordScreenType = ''
+                } else {
+                    console.log('You need to enter 8 digits')
+                }
             }
+        },
+
+        LogOut() {
+            postNUI("Logout")
+            this.show = false
+            this.CurrentScreen = ''
         }
     },  
 
@@ -317,13 +336,13 @@ const app = Vue.createApp({
             const allMonths = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
 
             const monthlyWithdrawals = this.LastTransactions
-                .filter(transaction => transaction.type === 'Withdraw')
-                .sort((a, b) => {
+            .filter(transaction => transaction.type === 'Withdraw')
+            .sort((a, b) => {
                 const dateA = new Date(a.date.split('.').reverse().join('-'));
                 const dateB = new Date(b.date.split('.').reverse().join('-'));
                 return dateA - dateB;
-                })
-                .reduce((acc, transaction) => {
+            })
+            .reduce((acc, transaction) => {
                 const month = transaction.date.split('.')[1];
                 acc[month] = (acc[month] || 0) + transaction.amount;
                 return acc;
@@ -339,7 +358,7 @@ const app = Vue.createApp({
             return {
                 labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
                 datasets: [{
-                    label: 'Data',
+                    label: '$',
                     data: chartDataValues,
                     fill: true,
                     backgroundColor: gradient,
@@ -396,8 +415,16 @@ const app = Vue.createApp({
             }
 
             if (data.action == 'OpenBank') {
+                const PlayerData = data.data[0]
+                const info = PlayerData.info
+
                 this.show = true
                 this.CurrentScreen = 'BankScreen'
+                this.PlayersMoney = info.playermoney
+                this.PlayersName = info.playername
+                this.PlayersProfilePicture = info.playerpfp
+                this.LastTransactions = JSON.parse(PlayerData.transaction)
+
                 setTimeout(() => {
                     this.CreateChart();
                 }, 10);

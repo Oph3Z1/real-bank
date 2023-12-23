@@ -4,6 +4,9 @@ Config.Framework = 'autodetect' -- newesx, oldesx, newqb, oldqb, autodetect
 Config.MySQL = 'oxmysql' -- oxmysql, ghamattimysql, mysql-async | Don't forget to edit fxmanifest.lua
 Config.Drawtext = 'drawtext' -- bt-target, qb-target, drawtext, qtarget
 
+-- Discord Settings
+Config.DiscordBotToken = 'OTMwODI3Mzg1MzI5MzA3NzMx.GQPatL.q0qjstbgFANq6d21rMjZK7A4v__UmNNxF0dti8' -- Discord bot token
+
 Config.GetCreditCard = vector3(247.49, 223.2, 106.29)
 
 Config.BankLocations = {

@@ -31,4 +31,6 @@ server_scripts {
     'server/*.lua'
 }
 
+export 'SendLog'
+
 lua54 'yes'

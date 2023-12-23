@@ -46,11 +46,12 @@ function OpenBank()
 
                     if DistanceToATMs < 1.5 then
                         sleep = 4
-                        Config.DrawText3D("~INPUT_PICKUP~ - Open Bank", vector3(GetATMCoords.x, GetATMCoords.y, GetATMCoords.z))
+                        Config.DrawText3D("~INPUT_PICKUP~ - Open ATM", vector3(GetATMCoords.x, GetATMCoords.y, GetATMCoords.z + 1.0))
                         if IsControlJustReleased(0, 38) then
                             SendNUIMessage({
                                 action = 'OpenBank'
                             })
+                            SetNuiFocus(true, true)
                         end
                     end
                 end
@@ -61,9 +62,7 @@ function OpenBank()
                         sleep = 4
                         Config.DrawText3D("~INPUT_PICKUP~ - Open Bank", vector3(v.Coords.x, v.Coords.y, v.Coords.z))
                         if IsControlJustReleased(0, 38) then
-                            SendNUIMessage({
-                                action = 'OpenBank'
-                            })
+                            OpenBankUI()
                         end
                     end
                 end
@@ -82,19 +81,127 @@ Citizen.CreateThread(function()
 
         if Distance < 1.5 then
             sleep = 4
-            Config.DrawText3D("~INPUT_PICKUP~ - Get Credit Card", Config.GetCreditCard)
+            Config.DrawText3D("~INPUT_PICKUP~ - Open Bank Settings", Config.GetCreditCard)
             if IsControlJustReleased(0, 38) then
-                SendNUIMessage({
-                    action = 'OpenCreatePasswordScreen'
-                })
-                SetNuiFocus(true, true)
+                local QBMenu = {
+                    {
+                        header = ' Bank Settings',
+                        icon = 'fa-solid fa-building-columns',
+                        isMenuHeader = true,
+                    },
+                    {
+                        header = 'Get Credit Card',
+                        text = 'Get your first credit card',
+                        icon = 'fa-solid fa-credit-card',
+                        params = {
+                            event = 'real-bank:BankSettings',
+                            args = {
+                                value = 'Get'
+                            }   
+                        }
+                    },
+                    {
+                        header = 'Change Password',
+                        text = 'Change your password asap if your credit card is stolen',
+                        icon = 'fa-solid fa-credit-card',
+                        params = {
+                            event = 'real-bank:BankSettings',
+                            args = {
+                                value = 'Change'
+                            }   
+                        }
+                    },
+                }
+                exports['qb-menu']:openMenu(QBMenu)
             end
         end
         Citizen.Wait(sleep)
     end
 end)
 
+RegisterNetEvent('real-bank:CheckAccountExistensResult', function(result, data)
+    if data.value == 'Get' then
+        if not result then
+            SendNUIMessage({
+                action = 'OpenCreatePasswordScreen'
+            })
+            SetNuiFocus(true, true)
+        else
+            print('You already have an account')
+        end
+    elseif data.value == 'Change' then
+        if result then
+            SendNUIMessage({
+                action = 'OpenChangePasswordScreen'
+            })
+            SetNuiFocus(true, true)
+        else
+            print("You don't have an account. Please create one first.")
+        end
+    end
+end)
+
+function OpenBankUI()
+    local data = Callback('real-bank:GetPlayerData')
+    SetNuiFocus(true, true)
+    SendNUIMessage({
+        action = 'OpenBank',
+        data = data
+    })
+end
+
+function Callback(name, payload)
+    if Config.Framework == "newesx" or Config.Framework == "oldesx" then
+        local data = nil
+        if frameworkObject then
+            frameworkObject.TriggerServerCallback(name, function(returndata)
+                data = returndata
+            end, payload)
+            while data == nil do
+                Citizen.Wait(0)
+            end
+        end
+        return data
+    else
+        local data = nil
+        if frameworkObject then
+            frameworkObject.Functions.TriggerCallback(name, function(returndata)
+                data = returndata
+            end, payload)
+            while data == nil do
+                Citizen.Wait(0)
+            end
+        end
+        return data
+    end
+end
+
+function SendLog(received, sendedto, type, amount, pp)
+    TriggerServerEvent('real-bank:SendLog', received, sendedto, type, amount, pp)
+end
+
+RegisterNetEvent('real-bank:SendLog')
+AddEventHandler('real-bank:SendLog', function(received, sendedto, type, amount, pp)
+    SendLog(received, sendedto, type, amount, pp)
+end)
+
+RegisterNetEvent('real-bank:BankSettings')
+AddEventHandler('real-bank:BankSettings', function(data)
+    if data.value == 'Get' or data.value == 'Change' then
+        TriggerServerEvent('real-bank:CheckAccountExistens', data)
+    end
+end)
+
 RegisterNUICallback('CreatePassword', function(data, cb)
     TriggerServerEvent("real-bank:CreateAccount", data)
+    SetNuiFocus(false, false)
+end)
+
+RegisterNUICallback('ChangePassword', function(data, cb)
+    TriggerServerEvent("real-bank:ChangePassword", data)
+    SetNuiFocus(false, false)
+end)
+
+RegisterNUICallback('Logout', function(data, cb)
     SetNuiFocus(false, false)
 end)
