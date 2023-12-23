@@ -1,3 +1,25 @@
+const resourceName = window.GetParentResourceName ? window.GetParentResourceName() : "real-bank";
+
+window.postNUI = async (name, data) => {
+    try {
+        const response = await fetch(`https://${resourceName}/${name}`, {
+            method: "POST",
+            mode: "cors",
+            cache: "no-cache",
+            credentials: "same-origin",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            redirect: "follow",
+            referrerPolicy: "no-referrer",
+            body: JSON.stringify(data)
+        });
+        return !response.ok ? null : response.json();
+    } catch (error) {
+        // console.log(error)
+    }
+};
+
 const store = Vuex.createStore({
     state: {},
     mutations: {},
@@ -6,10 +28,12 @@ const store = Vuex.createStore({
 
 const app = Vue.createApp({
     data: () => ({
-        show: true,
+        show: false,
         chartData: null,
-        CurrentScreen: 'BankScreen', // 'Password' - 'BankScreen'
+        CurrentScreen: '', // 'Password' - 'BankScreen'
+        PasswordScreenType: 'Normal', // 'Normal' - 'Create' - 'Change'
         CurrentMenu: 'Dashboard',
+        PinInput: '',
         CardStyle: 2, // '1' - '2'
         FirstFastAction: {type: 'deposit', amount: 500}, // type --> 'deposit' - 'withdraw'
         SecondFastAction: {type: 'withdraw', amount: 500}, // type --> 'deposit' - 'withdraw'
@@ -196,6 +220,84 @@ const app = Vue.createApp({
                 console.log("You don't have enough money to pay you'r debts!")
             }
         },
+
+        PasswordScreenTypeFunction(type) {
+            if (type == 'First') {
+                if (this.PasswordScreenType == 'Normal') {
+                    return 'Two-Factor Authentication'
+                } else if (this.PasswordScreenType == 'Create') {
+                    return 'Create Password'
+                } else if (this.PasswordScreenType == 'Change') {
+                    return 'Change Password'
+                }
+            } else {
+                if (this.PasswordScreenType == 'Normal') {
+                    return 'Please enter your 8-digit password.'
+                } else if (this.PasswordScreenType == 'Create') {
+                    return 'Please enter your 8-digit password.'
+                } else if (this.PasswordScreenType == 'Change') {
+                    return 'Please enter your new 8-digit password.'
+                }
+            }
+        },
+
+        GetResponse() {
+            postNUI("GetResponse")
+        },
+
+        CreateChart() {
+            this.chartData = this.ChartDataFunction;
+
+            var ctx = document.getElementById('chart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: this.chartData,
+                options: {
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                font: {
+                                    weight: 'bold',
+                                    color: 'black'
+                                }
+                            }
+                        },
+                        y: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                font: {
+                                    weight: 'bold',
+                                    color: 'red'
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false,
+                        }
+                    }
+                }
+            });
+        },
+
+        ConfirmPassword() {
+            if (this.PasswordScreenType == 'Create') {
+                if (this.PinInput.toString().length == 8) {
+                    postNUI("CreatePassword", this.PinInput)
+                    this.show = false
+                    this.CurrentScreen = ''
+                    this.PasswordScreenType = ''
+                } else {
+                    console.log('You need to enter 8 digits')
+                }
+            }
+        }
     },  
 
     computed: {
@@ -273,80 +375,39 @@ const app = Vue.createApp({
     },
 
     mounted() {
-        this.chartData = this.ChartDataFunction;
-
-        var ctx = document.getElementById('chart').getContext('2d');
-        new Chart(ctx, {
-            type: 'line',
-            data: this.chartData,
-            options: {
-                scales: {
-                    x: {
-                        grid: {
-                            display: false
-                        },
-                        ticks: {
-                            font: {
-                                weight: 'bold',
-                                color: 'black'
-                            }
-                        }
-                    },
-                    y: {
-                        grid: {
-                            display: false
-                        },
-                        ticks: {
-                            font: {
-                                weight: 'bold',
-                                color: 'red'
-                            }
-                        }
-                    }
-                },
-                plugins: {
-                    legend: {
-                        display: false,
-                    }
-                }
-            }
-        });
-
         window.addEventListener("message", event => {
-            window.addEventListener('keyup', this.onKeyUp);
-            switch (event.data.message) {
-                case "OPEN":
-                    this.show = true
-                break;
-                
-                case "CLOSE":
-                    this.show = false
-                break;
-            }   
+            const data = event.data;
+            if (data.action == 'OpenPasswordScreen') {
+                this.show = true
+                this.CurrentScreen = 'Password'
+                this.PasswordScreenType = 'Normal'
+            } 
+
+            if (data.action == 'OpenCreatePasswordScreen') {
+                this.show = true
+                this.CurrentScreen = 'Password'
+                this.PasswordScreenType = 'Create'
+            } 
+
+            if (data.action == 'OpenChangePasswordScreen') {
+                this.show = true
+                this.CurrentScreen = 'Password'
+                this.PasswordScreenType = 'Change'
+            }
+
+            if (data.action == 'OpenBank') {
+                this.show = true
+                this.CurrentScreen = 'BankScreen'
+                setTimeout(() => {
+                    this.CreateChart();
+                }, 10);
+            }
+
+            if (data.action == 'SendResponse') {
+                this.GetResponse(data.ResourceName)
+            }
         });
     },
 });
 
 app.use(store).mount("#app");
-
-const resourceName = window.GetParentResourceName ? window.GetParentResourceName() : "real-bank";
-
-window.postNUI = async (name, data) => {
-    try {
-        const response = await fetch(`https://${resourceName}/${name}`, {
-            method: "POST",
-            mode: "cors",
-            cache: "no-cache",
-            credentials: "same-origin",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            redirect: "follow",
-            referrerPolicy: "no-referrer",
-            body: JSON.stringify(data)
-        });
-        return !response.ok ? null : response.json();
-    } catch (error) {
-        // console.log(error)
-    }
-};

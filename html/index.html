@@ -30,7 +30,7 @@
                         font-weight: 600;
                         line-height: 4.5394vw; /* 127.687% */
                         ">
-                        Two-Factor Authentication 
+                        {{ PasswordScreenTypeFunction('First') }} 
                         </h2>
                     </div>
                     <div class="w-full h-[10%]">
@@ -43,12 +43,12 @@
                         font-weight: 400;
                         line-height: 2.4146vw;  /* 127.687% */
                         ">
-                        Please enter your 8-digit password.
+                        {{ PasswordScreenTypeFunction('Second') }} 
                         </h2>
                     </div>
                     <div class="w-full h-[10%]"></div>
                     <div class="w-full h-[25%] flex items-center justify-center">
-                        <input class="w-[95%] h-[95%] pin-input" type="number" style="border: .0618vw solid #8B8B8B; border-radius: .1853vw;">
+                        <input class="w-[95%] h-[95%] pin-input" v-model="PinInput" type="number" style="border: .0618vw solid #8B8B8B; border-radius: .1853vw;" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length == 8) return false;">
                     </div>
                     <div class="w-full h-[8%]"></div>
                     <div class="w-full h-[16.8%] flex items-center justify-center">
@@ -62,9 +62,12 @@
                         font-weight: 700; 
                         font-style: normal; 
                         cursor: pointer;
-                        line-height: 1.9089vw;">
+                        line-height: 1.9089vw;"
+
+                        @click="ConfirmPassword()"
+                        >
                         Confirm
-                    </div>
+                        </div>
                     </div>
                     <div class="w-full h-[10.2%]"></div>
                 </div>
@@ -1003,4 +1006,6 @@
     </div>
     <script src="./app.js"></script>
 </body>
+<script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 </html>
