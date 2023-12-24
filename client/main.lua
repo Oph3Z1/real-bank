@@ -146,7 +146,8 @@ function OpenBankUI()
     SetNuiFocus(true, true)
     SendNUIMessage({
         action = 'OpenBank',
-        data = data
+        data = data.data,
+        playermoney = data.PlayerMoney
     })
 end
 

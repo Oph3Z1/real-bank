@@ -188,7 +188,7 @@
                                         font-weight: 600;
                                         line-height: 1.4363vw; /* 127.687% */
                                         letter-spacing: .0675vw;
-                                        ">URSU ARTS</h1> 
+                                        ">{{ PlayersName }}</h1> 
                                         </div>
                                         <div class="w-[60%] h-full"></div>
                                     </div>
@@ -204,7 +204,7 @@
                                             font-weight: 600;
                                             line-height: 1.4363vw; /* 127.687% */
                                             letter-spacing: .0675vw;
-                                            ">XXXX XXXX XXXX 5544</h1>
+                                            ">{{'XXXX XXXX XXXX ' + PlayerIBAN}}</h1>
                                         </div>
                                         <div class="w-[29%] h-full flex flex-wrap">
                                             <div class="w-[20%] h-full"></div>
@@ -231,7 +231,7 @@
                                     <div class="w-full h-[6%] flex flex-wrap">
                                         <div class="w-[4.8%] h-full"></div>
                                         <div class="w-[40%] h-full flex items-center justify-start">
-                                            <span class="name-on-card2">URSU ARTS</span>
+                                            <span class="name-on-card2">{{ PlayersName }}</span>
                                         </div>
                                         <div class="w-[55.2%] h-full"></div>
                                     </div>
@@ -239,7 +239,7 @@
                                     <div class="w-full h-[7%] flex flex-wrap">
                                         <div class="w-[5%] h-full"></div>
                                         <div class="w-[55%] h-full flex items-end justify-start">
-                                            <div class="card-number2">XXXX XXXX XXXX 5544</div>
+                                            <div class="card-number2">{{'XXXX XXXX XXXX ' + PlayerIBAN}}</div>
                                         </div>
                                         <div class="w-[40%] h-full"></div>
                                     </div>
@@ -450,7 +450,7 @@
                                                 <div class="w-[1%] h-full"></div>
                                                 <div class="w-[78.8%] h-full flex items-center justify-center">
                                                     <div class="w-full h-[99%] flex items-center justify-center border-[.1vw] border-[#D7D7D7] rounded-[.2vw]">
-                                                        <input class="w-full h-full dw-input" type="number">
+                                                        <input class="w-full h-full dw-input" type="number" v-model="DWInput" pattern="/^-?\d+\.?\d*$/">
                                                     </div>
                                                 </div>
                                                 <div class="w-[3.3%] h-full"></div>
@@ -459,7 +459,7 @@
                                             <div class="w-full h-[22%] flex flex-wrap">  <!-- Deposit/Withdraw Button -->
                                                 <div class="w-[5%] h-full"></div>
                                                 <div class="w-[91.7%] h-full flex items-center justify-center">
-                                                    <div class="w-full h-full flex items-center justify-center hover:cursor-pointer bg-black">
+                                                    <div class="w-full h-full flex items-center justify-center hover:cursor-pointer bg-black" @click="DWAction()">
                                                         <span class="w-full" style="color: #FFF; text-align: center; font-family: regular; font-size: .8513vw; font-style: normal; font-weight: 700; line-height: 1.087vw;">
                                                             {{ DWType == 'withdraw' ? 'Withdraw Money' : DWType == 'deposit' ? 'Deposit Money' : '' }}
                                                         </span>

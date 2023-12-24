@@ -32,11 +32,16 @@ Citizen.CreateThread(function()
     RegisterCallback("real-bank:GetPlayerData", function(source, cb)
         local src = source
         local PlayerIdent = GetIdentifier(src)
+        local PlayerMoney = GetPlayerOfflineBank(PlayerIdent)
         local data = ExecuteSql("SELECT * FROM `real_bank` WHERE `identifier` = '"..PlayerIdent.."'")
         if #data > 0 then
             local a = json.decode(data[1].info)
             data[1].info = a
-            cb(data)
+            DataTable = {
+                data = data,
+                PlayerMoney = PlayerMoney
+            }
+            cb(DataTable)
         end
     end)
 end)
@@ -50,7 +55,6 @@ RegisterNetEvent("real-bank:CreateAccount", function(password)
             identifier = GetIdentifier(src),
             info = {
                 playername = Player.getName(),
-                playermoney = Player.getAccount("bank").money,
                 playerpfp = DiscordAvatar
             },
             credit = {},
@@ -61,11 +65,11 @@ RegisterNetEvent("real-bank:CreateAccount", function(password)
         }
     else
         local Player = frameworkObject.Functions.GetPlayer(src)
+        local identity = GetIdentifier(src)
         CreateAccount = {
             identifier = GetIdentifier(src),
             info = {
                 playername = GetName(src),
-                playermoney = Player.PlayerData.money["bank"],
                 playerpfp = DiscordAvatar
             },
             credit = {},
@@ -78,6 +82,18 @@ RegisterNetEvent("real-bank:CreateAccount", function(password)
     ExecuteSql("INSERT INTO `real_bank` (`identifier`, `info`, `credit`, `transaction`, `iban`, `password`, `AccountUsed`) VALUES ('"..CreateAccount.identifier.."', '"..json.encode(CreateAccount.info).."', '"..json.encode(CreateAccount.credit).."', '"..json.encode(CreateAccount.transaction).."', '"..CreateAccount.iban.."', '"..CreateAccount.password.."', '"..CreateAccount.AccountUsed.."')")
     Citizen.Wait(200)
     table.insert(GetSQLTable, CreateAccount)
+end)
+
+RegisterCommand('moneyal', function()
+    TriggerEvent('moneyaltest')
+end)
+
+RegisterNetEvent('moneyaltest', function()
+    local source = source
+    local Player = frameworkObject.Functions.GetPlayer(tonumber(source))
+    if Player.PlayerData.money["bank"] > 1000 then
+        Player.Functions.RemoveMoney("bank", 1000)
+    end
 end)
 
 RegisterNetEvent('real-bank:ChangePassword', function(newpassword)
@@ -210,6 +226,18 @@ function RegisterCallback(name, cbFunc, data)
                 cbFunc(source, cb)
             end
         )
+    end
+end
+
+function GetPlayerOfflineBank(identifier)
+    if Config.Framework == 'newqb' or Config.Framework == 'oldqb' then
+        local result = ExecuteSql("SELECT money FROM players WHERE citizenid = '"..identifier.."'")
+        local targetMoney = json.decode(result[1].money)
+        return targetMoney.bank
+    else
+        local result = ExecuteSql("SELECT accounts FROM users WHERE identifier = '"..identifier.."'")
+        local targetMoney = json.decode(result[1].accounts)
+        return targetMoney.bank
     end
 end
 

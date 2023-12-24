@@ -132,7 +132,7 @@ input[type=number]::-webkit-outer-spin-button {
   font-size: .9522vw;
   font-style: normal;
   font-weight: 600;
-  line-height: 1.2159vw; /* 127.687% */
+  line-height: 1vw; /* 127.687% */
   letter-spacing: .0571vw;
 }
 

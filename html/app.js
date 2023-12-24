@@ -41,6 +41,7 @@ const app = Vue.createApp({
         DWPopup: false,
         DWType: null,
         MiddleMenuSection: 'Main', // 'Main' - 'Transfer' - 'Invoices' - 'Credit'
+        DWInput: '',
         SearchPlayers: [
             {id: 1,  firstname: 'Oph3Z', lastname: 'Test', iban: 2001,  pp: './img/example-logo.png'},
             {id: 2,  firstname: 'Yusuf', lastname: 'Test', iban: 2002,  pp: './img/second-example-logo.png'},
@@ -83,7 +84,7 @@ const app = Vue.createApp({
         Debts: 350000, // Players debts (The amount the player need to pay back due to credit/loan) - dont touch
         PlayersName: '', // Players name and lastname - dont touch
         PlayersProfilePicture: './img/example-logo.png',
-        //LastTransactions: 0, // Type => 'Received' - 'Withdraw' - 'Deposit' - 'Transfer' - 'Shopping'
+        PlayerIBAN: 0,
         LastTransactions: [ // Type => 'Received' - 'Withdraw' - 'Deposit' - 'Transfer' - 'Shopping'
             {id: 1, name: 'Oph3Z Test', received: '', sendedto: 'Yusuf Karaçolak', type: 'Transfer', amount: 1000,  pp: './img/second-example-logo.png', date: '10.07.2023'},
             {id: 2, name: 'Oph3Z Test', received: 'Oph3Z Test2', sendedto: 'Yusuf Karaçolak', type: 'Received', amount: 1250,  pp: './img/second-example-logo.png', date: '10.08.2023'},
@@ -316,7 +317,22 @@ const app = Vue.createApp({
             postNUI("Logout")
             this.show = false
             this.CurrentScreen = ''
-        }
+            this.DWType = null
+            this.DWPopup = false
+            this.DWInput = ''
+            this.PasswordScreenType = ''
+            this.PinInput = ''
+        },
+
+        DWAction() {
+            if (this.DWType == 'deposit') {
+                if (this.DWInput.toString().length > 0 ) {
+                    postNUI("DepositMoney", this.DWInput)
+                } else {
+                    console.log("You need to enter amount!")
+                }
+            }
+        },
     },  
 
     computed: {
@@ -420,8 +436,9 @@ const app = Vue.createApp({
 
                 this.show = true
                 this.CurrentScreen = 'BankScreen'
-                this.PlayersMoney = info.playermoney
+                this.PlayersMoney = data.playermoney
                 this.PlayersName = info.playername
+                this.PlayerIBAN = PlayerData.iban
                 this.PlayersProfilePicture = info.playerpfp
                 this.LastTransactions = JSON.parse(PlayerData.transaction)
 
