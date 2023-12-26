@@ -30,6 +30,7 @@ const app = Vue.createApp({
     data: () => ({
         show: false,
         chartData: null,
+        GetChart: null,
         CurrentScreen: '', // 'Password' - 'BankScreen'
         PasswordScreenType: 'Normal', // 'Normal' - 'Create' - 'Change'
         CurrentMenu: 'Dashboard',
@@ -64,10 +65,13 @@ const app = Vue.createApp({
         ],
         SelectCreditType: null, // Dont Touch
         RequireCreditPoint: true, // true => System will require credit point to withdraw money via credit system | false => System will not check credit point to withdraw money via credit system
-        SelectCredit: false, // Dont Touch
+        SelectCredit: null, // Dont Touch
         SelectedCreditPrice: 0, // Dont Touch
         SelectedCreditReq: false, // Dont Touch
         ConfirmCredit: false, // Dont Touch
+        CreditLastDate: null, // Dont Touch
+        CreditPayback: null,
+        CredType: null,
         AvailableCredits: [
             {id: 1, type: 'Home', label: 'Normal Home Credit',  description: 'This is a normal loan and the amount is low',      price: 100000,  requiredcreditpoint: 300, paybacktime: 1, paybackpercent: 1.2}, // paybackpercent --> 1 = 100%, 2 = 200%   ∥    paybacktime --> weeks          
             {id: 2, type: 'Home', label: 'Premium Home Credit', description: 'This is a premium loan and the amount is high',    price: 1000000, requiredcreditpoint: 600, paybacktime: 2, paybackpercent: 1.4}, // paybackpercent --> 1 = 100%, 2 = 200%   ∥    paybacktime --> weeks  
@@ -169,34 +173,56 @@ const app = Vue.createApp({
             }
         }, 
 
-        SelectCreditFunction(id, price, creditreq) {
+        SelectCreditFunction(id, price, creditreq, date, payback, credid) {
             this.SelectCredit = id
             this.SelectedCreditPrice = price
             this.SelectedCreditReq = creditreq
+            this.CreditLastDate = date
+            this.CreditPayback = payback
+            this.CredType = credid
         },
 
         ConfirmCreditWithdraw() {
             if (this.RequireCreditPoint) {
                 if (this.PlayersCreditPoint >= this.SelectedCreditReq) {
+                    postNUI('ConfirmCredit', {
+                        credprice: this.SelectedCreditPrice,
+                        credreq:  this.SelectedCreditReq,
+                        creddate:  this.CreditLastDate,
+                        credpaybackpercent: this.CreditPayback,
+                        credid: this.CredType
+                    })
                     this.PlayersMoney += this.SelectedCreditPrice
                     this.PlayersCreditPoint -= this.SelectedCreditReq
+                    this.Debts = this.SelectedCreditPrice * this.CreditPayback
                     this.ConfirmCredit = true
                 } else {
                     console.log("You don't have enough credit point to withdraw money. Required Credit Point: " + this.SelectedCreditReq)
                 }
             } else {
+                postNUI('ConfirmCredit', {
+                    credprice: this.SelectedCreditPrice,
+                    credreq:  this.SelectedCreditReq,
+                    creddate:  this.CreditLastDate,
+                    credpaybackpercent: this.CreditPayback,
+                    credid: this.CredType
+                })
                 this.PlayersMoney += this.SelectedCreditPrice
                 this.PlayersCreditPoint -= this.SelectedCreditReq
+                this.Debts = this.SelectedCreditPrice * this.CreditPayback
                 this.ConfirmCredit = true
             }
         }, 
 
         ClearAll() {
             this.ConfirmCredit = false
-            this.SelectCredit = false
+            this.SelectCredit = null
             this.SelectedCreditPrice = 0
             this.SelectedCreditReq = false
             this.SelectCreditType = null
+            this.CreditLastDate = null
+            this.CreditPayback = null
+            this.CredType = null
             this.MiddleMenuSection = 'Main'
         },
 
@@ -221,6 +247,7 @@ const app = Vue.createApp({
             if (this.PlayersMoney >= this.Debts) {
                 this.PlayersMoney -= this.Debts
                 this.Debts = 0
+                postNUI('PayDebts')
             } else {
                 console.log("You don't have enough money to pay you'r debts!")
             }
@@ -254,7 +281,7 @@ const app = Vue.createApp({
             this.chartData = this.ChartDataFunction;
 
             var ctx = document.getElementById('chart').getContext('2d');
-            new Chart(ctx, {
+            this.GetChart = new Chart(ctx, {
                 type: 'line',
                 data: this.chartData,
                 options: {
@@ -322,6 +349,16 @@ const app = Vue.createApp({
             this.DWInput = ''
             this.PasswordScreenType = ''
             this.PinInput = ''
+            this.SelectCreditType = null
+            this.SelectCredit = null
+            this.SelectedCreditPrice = 0
+            this.SelectedCreditReq = false
+            this.CreditPayback = null
+            this.CreditLastDate = null
+            this.ConfirmCredit = false
+            this.CredType = null
+            this.SearchBar = ''
+            this.SelectPlayer = false
         },
 
         DWAction() {
@@ -333,6 +370,48 @@ const app = Vue.createApp({
                 }
             }
         },
+
+        ChangeMiddleSection(type) { // 'Main' - 'Transfer' - 'Invoices' - 'Credit'
+            if (type == 'Main') {
+                this.MiddleMenuSection = 'Main'
+            } else if (type == 'Transfer') {
+                this.MiddleMenuSection = 'Transfer'
+            } else if (type == 'Invoices') {
+                this.MiddleMenuSection = 'Invoices'
+            } else if (type == 'Credit') {
+                this.MiddleMenuSection = 'Credit'
+            }
+            
+            if (type != 'credit') {
+                this.SelectCreditType = null
+                this.SelectCredit = null
+                this.SelectedCreditPrice = 0
+                this.SelectedCreditReq = false
+            }
+        },
+
+        UpdateTransaction(id) {
+            this.LastTransactions = id
+
+            if (this.GetChart) {
+                this.GetChart.destroy()
+            }
+
+            setTimeout(() => {
+                this.CreateChart();
+            }, 10);
+        },
+
+        SelectCreditTypeFunction(type) {
+            this.SelectCreditType = type
+
+            this.SelectCredit = null
+            this.SelectedCreditPrice = 0
+            this.SelectedCreditReq = false
+            this.CreditLastDate = null
+            this.CreditPayback = null
+            this.CredType = null
+        }
     },  
 
     computed: {
@@ -433,6 +512,7 @@ const app = Vue.createApp({
             if (data.action == 'OpenBank') {
                 const PlayerData = data.data[0]
                 const info = PlayerData.info
+                const credit = PlayerData.credit
 
                 this.show = true
                 this.CurrentScreen = 'BankScreen'
@@ -441,10 +521,20 @@ const app = Vue.createApp({
                 this.PlayerIBAN = PlayerData.iban
                 this.PlayersProfilePicture = info.playerpfp
                 this.LastTransactions = JSON.parse(PlayerData.transaction)
+                this.CardStyle = data.cardstyle
+                this.PlayersCreditPoint = credit.playercreditpoint
+                this.Debts = credit.debt
+                this.AvailableCredits = data.credittable
+                this.RequireCreditPoint = data.requirecreditpoint
 
                 setTimeout(() => {
                     this.CreateChart();
                 }, 10);
+            }
+
+            if (data.action == 'UpdateTransaction') {
+                const PlayerData = data.data[0]
+                this.UpdateTransaction(JSON.parse(PlayerData.transaction))
             }
 
             if (data.action == 'SendResponse') {

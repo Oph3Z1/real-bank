@@ -62,7 +62,7 @@ function OpenBank()
                         sleep = 4
                         Config.DrawText3D("~INPUT_PICKUP~ - Open Bank", vector3(v.Coords.x, v.Coords.y, v.Coords.z))
                         if IsControlJustReleased(0, 38) then
-                            OpenBankUI()
+                            TriggerServerEvent('real-bank:CheckAccountExistens', nil)
                         end
                     end
                 end
@@ -120,21 +120,29 @@ Citizen.CreateThread(function()
 end)
 
 RegisterNetEvent('real-bank:CheckAccountExistensResult', function(result, data)
-    if data.value == 'Get' then
-        if not result then
-            SendNUIMessage({
-                action = 'OpenCreatePasswordScreen'
-            })
-            SetNuiFocus(true, true)
-        else
-            print('You already have an account')
+    if data then
+        if data.value == 'Get' then
+            if not result then
+                SendNUIMessage({
+                    action = 'OpenCreatePasswordScreen'
+                })
+                SetNuiFocus(true, true)
+            else
+                print('You already have an account')
+            end
+        elseif data.value == 'Change' then
+            if result then
+                SendNUIMessage({
+                    action = 'OpenChangePasswordScreen'
+                })
+                SetNuiFocus(true, true)
+            else
+                print("You don't have an account. Please create one first.")
+            end
         end
-    elseif data.value == 'Change' then
+    else
         if result then
-            SendNUIMessage({
-                action = 'OpenChangePasswordScreen'
-            })
-            SetNuiFocus(true, true)
+            OpenBankUI()
         else
             print("You don't have an account. Please create one first.")
         end
@@ -147,7 +155,10 @@ function OpenBankUI()
     SendNUIMessage({
         action = 'OpenBank',
         data = data.data,
-        playermoney = data.PlayerMoney
+        playermoney = data.PlayerMoney,
+        cardstyle = Config.CardStyle,
+        credittable = Config.AvailableCredits,
+        requirecreditpoint = Config.RequireCreditPoint,
     })
 end
 
@@ -181,6 +192,15 @@ function SendLog(received, sendedto, type, amount, pp)
     TriggerServerEvent('real-bank:SendLog', received, sendedto, type, amount, pp)
 end
 
+RegisterNetEvent('real-bank:UpdateUITransaction')
+AddEventHandler('real-bank:UpdateUITransaction', function()
+    local data = Callback('real-bank:GetPlayerData')
+    SendNUIMessage({
+        action = 'UpdateTransaction',
+        data = data.data
+    })
+end)
+
 RegisterNetEvent('real-bank:SendLog')
 AddEventHandler('real-bank:SendLog', function(received, sendedto, type, amount, pp)
     SendLog(received, sendedto, type, amount, pp)
@@ -201,6 +221,14 @@ end)
 RegisterNUICallback('ChangePassword', function(data, cb)
     TriggerServerEvent("real-bank:ChangePassword", data)
     SetNuiFocus(false, false)
+end)
+
+RegisterNUICallback('ConfirmCredit', function(data, cb)
+    TriggerServerEvent('real-bank:CreditConfirm', data)
+end)
+
+RegisterNUICallback('PayDebts', function(cb)
+    TriggerServerEvent('real-bank:PayCreditDebts')
 end)
 
 RegisterNUICallback('Logout', function(data, cb)

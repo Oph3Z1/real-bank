@@ -119,7 +119,7 @@
                             <div class="w-[10%] h-full"></div>
                             <div class="w-[72%] h-full flex flex-col">  <!-- LM - Menu Items -->
 
-                                <div class="w-full h-[17%] flex flex-wrap rounded-[.4208vw] hover:cursor-pointer" @click="MiddleMenuSection = 'Main'" :style="{background: MiddleMenuSection == 'Main' ? '#EFECEF' : ''}"> <!-- MI - Dashboard -->
+                                <div class="w-full h-[17%] flex flex-wrap rounded-[.4208vw] hover:cursor-pointer" @click="ChangeMiddleSection('Main')" :style="{background: MiddleMenuSection == 'Main' ? '#EFECEF' : ''}"> <!-- MI - Dashboard -->
                                     <div class="w-[6%] h-full"></div>
                                     <div class="w-[14%] h-full flex items-center justify-center">
                                         <img :src="MiddleMenuSection == 'Main' ? './img/Dashboard-icon.png' : './img/Dashboard-gray-icon.png'">
@@ -135,7 +135,7 @@
 
                                 <div class="w-full h-[8%] "></div>
 
-                                <div class="w-full h-[17%] flex flex-wrap rounded-[.4208vw] hover:cursor-pointer" @click="MiddleMenuSection = 'Invoices'" :style="{background: MiddleMenuSection == 'Invoices' ? '#EFECEF' : ''}">  <!-- MI - Invoices -->
+                                <div class="w-full h-[17%] flex flex-wrap rounded-[.4208vw] hover:cursor-pointer" @click="ChangeMiddleSection('Invoices')" :style="{background: MiddleMenuSection == 'Invoices' ? '#EFECEF' : ''}">  <!-- MI - Invoices -->
                                     <div class="w-[6%] h-full"></div>
                                     <div class="w-[14%] h-full flex items-center justify-center">
                                         <img :src="MiddleMenuSection == 'Invoices' ? './img/Invoices-icon.png' : './img/Invoices-gray-icon.png'">
@@ -151,7 +151,7 @@
 
                                 <div class="w-full h-[8%] "></div>
 
-                                <div class="w-full h-[17%] flex flex-wrap rounded-[.4208vw] hover:cursor-pointer" @click="MiddleMenuSection = 'Credit'" :style="{background: MiddleMenuSection == 'Credit' ? '#EFECEF' : ''}">  <!-- MI - Lonas/Credits --> 
+                                <div class="w-full h-[17%] flex flex-wrap rounded-[.4208vw] hover:cursor-pointer" @click="ChangeMiddleSection('Credit')" :style="{background: MiddleMenuSection == 'Credit' ? '#EFECEF' : ''}">  <!-- MI - Lonas/Credits --> 
                                     <div class="w-[6%] h-full"></div>
                                     <div class="w-[14%] h-full flex items-center justify-center ">
                                         <img :src="MiddleMenuSection == 'Credit' ? './img/Loan-icon.png' : './img/Loan-gray-icon.png'">
@@ -188,13 +188,14 @@
                                         font-weight: 600;
                                         line-height: 1.4363vw; /* 127.687% */
                                         letter-spacing: .0675vw;
+                                        margin-left: -.9vw;
                                         ">{{ PlayersName }}</h1> 
                                         </div>
                                         <div class="w-[60%] h-full"></div>
                                     </div>
                                     <div class="w-[50%] h-[2%]"></div>
                                     <div class="w-full h-[11%] flex flex-wrap">
-                                        <div class="w-[71%] h-full flex items-center justify-end">
+                                        <div class="w-[71%] h-full flex items-center justify-start">
                                             <h1 
                                             style="
                                             color: #A4A4A4;
@@ -204,6 +205,7 @@
                                             font-weight: 600;
                                             line-height: 1.4363vw; /* 127.687% */
                                             letter-spacing: .0675vw;
+                                            margin-left: .89vw;
                                             ">{{'XXXX XXXX XXXX ' + PlayerIBAN}}</h1>
                                         </div>
                                         <div class="w-[29%] h-full flex flex-wrap">
@@ -259,7 +261,7 @@
                         <div class="w-full h-[6.8%] flex flex-wrap">  <!-- Actions Box -->
                             <div class="w-[10%] h-full"></div>
                             <div class="w-[12.5%] h-full flex items-center justify-center"> <!-- Send Money -->
-                                <div class="w-full h-full rounded-[50%] bg-[#D9D9D9] hover:cursor-pointer flex items-center justify-center" @click="MiddleMenuSection = 'Transfer'">
+                                <div class="w-full h-full rounded-[50%] bg-[#D9D9D9] hover:cursor-pointer flex items-center justify-center" @click="ChangeMiddleSection('Transfer')">
                                     <img src="./img/Send-icon.png" style="width: 1.4063vw; height: 1.4063vw;">
                                 </div>
                             </div>
@@ -724,7 +726,7 @@
                                         </div>
                                         <div class="w-full h-[11%]"></div>
                                         <div class="w-full h-[10%] flex items-center justify-center">
-                                            <div class="w-[69%] h-full flex items-center justify-center bg-[#000000] rounded-[.2vw] hover:cursor-pointer" :class="{'bg-[#9E5EC7]': SelectCreditType == 'Home'}" @click="SelectCreditType = 'Home'">
+                                            <div class="w-[69%] h-full flex items-center justify-center bg-[#000000] rounded-[.2vw] hover:cursor-pointer" :class="{'bg-[#9E5EC7]': SelectCreditType == 'Home'}" @click="SelectCreditTypeFunction('Home')">
                                                 <span style="color: #FFF; text-align: center; font-family: regular; letter-spacing: .06vw; font-size: .5979vw; font-style: normal; font-weight: 600; line-height: .6358vw;">{{SelectCreditType == 'Home' ? 'Selected' : 'Select'}}</span>
                                             </div>
                                         </div>
@@ -754,7 +756,7 @@
                                         </div>
                                         <div class="w-full h-[11%]"></div>
                                         <div class="w-full h-[10%] flex items-center justify-center">
-                                            <div class="w-[69%] h-full flex items-center justify-center bg-[#000000] rounded-[.2vw] hover:cursor-pointer" :class="{'bg-[#9E5EC7]': SelectCreditType == 'Car'}" @click="SelectCreditType = 'Car'">
+                                            <div class="w-[69%] h-full flex items-center justify-center bg-[#000000] rounded-[.2vw] hover:cursor-pointer" :class="{'bg-[#9E5EC7]': SelectCreditType == 'Car'}" @click="SelectCreditTypeFunction('Car')">
                                                 <span style="color: #FFF; text-align: center; font-family: regular; letter-spacing: .06vw; font-size: .5979vw; font-style: normal; font-weight: 600; line-height: .6358vw;">{{SelectCreditType == 'Car' ? 'Selected' : 'Select'}}</span>
                                             </div>
                                         </div>
@@ -784,7 +786,7 @@
                                         </div>
                                         <div class="w-full h-[11%]"></div>
                                         <div class="w-full h-[10%] flex items-center justify-center">
-                                            <div class="w-[69%] h-full flex items-center justify-center bg-[#000000] rounded-[.2vw] hover:cursor-pointer" :class="{'bg-[#9E5EC7]': SelectCreditType == 'Open'}" @click="SelectCreditType = 'Open'">
+                                            <div class="w-[69%] h-full flex items-center justify-center bg-[#000000] rounded-[.2vw] hover:cursor-pointer" :class="{'bg-[#9E5EC7]': SelectCreditType == 'Open'}" @click="SelectCreditTypeFunction('Open')">
                                                 <span style="color: #FFF; text-align: center; font-family: regular; letter-spacing: .06vw; font-size: .5979vw; font-style: normal; font-weight: 600; line-height: .6358vw;">{{SelectCreditType == 'Open' ? 'Selected' : 'Select'}}</span>
                                             </div>
                                         </div>
@@ -812,8 +814,8 @@
                             <div class="w-full h-[32.1%] flex flex-wrap" v-if="!ConfirmCredit">
                                 <div class="w-[5%] h-full"></div>
                                 <div class="w-[84%] h-full block overflow-auto">  <!-- Credit Lower - v-for Function -->
-                                    <div class="w-full h-[30%] mb-[.6042vw] bg-[#F0ECF0] rounded-[.8333vw] flex flex-col" v-for="data in ShowAvailableCredits" :style="{height: SelectCredit == data.id ? '75%' : '30%'}">
-                                        <div class="w-full flex flex-wrap" :class="{'h-[40%]': SelectCredit == data.id, 'h-full': SelectCredit !== data.id}">
+                                    <div class="w-full h-[30%] mb-[.6042vw] bg-[#F0ECF0] rounded-[.8333vw] flex flex-col" v-for="(data, k) in ShowAvailableCredits" :style="{height: SelectCredit == k ? '75%' : '30%'}">
+                                        <div class="w-full flex flex-wrap" :class="{'h-[40%]': SelectCredit == k, 'h-full': SelectCredit !== k}">
                                             <div class="w-[5%] h-full"></div>
                                             <div class="w-[16%] h-full flex items-center justify-center">
                                                 <div class="w-[80%] h-[80%] flex items-center justify-center rounded-[50%] bg-[#D9D9D975]">
@@ -839,10 +841,10 @@
                                                         <span style="color: #9E5EC7; text-align: center; font-family: regular; font-size: .7189vw; font-style: normal; font-weight: 600; line-height: .918vw;">{{ '$' + PE3D(data.price) }}</span>
                                                     </div>
                                                     <div class="w-[50%] h-full flex items-center justify-center">
-                                                        <div class="w-full h-[60%] flex items-center justify-center bg-[#9E5EC7] rounded-[.2vw] hover:cursor-pointer" v-if="SelectCredit != data.id" @click="SelectCreditFunction(data.id, data.price, data.requiredcreditpoint)">
+                                                        <div class="w-full h-[60%] flex items-center justify-center bg-[#9E5EC7] rounded-[.2vw] hover:cursor-pointer" v-if="SelectCredit != k" @click="SelectCreditFunction(k, data.price, data.requiredcreditpoint, data.paybacktime, data.paybackpercent, data.id)">
                                                             <span class="w-full" style="color: #FFF; text-align: center; font-family: regular; font-size: .6054vw; font-style: normal; font-weight: 600; line-height: .773vw; letter-spacing: .03vw;">Select</span>
                                                         </div>
-                                                        <div class="w-full h-[60%] flex items-center justify-center bg-[#9E5EC7] rounded-[.2vw] hover:cursor-pointer" v-if="SelectCredit == data.id" @click="ConfirmCreditWithdraw()">
+                                                        <div class="w-full h-[60%] flex items-center justify-center bg-[#9E5EC7] rounded-[.2vw] hover:cursor-pointer" v-if="SelectCredit == k" @click="ConfirmCreditWithdraw()">
                                                             <span class="w-full" style="color: #FFF; text-align: center; font-family: regular; font-size: .6054vw; font-style: normal; font-weight: 600; line-height: .773vw; letter-spacing: .03vw;">Confirm</span>
                                                         </div>
                                                     </div>
@@ -851,7 +853,7 @@
                                             </div>
                                             <div class="w-[5%] h-full"></div>
                                         </div>
-                                        <div class="w-full h-[60%] flex flex-col" v-if="SelectCredit == data.id">
+                                        <div class="w-full h-[60%] flex flex-col" v-if="SelectCredit == k">
                                             <div class="w-full h-[8%]"></div>
                                             <div class="w-full h-[70%] flex flex-wrap">
                                                 <div class="w-[5%] h-full"></div>
@@ -960,7 +962,7 @@
                                 </div>
                                 <div class="w-full h-[5%]"></div>
                                 <div class="w-full h-[82%] block overflow-y-auto overflow-x-hidden">
-                                    <div class="w-full h-[35%] flex flex-wrap mb-[1vw]" v-for="data in LastTransactions">
+                                    <div class="w-full h-[35%] flex flex-wrap mb-[1vw]" v-for="data in LastTransactions.slice().reverse()">
                                         <div class="w-[10%] h-full flex items-center justify-center">
                                             <div class="w-full h-full flex items-center justify-center">
                                                 <img class="rounded-[50%]" :src="data.pp" style="width: 3.3333vw; height: 3.3333vw;">

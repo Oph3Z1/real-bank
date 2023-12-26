@@ -32,14 +32,16 @@ Citizen.CreateThread(function()
     RegisterCallback("real-bank:GetPlayerData", function(source, cb)
         local src = source
         local PlayerIdent = GetIdentifier(src)
-        local PlayerMoney = GetPlayerOfflineBank(PlayerIdent)
+        local PlayerMoney = GetPlayerMoneyOnline("bank", src)
         local data = ExecuteSql("SELECT * FROM `real_bank` WHERE `identifier` = '"..PlayerIdent.."'")
         if #data > 0 then
             local a = json.decode(data[1].info)
+            local b = json.decode(data[1].credit)
             data[1].info = a
+            data[1].credit = b
             DataTable = {
                 data = data,
-                PlayerMoney = PlayerMoney
+                PlayerMoney = tonumber(PlayerMoney)
             }
             cb(DataTable)
         end
@@ -49,6 +51,17 @@ end)
 RegisterNetEvent("real-bank:CreateAccount", function(password)
     local src = source
     local DiscordAvatar = GetDiscordAvatar(src)
+    local CreditTable = {}
+
+    if Config.CreditSystem == true then
+        CreditTable = {
+            playercreditpoint = Config.StartCreditPoint,
+            activecredit = '',
+            creditlastdate = 0,
+            debt = 0,
+        }
+    end
+
     if Config.Framework == 'newesx' or Config.Framework == 'oldesx' then
         local Player = frameworkObject.GetPlayerFromId(src)
         CreateAccount = {
@@ -57,7 +70,7 @@ RegisterNetEvent("real-bank:CreateAccount", function(password)
                 playername = Player.getName(),
                 playerpfp = DiscordAvatar
             },
-            credit = {},
+            credit = CreditTable,
             transaction = {},
             iban = math.random(1000, 9999),
             password = password,
@@ -72,7 +85,7 @@ RegisterNetEvent("real-bank:CreateAccount", function(password)
                 playername = GetName(src),
                 playerpfp = DiscordAvatar
             },
-            credit = {},
+            credit = CreditTable,
             transaction = {},
             iban = math.random(1000, 9999),
             password = password,
@@ -82,18 +95,6 @@ RegisterNetEvent("real-bank:CreateAccount", function(password)
     ExecuteSql("INSERT INTO `real_bank` (`identifier`, `info`, `credit`, `transaction`, `iban`, `password`, `AccountUsed`) VALUES ('"..CreateAccount.identifier.."', '"..json.encode(CreateAccount.info).."', '"..json.encode(CreateAccount.credit).."', '"..json.encode(CreateAccount.transaction).."', '"..CreateAccount.iban.."', '"..CreateAccount.password.."', '"..CreateAccount.AccountUsed.."')")
     Citizen.Wait(200)
     table.insert(GetSQLTable, CreateAccount)
-end)
-
-RegisterCommand('moneyal', function()
-    TriggerEvent('moneyaltest')
-end)
-
-RegisterNetEvent('moneyaltest', function()
-    local source = source
-    local Player = frameworkObject.Functions.GetPlayer(tonumber(source))
-    if Player.PlayerData.money["bank"] > 1000 then
-        Player.Functions.RemoveMoney("bank", 1000)
-    end
 end)
 
 RegisterNetEvent('real-bank:ChangePassword', function(newpassword)
@@ -112,13 +113,79 @@ RegisterNetEvent('real-bank:CheckAccountExistens', function(data)
     local Account = GetPlayerAccount(ident)
 
     if Account then
-        TriggerClientEvent('real-bank:CheckAccountExistensResult', source, true, data)
+        if data then
+            TriggerClientEvent('real-bank:CheckAccountExistensResult', source, true, data)
+        else
+            TriggerClientEvent('real-bank:CheckAccountExistensResult', source, true, nil)
+        end
     else 
-        TriggerClientEvent('real-bank:CheckAccountExistensResult', source, false, data)
+        if data then
+            TriggerClientEvent('real-bank:CheckAccountExistensResult', source, false, data)
+        else
+            TriggerClientEvent('real-bank:CheckAccountExistensResult', source, false, nil)
+        end
+    end
+end)
+
+RegisterNetEvent('real-bank:CreditConfirm', function(data)
+    local src = source
+    local ident = GetIdentifier(src)
+    local sqldata = ExecuteSql("SELECT `credit` FROM `real_bank` WHERE `identifier` = '"..ident.."'")
+    local a = json.decode(sqldata[1].credit)
+    if a.credid == '' or a.cerdid == "" or a.credid == nil then
+        if Config.RequireCreditPoint then
+            if a.playercreditpoint > data.credreq then
+                a.playercreditpoint = a.playercreditpoint - data.credreq
+                NewCreditTable = {
+                    playercreditpoint = a.playercreditpoint,
+                    debt = data.credprice*data.credpaybackpercent,
+                    activecredit = data.credid,
+                    creditlastdate = os.date('%d.%m.%Y', os.time() + tonumber(data.creddate) * 7 * 24 * 60 * 60)
+                }
+                ExecuteSql("UPDATE `real_bank` SET `credit` = '"..json.encode(NewCreditTable).."' WHERE `identifier` = '"..ident.."'")
+                RemoveAddBankMoneyOnline('add', tonumber(data.credprice), src)
+            else
+                print('Player does not have enough credit points to get this credit')
+            end
+        else
+            a.playercreditpoint = a.playercreditpoint - data.credreq
+            NewCreditTable = {
+                playercreditpoint = a.playercreditpoint,
+                debt = data.credprice*data.credpaybackpercent,
+                activecredit = data.credid,
+                creditlastdate = os.date('%d.%m.%Y', os.time() + tonumber(data.creddate) * 7 * 24 * 60 * 60)
+            }
+            ExecuteSql("UPDATE `real_bank` SET `credit` = '"..json.encode(NewCreditTable).."' WHERE `identifier` = '"..ident.."'")
+            RemoveAddBankMoneyOnline('add', tonumber(data.credprice), src)
+        end
+    else
+        print('You already have active credit plan, you need to pay that first before you can get another credit')
+    end
+end)
+
+RegisterNetEvent('real-bank:PayCreditDebts', function()
+    local src =  source
+    local ident = GetIdentifier(src)
+    local data = ExecuteSql("SELECT `credit` FROM `real_bank` WHERE `identifier` = '"..ident.."'")
+    local GetPlayerMoney = GetPlayerMoneyOnline('bank', src)
+    local a = json.decode(data[1].credit)
+    
+    if GetPlayerMoney > a.debt then
+        NewCreditTable = {
+            playercreditpoint =  a.playercreditpoint,
+            activecredit = '',
+            creditlastdate = 0,
+            debt = 0,
+        }
+        ExecuteSql("UPDATE `real_bank` SET `credit` = '"..json.encode(NewCreditTable).."' WHERE `identifier` = '"..ident.."'")
+        RemoveAddBankMoneyOnline('remove', tonumber(a.debt), src)
+    else
+        print("You don't have enough money to pay you'r debts")
     end
 end)
 
 RegisterNetEvent('real-bank:SendLog', function(received, sendedto, type, amount, pp)
+    local source = source
     local ident = GetIdentifier(source)
     local GetPlayerName = GetName(source)
     local DiscordAvatar = GetDiscordAvatar(source)
@@ -134,8 +201,6 @@ RegisterNetEvent('real-bank:SendLog', function(received, sendedto, type, amount,
         end
         if pp == 'discord' then
             pp = DiscordAvatar
-        else
-            pp = pp
         end
 
         TableID = #Transaction + 1
@@ -151,6 +216,7 @@ RegisterNetEvent('real-bank:SendLog', function(received, sendedto, type, amount,
             date = GetCurrentDate(),
         })
         ExecuteSql("UPDATE `real_bank` SET `transaction` = '"..json.encode(Transaction).."' WHERE `identifier` = '"..ident.."'")
+        TriggerClientEvent('real-bank:UpdateUITransaction', source)
     end
 end)
 
@@ -229,7 +295,7 @@ function RegisterCallback(name, cbFunc, data)
     end
 end
 
-function GetPlayerOfflineBank(identifier)
+function GetPlayerMoneyOffline(identifier)
     if Config.Framework == 'newqb' or Config.Framework == 'oldqb' then
         local result = ExecuteSql("SELECT money FROM players WHERE citizenid = '"..identifier.."'")
         local targetMoney = json.decode(result[1].money)
@@ -238,6 +304,70 @@ function GetPlayerOfflineBank(identifier)
         local result = ExecuteSql("SELECT accounts FROM users WHERE identifier = '"..identifier.."'")
         local targetMoney = json.decode(result[1].accounts)
         return targetMoney.bank
+    end
+end
+
+function RemoveBankMoneyOffline(identifier, payment)
+    if Config.Framework == 'newqb' or Config.Framework == 'oldqb' then
+        local result = ExecuteSql("SELECT money FROM players WHERE citizenid = '"..identifier.."'")
+        local targetMoney = json.decode(result[1].money)
+        targetMoney.bank = targetMoney.bank - payment
+        ExecuteSql("UPDATE players SET money = '"..json.encode(targetMoney).."' WHERE citizenid = '"..identifier.."'")
+    else
+        local result = ExecuteSql("SELECT accounts FROM users WHERE identifier = '"..identifier.."'")
+        local targetMoney = json.decode(result[1].accounts)
+        targetMoney.bank = targetMoney.bank - payment
+        ExecuteSql("UPDATE users SET accounts = '"..json.encode(targetMoney).."' WHERE identifier = '"..identifier.."'")
+    end
+end
+
+function AddBankMoneyOffline(identifier, payment)
+    if Config.Framework == 'newqb' or Config.Framework == 'oldqb' then
+        local result = ExecuteSql("SELECT money FROM players WHERE citizenid = '"..identifier.."'")
+        local targetMoney = json.decode(result[1].money)
+        targetMoney.bank = targetMoney.bank + payment
+        ExecuteSql("UPDATE players SET money = '"..json.encode(targetMoney).."' WHERE citizenid = '"..identifier.."'")
+    else
+        local result = ExecuteSql("SELECT accounts FROM users WHERE identifier = '"..identifier.."'")
+        local targetMoney = json.decode(result[1].accounts)
+        targetMoney.bank = targetMoney.bank + payment
+        ExecuteSql("UPDATE users SET accounts = '"..json.encode(targetMoney).."' WHERE identifier = '"..identifier.."'")
+    end
+end
+
+function RemoveAddBankMoneyOnline(type, amount, id)
+    if Config.Framework == 'newqb' or Config.Framework == 'oldqb' then
+        local Player = frameworkObject.Functions.GetPlayer(id)
+        if type == 'add' then
+            Player.Functions.AddMoney('bank', tonumber(amount))
+        elseif type == 'remove' then
+            Player.Functions.RemoveMoney('bank', tonumber(amount))
+        end
+    else
+        local Player = frameworkObject.GetPlayerFromId(id)
+        if type == 'add' then
+            Player.addAccountMoney('bank', tonumber(amount))
+        elseif type == 'remove' then
+            Player.removeAccountMoney('bank', tonumber(amount))
+        end
+    end
+end
+
+function GetPlayerMoneyOnline(type, id)
+    if Config.Framework == 'newqb' or Config.Framework == 'oldqb' then
+        local Player = frameworkObject.Functions.GetPlayer(id)
+        if type == 'bank' then
+            return tonumber(Player.PlayerData.money.bank)
+        elseif type == 'cash' then
+            return tonumber(Player.PlayerData.money.cash)
+        end
+    elseif Config.Framework == 'newesx' or Config.Framework == 'oldesx' then
+        local Player = frameworkObject.GetPlayerFromId(id)
+        if type == 'bank' then
+            return tonumber(Player.getAccount('bank').money)
+        elseif type == 'cash' then
+            return tonumber(Player.getMoney())
+        end
     end
 end
 

@@ -4,6 +4,23 @@ Config.Framework = 'autodetect' -- newesx, oldesx, newqb, oldqb, autodetect
 Config.MySQL = 'oxmysql' -- oxmysql, ghamattimysql, mysql-async | Don't forget to edit fxmanifest.lua
 Config.Drawtext = 'drawtext' -- bt-target, qb-target, drawtext, qtarget
 
+Config.CardStyle = 1 -- '1' => 'img/FirstCard.png' | '2' => 'img/SecondCard.png'
+
+Config.CreditSystem = true -- If 'true' players can use the credit system
+Config.RequireCreditPoint = true -- If 'true' system will require credit point to withdraw money
+Config.StartCreditPoint = 1000 -- Amount of creditpoint players will get at the beginning
+Config.AvailableCredits = {
+    {id = 'home1', type = 'Home', label = 'Cartfs Home Credit',  description = 'This is a normal loan and the amount is low',      price = 100000,  requiredcreditpoint = 300, paybacktime = 1, paybackpercent = 1.2}, -- paybackpercent --> 1 = 100%, 2 = 200%   ∥    paybacktime --> weeks          
+    {id = 'home2', type = 'Home', label = 'Premium Home Credit', description = 'This is a premium loan and the amount is high',    price = 1000000, requiredcreditpoint = 600, paybacktime = 2, paybackpercent = 1.4}, -- paybackpercent --> 1 = 100%, 2 = 200%   ∥    paybacktime --> weeks  
+    {id = 'home3', type = 'Home', label = 'Ultra Home Credit',   description = 'This is a ultra loan and the amount is very high', price = 2500000, requiredcreditpoint = 900, paybacktime = 4, paybackpercent = 1.6}, -- paybackpercent --> 1 = 100%, 2 = 200%   ∥    paybacktime --> weeks  
+    {id = 'car1',  type = 'Car',  label = 'Normal Car Credit',   description = 'This is a normal loan and the amount is low',      price = 50000,   requiredcreditpoint = 300, paybacktime = 1, paybackpercent = 1.2}, -- paybackpercent --> 1 = 100%, 2 = 200%   ∥    paybacktime --> weeks  
+    {id = 'car2',  type = 'Car',  label = 'Premium Car Credit',  description = 'This is a premium loan and the amount is high',    price = 150000,  requiredcreditpoint = 600, paybacktime = 2, paybackpercent = 1.4}, -- paybackpercent --> 1 = 100%, 2 = 200%   ∥    paybacktime --> weeks  
+    {id = 'car3',  type = 'Car',  label = 'Ultra Car Credit',    description = 'This is a ultra loan and the amount is very high', price = 400000,  requiredcreditpoint = 900, paybacktime = 4, paybackpercent = 1.6}, -- paybackpercent --> 1 = 100%, 2 = 200%   ∥    paybacktime --> weeks  
+    {id = 'open1', type = 'Open', label = 'Normal Open Credit',  description = 'This is a normal loan and the amount is low',      price = 25000,   requiredcreditpoint = 300, paybacktime = 1, paybackpercent = 1.2}, -- paybackpercent --> 1 = 100%, 2 = 200%   ∥    paybacktime --> weeks  
+    {id = 'open2', type = 'Open', label = 'Premium Open Credit', description = 'This is a premium loan and the amount is high',    price = 90000,   requiredcreditpoint = 600, paybacktime = 2, paybackpercent = 1.4}, -- paybackpercent --> 1 = 100%, 2 = 200%   ∥    paybacktime --> weeks  
+    {id = 'open3', type = 'Open', label = 'Ultra Open Credit',   description = 'This is a ultra loan and the amount is very high', price = 130000,  requiredcreditpoint = 900, paybacktime = 4, paybackpercent = 1.6}, -- paybackpercent --> 1 = 100%, 2 = 200%   ∥    paybacktime --> weeks  
+}
+
 -- Discord Settings
 Config.DiscordBotToken = 'OTMwODI3Mzg1MzI5MzA3NzMx.GQPatL.q0qjstbgFANq6d21rMjZK7A4v__UmNNxF0dti8' -- Discord bot token
 
