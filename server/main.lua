@@ -1,5 +1,7 @@
 frameworkObject = nil
 GetSQLTable = {}
+StatusThing = nil
+PlayerSource = 0
 
 Citizen.CreateThread(function()
     frameworkObject, Config.Framework = GetCore()
@@ -31,19 +33,57 @@ end)
 Citizen.CreateThread(function()
     RegisterCallback("real-bank:GetPlayerData", function(source, cb)
         local src = source
+        PlayerSource = src
         local PlayerIdent = GetIdentifier(src)
         local PlayerMoney = GetPlayerMoneyOnline("bank", src)
+        local checkdebts = CheckDebts()
         local data = ExecuteSql("SELECT * FROM `real_bank` WHERE `identifier` = '"..PlayerIdent.."'")
         if #data > 0 then
-            local a = json.decode(data[1].info)
-            local b = json.decode(data[1].credit)
-            data[1].info = a
-            data[1].credit = b
-            DataTable = {
-                data = data,
-                PlayerMoney = tonumber(PlayerMoney)
-            }
-            cb(DataTable)
+            if StatusThing == 'donthave' then
+                local a = json.decode(data[1].info)
+                local b = json.decode(data[1].credit)
+                data[1].info = a
+                data[1].credit = b
+                DataTable = {
+                    data = data,
+                    PlayerMoney = tonumber(PlayerMoney)
+                }
+                cb(DataTable)
+            else
+                if checkdebts then
+                    local a = json.decode(data[1].info)
+                    local b = json.decode(data[1].credit)
+                    data[1].info = a
+                    data[1].credit = b
+                    DataTable = {
+                        data = data,
+                        PlayerMoney = tonumber(PlayerMoney)
+                    }
+                    cb(DataTable)
+                else
+                    print("You do not have access to the bank because your debts have not been paid. Pay you'r debts and you get access to the bank system.")
+                end
+            end
+        end
+    end)
+    RegisterCallback("real-bank:GetBills", function(source, cb)
+        local src = source
+        if Config.Framework == 'newqb' or Config.Framework == 'oldqb' then
+            local identity = GetIdentifier(src)
+            local data = ExecuteSql("SELECT * FROM `phone_invoices` WHERE `citizenid` = '"..identity.."'")
+            if next(data) then
+                cb(data)
+            else
+                cb(false)
+            end
+        else
+            local identity = GetIdentifier(src)
+            local data = ExecuteSql("SELECT * FROM `billing` WHERE `identifier` = '" .. identity .. "'")
+            if next(data) then
+                cb(data)
+            else
+                cb(false)
+            end
         end
     end)
 end)
@@ -164,25 +204,70 @@ RegisterNetEvent('real-bank:CreditConfirm', function(data)
 end)
 
 RegisterNetEvent('real-bank:PayCreditDebts', function()
-    local src =  source
-    local ident = GetIdentifier(src)
+    local ident = GetIdentifier(PlayerSource)
     local data = ExecuteSql("SELECT `credit` FROM `real_bank` WHERE `identifier` = '"..ident.."'")
-    local GetPlayerMoney = GetPlayerMoneyOnline('bank', src)
+    local GetPlayerMoney = GetPlayerMoneyOnline('bank', PlayerSource)
     local a = json.decode(data[1].credit)
-    
-    if GetPlayerMoney > a.debt then
-        NewCreditTable = {
-            playercreditpoint =  a.playercreditpoint,
-            activecredit = '',
-            creditlastdate = 0,
-            debt = 0,
-        }
-        ExecuteSql("UPDATE `real_bank` SET `credit` = '"..json.encode(NewCreditTable).."' WHERE `identifier` = '"..ident.."'")
-        RemoveAddBankMoneyOnline('remove', tonumber(a.debt), src)
-    else
-        print("You don't have enough money to pay you'r debts")
+    if a.debt > 0 then
+        if GetPlayerMoney > tonumber(a.debt) then
+            NewCreditTable = {
+                playercreditpoint =  a.playercreditpoint,
+                activecredit = '',
+                creditlastdate = 0,
+                debt = 0,
+            }
+            ExecuteSql("UPDATE `real_bank` SET `credit` = '"..json.encode(NewCreditTable).."' WHERE `identifier` = '"..ident.."'")
+            RemoveAddBankMoneyOnline('remove', tonumber(a.debt), PlayerSource)
+            StatusThing = true
+        else
+            StatusThing = false
+            print("You don't have enough money to pay you'r debts")
+        end
+    elseif a.debt <= 0 then
+        StatusThing = 'donthave'
     end
 end)
+
+RegisterNetEvent('real-bank:PayBills', function(id, amount)
+    local src = source
+    if Config.Framework == 'newqb' or Config.Framework == 'oldqb' then
+        local Player = frameworkObject.Functions.GetPlayer(src)
+        local playermoney = Player.PlayerData.money.bank
+        if tonumber(playermoney) >= tonumber(amount) then
+            Player.Functions.RemoveMoney('bank', tonumber(amount))
+            ExecuteSql("DELETE FROM `phone_invoices` WHERE `id` = '"..id.."'")
+            TriggerClientEvent('real-bank:RefreshBillsUI', src)
+        else
+            print("You don't have enough money to pay you'r bills")
+        end
+    else
+    end
+end)
+
+function CheckDebts()
+    local ident = GetIdentifier(PlayerSource) 
+    local data = ExecuteSql("SELECT `credit` FROM `real_bank` WHERE `identifier` = '"..ident.."'")
+    local getdata = json.decode(data[1].credit)
+    local getdatefromdata = getdata.creditlastdate
+    local currenttime = GetCurrentDate()
+    if getdatefromdata ~= 0 or getdatefromdata ~= '' or getdatefromdata ~= "" or getdatefromdata ~= nil then
+        if currenttime < tostring(getdatefromdata) then
+            TriggerEvent('real-bank:PayCreditDebts')
+            if StatusThing == true then
+                print('All your debts have been paid automatically because the due date has passed.')
+                return true
+            elseif StatusThing == false then
+                return false
+            elseif StatusThing == 'donthave' then
+                return true
+            end
+        else
+            return true
+        end
+    else
+        return true
+    end
+end
 
 RegisterNetEvent('real-bank:SendLog', function(received, sendedto, type, amount, pp)
     local source = source
@@ -355,14 +440,14 @@ end
 
 function GetPlayerMoneyOnline(type, id)
     if Config.Framework == 'newqb' or Config.Framework == 'oldqb' then
-        local Player = frameworkObject.Functions.GetPlayer(id)
+        local Player = frameworkObject.Functions.GetPlayer(PlayerSource)
         if type == 'bank' then
             return tonumber(Player.PlayerData.money.bank)
         elseif type == 'cash' then
             return tonumber(Player.PlayerData.money.cash)
         end
     elseif Config.Framework == 'newesx' or Config.Framework == 'oldesx' then
-        local Player = frameworkObject.GetPlayerFromId(id)
+        local Player = frameworkObject.GetPlayerFromId(PlayerSource)
         if type == 'bank' then
             return tonumber(Player.getAccount('bank').money)
         elseif type == 'cash' then

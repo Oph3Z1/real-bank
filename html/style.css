@@ -371,3 +371,14 @@ input[type=number]::-webkit-outer-spin-button {
   width: 75%;
   height: 100%;
 }
+
+.payback-text {
+  color: #222;
+  height: fit-content !important;
+  font-family: regular;
+  font-size: .9857vw;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  margin-bottom: 1px;
+}

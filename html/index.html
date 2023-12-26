@@ -600,18 +600,18 @@
                                     <div class="w-[3.5%] h-full"></div>
                                     <div class="w-[17%] h-full flex items-center justify-center">
                                         <div class="w-[85%] h-[63%] flex items-center justify-center rounded-[50%] bg-[#D9D9D945]">
-                                            <div class="w-[40%] h-[40%] rounded-[.2vw]" :class="{'bg-[#5EA7C7]': data.type == 'lspd', 'bg-[#C75E5E]': data.type == 'ems', 'bg-[#5EC7C0]': data.type == 'player', 'bg-[#C7A95E]': data.type == 'company'}"></div>
+                                            <div class="w-[40%] h-[40%] rounded-[.2vw]" :class="{'bg-[#5EA7C7]': Billstheme == 'blue', 'bg-[#C75E5E]': Billstheme == 'red', 'bg-[#5EC7C0]': Billstheme == 'lightblue', 'bg-[#C7A95E]': Billstheme == 'yellow'}"></div>
                                         </div>
                                     </div>
                                     <div class="w-[3%] h-full"></div>
                                     <div class="w-[35%] h-full flex flex-col">
                                         <div class="w-full h-[27%]"></div>
                                         <div class="w-full h-[22%] flex items-center justify-start">
-                                            <span class="invoice-name">{{ data.invoicename }}</span>
+                                            <span class="invoice-name">{{ data.sender }}</span>
                                         </div>
                                         <div class="w-full h-[5%]"></div>
                                         <div class="w-full h-[24%]">
-                                            <span class="invoice-description w-full h-full block box-border overflow-auto">{{ data.description }}</span>
+                                            <span class="invoice-description w-full h-full block box-border overflow-auto">{{ Billsframe == 'qb' ? data.society : (Billsframe == 'esx' ? data.label : '') }}</span>
                                         </div>
                                         <div class="w-full h-[22%]"></div>
                                     </div>
@@ -620,11 +620,11 @@
                                         <div class="w-full h-[25%]"></div>
                                         <div class="w-full h-[50%] flex flex-wrap">
                                             <div class="w-[49%] h-full flex items-center justify-center">
-                                                <span class="invoice-price overflow-auto" :class="{'text-[#5EA7C7]': data.type == 'lspd', 'text-[#C75E5E]': data.type == 'ems', 'text-[#5EC7C0]': data.type == 'player', 'text-[#C7A95E]': data.type == 'company'}">{{ '$' + PE3D(data.price) }}</span>
+                                                <span class="invoice-price overflow-auto" :class="{'text-[#5EA7C7]': Billstheme == 'blue', 'text-[#C75E5E]': Billstheme == 'red', 'text-[#5EC7C0]': Billstheme == 'lightblue', 'text-[#C7A95E]': Billstheme == 'yellow'}">{{ '$' + PE3D(data.amount) }}</span>
                                             </div>
                                             <div class="w-[2%] h-full"></div>
                                             <div class="w-[49%] h-full flex items-center justify-center">
-                                                <div class="w-full h-[50%] flex items-center justify-center bg-[#5EA7C7] rounded-[.2vw] hover:cursor-pointer" :class="{'bg-[#5EA7C7]': data.type == 'lspd', 'bg-[#C75E5E]': data.type == 'ems', 'bg-[#5EC7C0]': data.type == 'player', 'bg-[#C7A95E]': data.type == 'company'}">
+                                                <div class="w-full h-[50%] flex items-center justify-center bg-[#5EA7C7] rounded-[.2vw] hover:cursor-pointer" :class="{'bg-[#5EA7C7]': Billstheme == 'blue', 'bg-[#C75E5E]': Billstheme == 'red', 'bg-[#5EC7C0]': Billstheme == 'lightblue', 'bg-[#C7A95E]': Billstheme == 'yellow'}" @click="PayBill(data.id, data.amount)">
                                                     <span class="w-full" style="color: #FFF; text-align: center; font-family: regular; font-size: .6367vw; font-style: normal; font-weight: 600; line-height: .813vw;">Pay</span>
                                                 </div>
                                             </div>
@@ -640,7 +640,7 @@
                         </div>
                         <div class="w-full h-[6.5%]"></div>
                     </div>
-                    <div class="w-[28%] h-full" v-if="MiddleMenuSection == 'Credit'">  <!-- Middle menu - Credit -->
+                    <div class="w-[28%] h-full" v-if="MiddleMenuSection == 'Credit' && Debts == 0">  <!-- Middle menu - Credit -->
                         <div class="w-full h-[7%]"></div>
                         <div class="w-full h-[12%] flex flex-wrap">  <!-- Header -->
                             <div class="w-[5.5%] h-full"></div>
@@ -900,6 +900,44 @@
                             </div>
                         </div>
                         <div class="w-full h-[7.5%]"></div>
+                    </div>
+                    <div class="w-[28%] h-full" v-if="MiddleMenuSection == 'Credit' && Debts > 0">
+                        <div class="w-full h-[7%]"></div>
+                        <div class="w-full h-[12%] flex flex-wrap">  <!-- Header -->
+                            <div class="w-[5.5%] h-full"></div>
+                            <div class="w-[77.5%] h-full flex flex-col">
+                                <div class="w-full h-[35%] flex items-center justify-center">
+                                    <h1 class="w-full send-money-text">You already have a credit plan</h1>
+                                </div>
+                                <div class="w-full h-[16%]"></div>
+                                <div class="w-full h-full flex items-center justify-start">
+                                    <span class="w-full credit-description">Here you can take a look at information about your current credit plan.</span>  <!-- Max 20 words -->
+                                </div>
+                            </div>
+                            <div class="w-[17%] h-full"></div>
+                        </div>
+                        <div class="w-full h-[5%]"></div>
+                        <div class="w-full h-[10%] flex flex-col">
+                            <div class="w-full h-[25%] flex items-center justify-start">
+                                <span class="payback-text ml-[1.6vw]">{{ 'Active Credit Plan: ' + FindLabel(CurrentActiveCredit) }}</span>
+                            </div>
+                            <div class="w-full h-[25%] flex items-center justify-start">
+                                <span class="payback-text ml-[1.6vw]">{{ 'Pay Back: ' + PE3D(Debts) }}</span>
+                            </div>
+                            <div class="w-full h-[25%] flex items-center justify-start">
+                                <span class="payback-text ml-[1.6vw]">{{ 'Deadline for payment: ' + CreditLastDate }}</span>
+                            </div>
+                            <div class="w-full h-[25%]"></div>
+                        </div>
+                        <div class="w-full h-[15%]"></div>
+                        <div class="w-full h-[25%] flex items-center justify-center">
+                            <div class="w-[88%] h-[80%] flex items-center justify-start">
+                                <span class="w-full h-full payback-text">
+                                    GENERAL INFORMATION: If you do not pay your credit on time, your account will be blocked and you will not be able to log in until you pay your credit. If you have enough money, it will pay automatically when you log in.
+                                </span>
+                            </div>
+                        </div>
+                        <div class="w-full h-[26%]"></div>
                     </div>
                     <div class="w-[52%] h-full flex flex-col">  <!-- Right menu -->
                         <div class="w-full h-[7%]"></div>

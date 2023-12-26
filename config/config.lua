@@ -5,6 +5,7 @@ Config.MySQL = 'oxmysql' -- oxmysql, ghamattimysql, mysql-async | Don't forget t
 Config.Drawtext = 'drawtext' -- bt-target, qb-target, drawtext, qtarget
 
 Config.CardStyle = 1 -- '1' => 'img/FirstCard.png' | '2' => 'img/SecondCard.png'
+Config.InvoiceTheme = 'blue' -- 'blue', 'lightblue', 'red', 'yellow'
 
 Config.CreditSystem = true -- If 'true' players can use the credit system
 Config.RequireCreditPoint = true -- If 'true' system will require credit point to withdraw money

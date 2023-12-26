@@ -72,6 +72,9 @@ const app = Vue.createApp({
         CreditLastDate: null, // Dont Touch
         CreditPayback: null,
         CredType: null,
+        CurrentActiveCredit: null,
+        Billstheme: '',
+        Billsframe: '',
         AvailableCredits: [
             {id: 1, type: 'Home', label: 'Normal Home Credit',  description: 'This is a normal loan and the amount is low',      price: 100000,  requiredcreditpoint: 300, paybacktime: 1, paybackpercent: 1.2}, // paybackpercent --> 1 = 100%, 2 = 200%   ∥    paybacktime --> weeks          
             {id: 2, type: 'Home', label: 'Premium Home Credit', description: 'This is a premium loan and the amount is high',    price: 1000000, requiredcreditpoint: 600, paybacktime: 2, paybackpercent: 1.4}, // paybackpercent --> 1 = 100%, 2 = 200%   ∥    paybacktime --> weeks  
@@ -411,7 +414,20 @@ const app = Vue.createApp({
             this.CreditLastDate = null
             this.CreditPayback = null
             this.CredType = null
-        }
+        },
+
+        FindLabel(value) {
+            const filter = this.AvailableCredits.find(data => data.id === value)
+            if (filter) {
+                return filter.label
+            } else {
+                return null
+            }
+        },
+
+        PayBill(id, amount) {
+            postNUI('PayBill', {id, amount})
+        },
     },  
 
     computed: {
@@ -526,6 +542,16 @@ const app = Vue.createApp({
                 this.Debts = credit.debt
                 this.AvailableCredits = data.credittable
                 this.RequireCreditPoint = data.requirecreditpoint
+                this.CreditLastDate = credit.creditlastdate
+                this.CurrentActiveCredit = credit.activecredit
+                this.Billstheme = data.billstheme
+                this.Billsframe = data.billsframe
+
+                if (data.billsdata == 0 || data.billsdata == null || data.billsdata == false) {
+                    this.Invoices = []
+                } else {
+                    this.Invoices = data.billsdata
+                }
 
                 setTimeout(() => {
                     this.CreateChart();
@@ -539,6 +565,24 @@ const app = Vue.createApp({
 
             if (data.action == 'SendResponse') {
                 this.GetResponse(data.ResourceName)
+            }
+
+            if (data.action == 'OpenBillsMenu') {
+                if (data.data == 0 || data.data == null || data.data == false) {
+                    this.Invoices = []
+                } else {
+                    this.Invoices = data.data
+                }
+            }
+
+            if (data.action == 'RefreshBills') {
+                this.Billsframe = data.billsframe
+                if (data.billsdata == 0 || data.billsdata == null || data.billsdata == false) {
+                    this.Invoices = []
+                } else {
+                    this.Invoices = data.billsdata
+                }
+                this.PlayersMoney = data.playermoney
             }
         });
     },

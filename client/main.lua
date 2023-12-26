@@ -151,6 +151,13 @@ end)
 
 function OpenBankUI()
     local data = Callback('real-bank:GetPlayerData')
+    local billsdata = Callback('real-bank:GetBills')
+    getframe = null
+    if Config.Framework == 'newqb' or Config.Framework == 'oldqb' then
+        getframe = 'qb'
+    else
+        getframe = 'esx'
+    end
     SetNuiFocus(true, true)
     SendNUIMessage({
         action = 'OpenBank',
@@ -159,33 +166,10 @@ function OpenBankUI()
         cardstyle = Config.CardStyle,
         credittable = Config.AvailableCredits,
         requirecreditpoint = Config.RequireCreditPoint,
+        billstheme = Config.InvoiceTheme,
+        billsframe = getframe,
+        billsdata = billsdata,
     })
-end
-
-function Callback(name, payload)
-    if Config.Framework == "newesx" or Config.Framework == "oldesx" then
-        local data = nil
-        if frameworkObject then
-            frameworkObject.TriggerServerCallback(name, function(returndata)
-                data = returndata
-            end, payload)
-            while data == nil do
-                Citizen.Wait(0)
-            end
-        end
-        return data
-    else
-        local data = nil
-        if frameworkObject then
-            frameworkObject.Functions.TriggerCallback(name, function(returndata)
-                data = returndata
-            end, payload)
-            while data == nil do
-                Citizen.Wait(0)
-            end
-        end
-        return data
-    end
 end
 
 function SendLog(received, sendedto, type, amount, pp)
@@ -213,6 +197,26 @@ AddEventHandler('real-bank:BankSettings', function(data)
     end
 end)
 
+RegisterNetEvent('real-bank:RefreshBillsUI')
+AddEventHandler('real-bank:RefreshBillsUI', function()
+    local billsdata = Callback('real-bank:GetBills')
+    getframe = null
+    playercurrentmoney = 0
+    if Config.Framework == 'newqb' or Config.Framework == 'oldqb' then
+        playerdata = frameworkObject.Functions.GetPlayerData()
+        playercurrentmoney = playerdata.money.bank
+        getframe = 'qb'
+    else
+        getframe = 'esx'
+    end
+    SendNUIMessage({
+        action = 'RefreshBills',
+        billsframe = getframe,
+        billsdata = billsdata,
+        playermoney = playercurrentmoney,
+    })
+end)
+
 RegisterNUICallback('CreatePassword', function(data, cb)
     TriggerServerEvent("real-bank:CreateAccount", data)
     SetNuiFocus(false, false)
@@ -227,10 +231,40 @@ RegisterNUICallback('ConfirmCredit', function(data, cb)
     TriggerServerEvent('real-bank:CreditConfirm', data)
 end)
 
-RegisterNUICallback('PayDebts', function(cb)
+RegisterNUICallback('PayDebts', function(data, cb)
     TriggerServerEvent('real-bank:PayCreditDebts')
+end)
+
+RegisterNUICallback('PayBill', function(data, cb)
+    TriggerServerEvent('real-bank:PayBills', data.id, data.amount)
 end)
 
 RegisterNUICallback('Logout', function(data, cb)
     SetNuiFocus(false, false)
 end)
+
+function Callback(name, payload)
+    if Config.Framework == "newesx" or Config.Framework == "oldesx" then
+        local data = nil
+        if frameworkObject then
+            frameworkObject.TriggerServerCallback(name, function(returndata)
+                data = returndata
+            end, payload)
+            while data == nil do
+                Citizen.Wait(0)
+            end
+        end
+        return data
+    else
+        local data = nil
+        if frameworkObject then
+            frameworkObject.Functions.TriggerCallback(name, function(returndata)
+                data = returndata
+            end, payload)
+            while data == nil do
+                Citizen.Wait(0)
+            end
+        end
+        return data
+    end
+end
