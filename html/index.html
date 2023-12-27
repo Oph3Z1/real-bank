@@ -69,7 +69,72 @@
                         Confirm
                         </div>
                     </div>
-                    <div class="w-full h-[10.2%]"></div>
+                    <div class="w-full h-[1%]" v-if="PasswordScreenType == 'Normal'"></div>
+                    <div class="w-full h-[4%] flex items-center justify-center" v-if="PasswordScreenType == 'Normal'">
+                        <span class="hover:cursor-pointer" style="font-size: .9vw;" @click="CurrentScreen = 'IBAN'">Want to login with iban?</span>
+                    </div>
+                    <div class="w-full h-[5.2%]" v-if="PasswordScreenType == 'Normal'"></div>
+                    <div class="w-full h-[10.2%]" v-else></div>
+                </div>
+            </div>
+            <div v-if="CurrentScreen == 'IBAN'" class="w-full h-full flex items-center justify-center" style="background-image: url(./img/login-backgrond.png); background-size: 100% 100%;">
+                <div class="w-[40%] h-[50%] flex flex-col">
+                    <div class="w-full h-[5%]"></div>
+                    <div class="w-full h-[15%] flex items-center justify-center">
+                        <h2 style="
+                        color: #000;
+                        text-align: center;
+                        font-family: regular;
+                        font-size: 3.5551vw;
+                        font-style: normal;
+                        font-weight: 600;
+                        line-height: 4.5394vw; /* 127.687% */
+                        ">
+                        {{ PasswordScreenTypeFunction('First') }} 
+                        </h2>
+                    </div>
+                    <div class="w-full h-[10%]">
+                        <h2 style="
+                        color: #000;
+                        text-align: center;
+                        font-family: regular;
+                        font-size: 1.891vw;
+                        font-style: normal;
+                        font-weight: 400;
+                        line-height: 2.4146vw;  /* 127.687% */
+                        ">
+                        {{ PasswordScreenTypeFunction('Second') }} 
+                        </h2>
+                    </div>
+                    <div class="w-full h-[10%]"></div>
+                    <div class="w-full h-[25%] flex flex-col items-center justify-center">
+                        <input class="w-[95%] h-[49%] mb-[1%] iban-input" placeholder="IBAN" v-model="IBANInput" type="number" style="border: .0618vw solid #8B8B8B; border-radius: .1853vw;" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length == 8) return false;">
+                        <input class="w-[95%] h-[49%] password-input" placeholder="PASSWORD" v-model="PasswordInput" type="number" style="border: .0618vw solid #8B8B8B; border-radius: .1853vw;" pattern="/^-?\d+\.?\d*$/">
+                    </div>
+                    <div class="w-full h-[8%]"></div>
+                    <div class="w-full h-[16.8%] flex items-center justify-center">
+                        <div class="w-[94.5%] h-full flex items-center justify-center hover:cursor-pointer" 
+                        style="
+                        background: black; 
+                        color: white; 
+                        font-size: 1.4949vw; 
+                        font-family: regular; 
+                        text-align: center; 
+                        font-weight: 700; 
+                        font-style: normal; 
+                        cursor: pointer;
+                        line-height: 1.9089vw;"
+
+                        @click="ConfirmLoginAnotherAccount()"
+                        >
+                        Confirm
+                        </div>
+                    </div>
+                    <div class="w-full h-[1%]"></div>
+                    <div class="w-full h-[4%] flex items-center justify-center">
+                        <span class="hover:cursor-pointer" style="font-size: .9vw;" @click="CurrentScreen = 'Password'">Want to login with your account?</span>
+                    </div>
+                    <div class="w-full h-[5.2%]"></div>
                 </div>
             </div>
             <div v-if="CurrentScreen == 'BankScreen'" class="w-full h-full flex flex-col" style="background-image: url(./img/background.png); background-size: 100% 100%;">
@@ -461,7 +526,7 @@
                                             <div class="w-full h-[22%] flex flex-wrap">  <!-- Deposit/Withdraw Button -->
                                                 <div class="w-[5%] h-full"></div>
                                                 <div class="w-[91.7%] h-full flex items-center justify-center">
-                                                    <div class="w-full h-full flex items-center justify-center hover:cursor-pointer bg-black" @click="DWAction()">
+                                                    <div class="w-full h-full flex items-center justify-center hover:cursor-pointer bg-black" @click="DepositWithdrawAction()">
                                                         <span class="w-full" style="color: #FFF; text-align: center; font-family: regular; font-size: .8513vw; font-style: normal; font-weight: 700; line-height: 1.087vw;">
                                                             {{ DWType == 'withdraw' ? 'Withdraw Money' : DWType == 'deposit' ? 'Deposit Money' : '' }}
                                                         </span>

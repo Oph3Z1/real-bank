@@ -31,7 +31,7 @@ const app = Vue.createApp({
         show: false,
         chartData: null,
         GetChart: null,
-        CurrentScreen: '', // 'Password' - 'BankScreen'
+        CurrentScreen: '', // 'Password' - 'BankScreen' - 'IBAN'
         PasswordScreenType: 'Normal', // 'Normal' - 'Create' - 'Change'
         CurrentMenu: 'Dashboard',
         PinInput: '',
@@ -75,6 +75,8 @@ const app = Vue.createApp({
         CurrentActiveCredit: null,
         Billstheme: '',
         Billsframe: '',
+        IBANInput: '',
+        PasswordInput: '',
         AvailableCredits: [
             {id: 1, type: 'Home', label: 'Normal Home Credit',  description: 'This is a normal loan and the amount is low',      price: 100000,  requiredcreditpoint: 300, paybacktime: 1, paybackpercent: 1.2}, // paybackpercent --> 1 = 100%, 2 = 200%   ∥    paybacktime --> weeks          
             {id: 2, type: 'Home', label: 'Premium Home Credit', description: 'This is a premium loan and the amount is high',    price: 1000000, requiredcreditpoint: 600, paybacktime: 2, paybackpercent: 1.4}, // paybackpercent --> 1 = 100%, 2 = 200%   ∥    paybacktime --> weeks  
@@ -92,6 +94,7 @@ const app = Vue.createApp({
         PlayersName: '', // Players name and lastname - dont touch
         PlayersProfilePicture: './img/example-logo.png',
         PlayerIBAN: 0,
+        PlayerCash: 0,
         LastTransactions: [ // Type => 'Received' - 'Withdraw' - 'Deposit' - 'Transfer' - 'Shopping'
             {id: 1, name: 'Oph3Z Test', received: '', sendedto: 'Yusuf Karaçolak', type: 'Transfer', amount: 1000,  pp: './img/second-example-logo.png', date: '10.07.2023'},
             {id: 2, name: 'Oph3Z Test', received: 'Oph3Z Test2', sendedto: 'Yusuf Karaçolak', type: 'Received', amount: 1250,  pp: './img/second-example-logo.png', date: '10.08.2023'},
@@ -112,6 +115,7 @@ const app = Vue.createApp({
         SelectActionMethod(status, type) {
             this.DWPopup = status
             this.DWType = type
+            this.DWInput = ''
         },
 
         CheckAnimationStatus() {
@@ -328,6 +332,7 @@ const app = Vue.createApp({
                     this.show = false
                     this.CurrentScreen = ''
                     this.PasswordScreenType = ''
+                    this.PinInput = ''
                 } else {
                     console.log('You need to enter 8 digits')
                 }
@@ -337,9 +342,29 @@ const app = Vue.createApp({
                     this.show = false
                     this.CurrentScreen = ''
                     this.PasswordScreenType = ''
+                    this.PinInput = ''
                 } else {
                     console.log('You need to enter 8 digits')
                 }
+            } else if (this.PasswordScreenType == 'Normal') {
+                postNUI('ATMLoginToOwnAccount', this.PinInput)
+                this.show = false
+                this.CurrentScreen = ''
+                this.PinInput = ''
+            }
+        },
+
+        ConfirmLoginAnotherAccount() {
+            if (this.IBANInput > 0 && this.PasswordInput > 0) {
+                postNUI('ATMLoginAnotherAccount', {
+                    iban: this.IBANInput,
+                    password: this.PasswordInput
+                })
+                this.show = false
+                this.CurrentScreen = ''
+                this.PasswordInput = ''
+                this.IBANInput = ''
+                this.PasswordScreenType = 'Normal'
             }
         },
 
@@ -428,6 +453,26 @@ const app = Vue.createApp({
         PayBill(id, amount) {
             postNUI('PayBill', {id, amount})
         },
+
+        DepositWithdrawAction() {
+            if (this.DWType == 'deposit') {
+                if (this.DWInput > 0) {
+                    if (this.PlayerCash >= this.DWInput) {
+                        postNUI('DepositMoney', this.DWInput)
+                        this.PlayersMoney += this.DWInput
+                        this.SelectActionMethod(false, '')
+                    }
+                }
+            } else if (this.DWType == 'withdraw') {
+                if (this.DWInput > 0) {
+                    if (this.PlayersMoney >= this.DWInput) {
+                        postNUI('WithdrawMoney', this.DWInput)
+                        this.PlayersMoney -= this.DWInput
+                        this.SelectActionMethod(false, '')
+                    }
+                }
+            }
+        }
     },  
 
     computed: {
@@ -546,6 +591,7 @@ const app = Vue.createApp({
                 this.CurrentActiveCredit = credit.activecredit
                 this.Billstheme = data.billstheme
                 this.Billsframe = data.billsframe
+                this.PlayerCash = data.playercash
 
                 if (data.billsdata == 0 || data.billsdata == null || data.billsdata == false) {
                     this.Invoices = []
@@ -583,6 +629,11 @@ const app = Vue.createApp({
                     this.Invoices = data.billsdata
                 }
                 this.PlayersMoney = data.playermoney
+            }
+
+            if (data.action == 'OpenATM') {
+                this.show = true
+                this.CurrentScreen = 'Password'
             }
         });
     },

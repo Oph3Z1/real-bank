@@ -7,6 +7,9 @@ Config.Drawtext = 'drawtext' -- bt-target, qb-target, drawtext, qtarget
 Config.CardStyle = 1 -- '1' => 'img/FirstCard.png' | '2' => 'img/SecondCard.png'
 Config.InvoiceTheme = 'blue' -- 'blue', 'lightblue', 'red', 'yellow'
 
+Config.LoginLimit = 3 -- This number indicates the limit to which players can access other accounts.
+Config.WithdrawLimit = 5000 -- The maximum amount of money a player can withdraw from another account.
+
 Config.CreditSystem = true -- If 'true' players can use the credit system
 Config.RequireCreditPoint = true -- If 'true' system will require credit point to withdraw money
 Config.StartCreditPoint = 1000 -- Amount of creditpoint players will get at the beginning

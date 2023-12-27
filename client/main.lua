@@ -48,10 +48,7 @@ function OpenBank()
                         sleep = 4
                         Config.DrawText3D("~INPUT_PICKUP~ - Open ATM", vector3(GetATMCoords.x, GetATMCoords.y, GetATMCoords.z + 1.0))
                         if IsControlJustReleased(0, 38) then
-                            SendNUIMessage({
-                                action = 'OpenBank'
-                            })
-                            SetNuiFocus(true, true)
+                            OpenATM()
                         end
                     end
                 end
@@ -149,6 +146,13 @@ RegisterNetEvent('real-bank:CheckAccountExistensResult', function(result, data)
     end
 end)
 
+function OpenATM()
+    SendNUIMessage({
+        action = 'OpenATM'
+    })
+    SetNuiFocus(true, true)
+end
+
 function OpenBankUI()
     local data = Callback('real-bank:GetPlayerData')
     local billsdata = Callback('real-bank:GetBills')
@@ -163,6 +167,7 @@ function OpenBankUI()
         action = 'OpenBank',
         data = data.data,
         playermoney = data.PlayerMoney,
+        playercash = data.PlayerCash,
         cardstyle = Config.CardStyle,
         credittable = Config.AvailableCredits,
         requirecreditpoint = Config.RequireCreditPoint,
@@ -217,6 +222,11 @@ AddEventHandler('real-bank:RefreshBillsUI', function()
     })
 end)
 
+RegisterNetEvent('real-bank:OpenBank')
+AddEventHandler('real-bank:OpenBank', function()
+    OpenBankUI()
+end)
+
 RegisterNUICallback('CreatePassword', function(data, cb)
     TriggerServerEvent("real-bank:CreateAccount", data)
     SetNuiFocus(false, false)
@@ -237,6 +247,24 @@ end)
 
 RegisterNUICallback('PayBill', function(data, cb)
     TriggerServerEvent('real-bank:PayBills', data.id, data.amount)
+end)
+
+RegisterNUICallback('DepositMoney', function(data, cb)
+    TriggerServerEvent('real-bank:DepositMoney', data)
+end)
+
+RegisterNUICallback('WithdrawMoney', function(data, cb)
+    TriggerServerEvent('real-bank:WithdrawMoney', data)
+end)
+
+RegisterNUICallback('ATMLoginToOwnAccount', function(data, cb)
+    TriggerServerEvent('real-bank:ATMLoginOwnAccount', data)
+    SetNuiFocus(false, false)
+end)
+
+RegisterNUICallback('ATMLoginAnotherAccount', function(data, cb)
+    TriggerServerEvent('real-bank:ATMLoginAnotherAccount', data.iban, data.password)
+    SetNuiFocus(false, false)
 end)
 
 RegisterNUICallback('Logout', function(data, cb)
