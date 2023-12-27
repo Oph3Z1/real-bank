@@ -43,6 +43,7 @@ const app = Vue.createApp({
         DWType: null,
         MiddleMenuSection: 'Main', // 'Main' - 'Transfer' - 'Invoices' - 'Credit'
         DWInput: '',
+        Logintype: '',
         SearchPlayers: [
             {id: 1,  firstname: 'Oph3Z', lastname: 'Test', iban: 2001,  pp: './img/example-logo.png'},
             {id: 2,  firstname: 'Yusuf', lastname: 'Test', iban: 2002,  pp: './img/second-example-logo.png'},
@@ -57,6 +58,7 @@ const app = Vue.createApp({
         ],
         SearchBar: '',
         SelectPlayer: false,
+        transferInput: '',
         Invoices: [
             {id: 1, invoicename: 'LSPD', price: 100000, description:'You have been fined for driving at high speed', type: 'lspd'},
             {id: 2, invoicename: 'EMS', price: 100000, description:'All your costs in the hospital', type: 'ems'},
@@ -77,6 +79,9 @@ const app = Vue.createApp({
         Billsframe: '',
         IBANInput: '',
         PasswordInput: '',
+        CreditSystem: true,
+        HackedAccountWithdrawLimit: 0,
+        HackedAccountUsage: 0,
         AvailableCredits: [
             {id: 1, type: 'Home', label: 'Normal Home Credit',  description: 'This is a normal loan and the amount is low',      price: 100000,  requiredcreditpoint: 300, paybacktime: 1, paybackpercent: 1.2}, // paybackpercent --> 1 = 100%, 2 = 200%   ∥    paybacktime --> weeks          
             {id: 2, type: 'Home', label: 'Premium Home Credit', description: 'This is a premium loan and the amount is high',    price: 1000000, requiredcreditpoint: 600, paybacktime: 2, paybackpercent: 1.4}, // paybackpercent --> 1 = 100%, 2 = 200%   ∥    paybacktime --> weeks  
@@ -128,7 +133,7 @@ const app = Vue.createApp({
 
         CheckSearchBarEquality(player) {
             const search = this.SearchBar.toLowerCase();
-            const fullName = (player.firstname + ' ' + player.lastname).toLowerCase();
+            const fullName = (player.playername).toLowerCase();
             const iban = player.iban.toString();
         
             return (
@@ -139,12 +144,13 @@ const app = Vue.createApp({
         },
 
         SelectTransferPlayer(id) {
-            if (!this.SelectPlayer) {
-                this.SelectPlayer = id 
+            if (this.SelectPlayer == null || this.SelectPlayer == undefined || this.SelectPlayer == false || this.SelectPlayer < 0) {
+                this.SelectPlayer = id;
             } else if (this.SelectPlayer == id) {
-                this.SelectPlayer = false
+                this.SelectPlayer = null;
             }
         },
+        
 
         GetSelectedCreditIMG(type) {
             if (type == 'Home') {
@@ -387,6 +393,7 @@ const app = Vue.createApp({
             this.CredType = null
             this.SearchBar = ''
             this.SelectPlayer = false
+            this.Logintype = ''
         },
 
         DWAction() {
@@ -403,11 +410,21 @@ const app = Vue.createApp({
             if (type == 'Main') {
                 this.MiddleMenuSection = 'Main'
             } else if (type == 'Transfer') {
-                this.MiddleMenuSection = 'Transfer'
+                if (this.Logintype != 'hacker') {
+                    this.MiddleMenuSection = 'Transfer'
+                } else {
+                    console.log('You cant see Invoices because you are not the owner of this account')
+                }
             } else if (type == 'Invoices') {
-                this.MiddleMenuSection = 'Invoices'
+                if (this.Logintype != 'hacker') {
+                    this.MiddleMenuSection = 'Invoices'
+                }
             } else if (type == 'Credit') {
-                this.MiddleMenuSection = 'Credit'
+                if (this.Logintype != 'hacker') {
+                    this.MiddleMenuSection = 'Credit'
+                } else {
+                    console.log('You cant see Invoices because you are not the owner of this account')
+                }
             }
             
             if (type != 'credit') {
@@ -455,33 +472,87 @@ const app = Vue.createApp({
         },
 
         DepositWithdrawAction() {
-            if (this.DWType == 'deposit') {
-                if (this.DWInput > 0) {
-                    if (this.PlayerCash >= this.DWInput) {
-                        postNUI('DepositMoney', this.DWInput)
-                        this.PlayersMoney += this.DWInput
-                        this.SelectActionMethod(false, '')
+            if (this.Logintype != 'hacker') {
+                if (this.DWType == 'deposit') {
+                    if (this.DWInput > 0) {
+                        if (this.PlayerCash >= this.DWInput) {
+                            postNUI('DepositMoney', this.DWInput)
+                            this.PlayersMoney += this.DWInput
+                            this.SelectActionMethod(false, '')
+                        }
+                    }
+                } else if (this.DWType == 'withdraw') {
+                    if (this.DWInput > 0) {
+                        if (this.PlayersMoney >= this.DWInput) {
+                            postNUI('WithdrawMoney', this.DWInput)
+                            this.PlayersMoney -= this.DWInput
+                            this.SelectActionMethod(false, '')
+                        }
                     }
                 }
-            } else if (this.DWType == 'withdraw') {
-                if (this.DWInput > 0) {
-                    if (this.PlayersMoney >= this.DWInput) {
-                        postNUI('WithdrawMoney', this.DWInput)
-                        this.PlayersMoney -= this.DWInput
-                        this.SelectActionMethod(false, '')
+            } else {
+                if (this.DWType == 'deposit') {
+                    console.log("You can't deposit money into a hacked account")
+                } else if (this.DWType == 'withdraw') {
+                    if (this.DWInput > 0) {
+                        if (this.PlayersMoney >= this.DWInput) {
+                            if (this.HackedAccountUsage > 0) {
+                                if (this.HackedAccountWithdrawLimit >= this.DWInput) {
+                                    postNUI('WithdrawHackedAccount', {
+                                        iban: this.PlayerIBAN,
+                                        amount: this.DWInput
+                                    })
+                                    this.PlayersMoney -= this.DWInput
+                                    this.HackedAccountWithdrawLimit -= this.DWInput
+                                    this.SelectActionMethod(false, '')
+                                }
+                            }
+                        }
                     }
                 }
             }
-        }
+        },
+
+        FastAction(type, amount) {
+            if (amount > 0) {
+                if (type == 'withdraw') {
+                    if (this.PlayersMoney >= amount) {
+                        postNUI('WithdrawFastAction', amount)
+                        this.PlayersMoney -= amount
+                        this.PlayerCash += amount
+                    }
+                } else if (type == 'deposit') {
+                    if (this.PlayerCash >= amount) {
+                        postNUI('DepositFastAction', amount)
+                        this.PlayersMoney += amount
+                        this.PlayerCash -= amount
+                    }
+                }
+            }
+        },
+
+        TransferMoney(id, iban) {
+            if (this.transferInput > 0) {
+                if (this.PlayersMoney > this.transferInput) {
+                    postNUI('TransferMoney', {
+                        iban: iban,
+                        amount: this.transferInput
+                    })
+                    this.PlayersMoney -= this.transferInput
+                    this.transferInput = ''
+                    this.SelectTransferPlayer(id)
+                }
+            } 
+        },
     },  
 
     computed: {
         SearchBarFunction() {
             if (!this.SearchBar) {
-                return this.SearchPlayers;
+                return this.SearchPlayers.filter((player) => player.iban !== this.PlayerIBAN);
             }
-          
-            return this.SearchPlayers.filter((player) => this.CheckSearchBarEquality(player));
+
+            return this.SearchPlayers.filter((player) => player.iban !== this.PlayerIBAN && this.CheckSearchBarEquality(player))
         },
 
         ShowAvailableCredits() {
@@ -592,12 +663,39 @@ const app = Vue.createApp({
                 this.Billstheme = data.billstheme
                 this.Billsframe = data.billsframe
                 this.PlayerCash = data.playercash
+                this.FirstFastAction = data.ffastaction
+                this.SecondFastAction = data.sfastaction
+                this.ThirdFastAction = data.tfastaction
+                this.SearchPlayers = data.transferlist
+                this.SelectPlayer = -1
 
                 if (data.billsdata == 0 || data.billsdata == null || data.billsdata == false) {
                     this.Invoices = []
                 } else {
                     this.Invoices = data.billsdata
                 }
+
+                setTimeout(() => {
+                    this.CreateChart();
+                }, 10);
+            }
+
+            
+            if (data.action == 'OpenAnotherAccount') {
+                const info = data.infodata
+
+                this.show = true
+                this.CurrentScreen = 'BankScreen'
+                this.PlayersMoney = data.targetmoney
+                this.PlayersName = info.playername
+                this.PlayerIBAN = data.iban
+                this.PlayersProfilePicture = info.playerpfp
+                this.LastTransactions = data.transaction
+                this.CardStyle = data.cardstyle
+                this.Logintype = 'hacker'
+                this.CreditSystem = false
+                this.HackedAccountWithdrawLimit = data.withdrawlimit
+                this.HackedAccountUsage = data.loginlimit
 
                 setTimeout(() => {
                     this.CreateChart();
@@ -634,6 +732,7 @@ const app = Vue.createApp({
             if (data.action == 'OpenATM') {
                 this.show = true
                 this.CurrentScreen = 'Password'
+                this.PasswordScreenType = 'Normal'
             }
         });
     },

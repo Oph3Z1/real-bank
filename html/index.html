@@ -200,7 +200,7 @@
 
                                 <div class="w-full h-[8%] "></div>
 
-                                <div class="w-full h-[17%] flex flex-wrap rounded-[.4208vw] hover:cursor-pointer" @click="ChangeMiddleSection('Invoices')" :style="{background: MiddleMenuSection == 'Invoices' ? '#EFECEF' : ''}">  <!-- MI - Invoices -->
+                                <div class="w-full h-[17%] flex flex-wrap rounded-[.4208vw] hover:cursor-pointer" @click="ChangeMiddleSection('Invoices')" :style="{background: MiddleMenuSection == 'Invoices' ? '#EFECEF' : ''}" v-if="Logintype != 'hacker'">  <!-- MI - Invoices -->
                                     <div class="w-[6%] h-full"></div>
                                     <div class="w-[14%] h-full flex items-center justify-center">
                                         <img :src="MiddleMenuSection == 'Invoices' ? './img/Invoices-icon.png' : './img/Invoices-gray-icon.png'">
@@ -216,7 +216,7 @@
 
                                 <div class="w-full h-[8%] "></div>
 
-                                <div class="w-full h-[17%] flex flex-wrap rounded-[.4208vw] hover:cursor-pointer" @click="ChangeMiddleSection('Credit')" :style="{background: MiddleMenuSection == 'Credit' ? '#EFECEF' : ''}">  <!-- MI - Lonas/Credits --> 
+                                <div class="w-full h-[17%] flex flex-wrap rounded-[.4208vw] hover:cursor-pointer" @click="ChangeMiddleSection('Credit')" :style="{background: MiddleMenuSection == 'Credit' ? '#EFECEF' : ''}" v-if="Logintype != 'hacker'">  <!-- MI - Lonas/Credits --> 
                                     <div class="w-[6%] h-full"></div>
                                     <div class="w-[14%] h-full flex items-center justify-center ">
                                         <img :src="MiddleMenuSection == 'Credit' ? './img/Loan-icon.png' : './img/Loan-gray-icon.png'">
@@ -373,7 +373,7 @@
                         <div class="w-full h-[41.6%] grid">
                             <div class="w-full h-full box1">
                                 <div class="w-full h-[32%]"></div>
-                                <div class="w-full h-[6%] flex flex-wrap">  <!-- Fast Action Text -->
+                                <div class="w-full h-[6%] flex flex-wrap" v-if="Logintype !== 'hacker'">  <!-- Fast Action Text -->
                                     <div class="w-[10%] h-full"></div>
                                     <div class="w-[33%] h-full flex items-center justify-start"> <!-- FAT - Content  -->
                                         <span class="fast-action-text">Fast Actions</span>
@@ -383,7 +383,7 @@
                                 <div class="w-full h-[7%]"></div>
                                 <div class="w-full h-[55%] flex flex-wrap">  <!-- Fast Action Items -->
                                     <div class="w-[10%] h-full"></div>
-                                    <div class="w-[23%] h-full">  <!-- FAI - First Item -->
+                                    <div class="w-[23%] h-full" v-if="Logintype !== 'hacker'">  <!-- FAI - First Item -->
                                         <div class="w-full h-full flex items-center justify-center rounded-[1vw] bg-[#F0ECF0]">
                                             <div class="w-[70%] h-[90%] flex flex-col">
                                                 <div class="w-full h-[36%] flex items-center justify-center">
@@ -405,7 +405,7 @@
                                                 </div>
                                                 <div class="w-full h-[8.4%]"></div>
                                                 <div class="w-full h-[10.8%] flex items-center justify-center">
-                                                    <div class="w-[90%] h-full flex items-center justify-center bg-black hover:cursor-pointer rounded-[.2vw]">
+                                                    <div class="w-[90%] h-full flex items-center justify-center bg-black hover:cursor-pointer rounded-[.2vw]" @click="FastAction(FirstFastAction.type, FirstFastAction.amount)">
                                                         <span class="action-text">{{ FirstFastAction.type[0].toUpperCase() + FirstFastAction.type.slice(1) }}</span>
                                                     </div>
                                                 </div>
@@ -413,7 +413,7 @@
                                         </div>
                                     </div>
                                     <div class="w-[4.1%] h-full"></div>
-                                    <div class="w-[23%] h-full">  <!-- FAI - Second Item -->
+                                    <div class="w-[23%] h-full" v-if="Logintype !== 'hacker'">  <!-- FAI - Second Item -->
                                         <div class="w-full h-full flex items-center justify-center rounded-[1vw] bg-[#F0ECF0]">
                                             <div class="w-[70%] h-[90%] flex flex-col">
                                                 <div class="w-full h-[36%] flex items-center justify-center">
@@ -435,7 +435,7 @@
                                                 </div>
                                                 <div class="w-full h-[8.4%]"></div>
                                                 <div class="w-full h-[10.8%] flex items-center justify-center">
-                                                    <div class="w-[90%] h-full flex items-center justify-center bg-black hover:cursor-pointer rounded-[.2vw]">
+                                                    <div class="w-[90%] h-full flex items-center justify-center bg-black hover:cursor-pointer rounded-[.2vw]" @click="FastAction(SecondFastAction.type, SecondFastAction.amount)">
                                                         <span class="action-text">{{ SecondFastAction.type[0].toUpperCase() + SecondFastAction.type.slice(1) }}</span>
                                                     </div>
                                                 </div>
@@ -443,7 +443,7 @@
                                         </div>
                                     </div>
                                     <div class="w-[4.1%] h-full"></div>
-                                    <div class="w-[23%] h-full">  <!-- FAI - Third Item -->
+                                    <div class="w-[23%] h-full" v-if="Logintype !==  'hacker'">  <!-- FAI - Third Item -->
                                         <div class="w-full h-full flex items-center justify-center rounded-[1vw] bg-[#F0ECF0]">
                                             <div class="w-[70%] h-[90%] flex flex-col">
                                                 <div class="w-full h-[36%] flex items-center justify-center">
@@ -465,7 +465,7 @@
                                                 </div>
                                                 <div class="w-full h-[8.4%]"></div>
                                                 <div class="w-full h-[10.8%] flex items-center justify-center">
-                                                    <div class="w-[90%] h-full flex items-center justify-center bg-black hover:cursor-pointer rounded-[.2vw]">
+                                                    <div class="w-[90%] h-full flex items-center justify-center bg-black hover:cursor-pointer rounded-[.2vw]" @click="FastAction(ThirdFastAction.type, ThirdFastAction.amount)">
                                                         <span class="action-text">{{ ThirdFastAction.type[0].toUpperCase() + ThirdFastAction.type.slice(1) }}</span>
                                                     </div>
                                                 </div>
@@ -592,7 +592,7 @@
                                         <div class="w-[30%] h-full flex flex-col">
                                             <div class="w-full h-[27%]"></div>
                                             <div class="w-full h-[22%] flex items-center justify-start">
-                                                <span class="search-bar-playername">{{ data.firstname + ' ' + data.lastname }}</span>
+                                                <span class="search-bar-playername">{{ data.playername }}</span>
                                             </div>
                                             <div class="w-full h-[5%]"></div>
                                             <div class="w-full h-[18%] flex items-center justify-start">
@@ -620,7 +620,7 @@
                                             </div>
                                             <div class="w-[2%] h-full"></div>
                                             <div class="w-[40%] h-full flex items-center justify-center rounded-[.1vw] border-[.0321vw] border-[#D7D7D7]">
-                                                <input class="w-full h-full outline-none" type="number" style="color: #262626; font-family: regular; font-size: .8951vw; font-style: normal; font-weight: 600; line-height: 1.1429vw; margin: 0 .5vw 0 .5vw;">
+                                                <input class="w-full h-full outline-none" type="number" v-model="transferInput" style="color: #262626; font-family: regular; font-size: .8951vw; font-style: normal; font-weight: 600; line-height: 1.1429vw; margin: 0 .5vw 0 .5vw;">
                                             </div>
                                             <div class="w-[46%] h-full"></div>
                                         </div>
@@ -628,7 +628,7 @@
                                         <div class="w-full h-[35%] flex flex-wrap">
                                             <div class="w-[4%] h-full"></div>
                                             <div class="w-[50%] h-full flex items-center justify-center">
-                                                <div class="w-full h-full flex items-center justify-center rounded-[.1vw] bg-[#000000] hover:cursor-pointer">
+                                                <div class="w-full h-full flex items-center justify-center rounded-[.1vw] bg-[#000000] hover:cursor-pointer" @click="TransferMoney(data.id, data.iban)">
                                                     <span class="w-full" style="color: #FFF; text-align: center; font-family: regular; font-size: .5996vw; font-style: normal; font-weight: 700; line-height: .6379vw;">Send Money</span>
                                                 </div>
                                             </div>
@@ -1012,11 +1012,11 @@
                                 <span style="color: #000; text-align: center; font-family: regular; font-size: 1.3063vw; font-style: normal; font-weight: 600; line-height: 1.668vw;">Personal Balance</span>
                             </div>
                             <div class="w-[18%] h-full"></div>
-                            <div class="w-[12%] h-full flex items-center justify-start">
+                            <div class="w-[12%] h-full flex items-center justify-start" v-if="Logintype != 'hacker' || CreditSystem != false">
                                 <span style="color: #000; font-family: regular; font-size: 1.3063vw; font-style: normal; font-weight: 600; line-height: 1.668vw;">Debts</span>
                             </div>
                             <div class="w-[12%] h-full"></div>
-                            <div class="w-[15%] h-full flex items-center justify-start">
+                            <div class="w-[15%] h-full flex items-center justify-start" v-if="Logintype != 'hacker' || CreditSystem != false">
                                 <span style="color: #000; font-family: regular; font-size: 1.3063vw; font-style: normal; font-weight: 600; line-height: 1.668vw;">Credit Point</span>
                             </div>
                             <div class="w-[12.5%] h-full"></div>
@@ -1028,14 +1028,14 @@
                                 <span class="w-full" style="color: #000; font-family: regular; font-size: 2.5548vw; font-style: normal; font-weight: 600; line-height: normal;">{{ '$' + PE3D(PlayersMoney) }}</span>
                             </div>
                             <div class="w-[5%] h-full"></div>
-                            <div class="w-[19.5%] h-full flex items-center justify-start" :class="{ 'justify-start': Debts > 0, 'justify-center': Debts <= 0, 'ml-[-1.7vw]': Debts <= 0}">
+                            <div class="w-[19.5%] h-full flex items-center justify-start" :class="{ 'justify-start': Debts > 0, 'justify-center': Debts <= 0, 'ml-[-1.7vw]': Debts <= 0}" v-if="Logintype != 'hacker' || CreditSystem != false">
                                 <span style="color: #000; text-align: center; font-family: regular; font-size: 2.1548vw; font-style: normal; font-weight: 600; line-height: 4.0283vw;">{{ DebtsCurrency(Debts) }}</span>
                                 <div class="w-[35%] h-[70%] flex items-center justify-center hover:cursor-pointer bg-[#000]" style="margin-left: 1vw;" @click="PayDebts()" v-if="Debts > 0">
                                     <span class="w-full" style="color: white; text-align: center; font-family: regular; font-size: .7257vw; font-style: normal; font-weight: 600; line-height: normal;">Pay</span>
                                 </div>
                             </div>
                             <div class="w-[8%] h-full"></div>
-                            <div class="w-[20%] h-full flex items-center justify-start">
+                            <div class="w-[20%] h-full flex items-center justify-start" v-if="Logintype != 'hacker' || CreditSystem != false">
                                 <span :class="{'ml-[1.7vw]': Debts <= 0}" style="color: #000; text-align: center; font-family: regular; font-size: 2.1548vw; font-style: normal; font-weight: 600; line-height: 4.0283vw;">{{ PE3D(PlayersCreditPoint) }}</span> <img src="./img/Star-icon.png" style="width: 1.8229vw; height: 1.8229vw; margin-left: .5vw;">
                             </div>
                             <div class="w-[7.5%] h-full"></div>

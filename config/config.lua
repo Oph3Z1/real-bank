@@ -25,6 +25,11 @@ Config.AvailableCredits = {
     {id = 'open3', type = 'Open', label = 'Ultra Open Credit',   description = 'This is a ultra loan and the amount is very high', price = 130000,  requiredcreditpoint = 900, paybacktime = 4, paybackpercent = 1.6}, -- paybackpercent --> 1 = 100%, 2 = 200%   ∥    paybacktime --> weeks  
 }
 
+-- Fast Actions
+Config.FirstFastAction = {type = 'withdraw', amount = 100}
+Config.SecondFastAction = {type = 'deposit', amount = 500}
+Config.ThirdFastAction = {type = 'withdraw', amount = 1000}
+
 -- Discord Settings
 Config.DiscordBotToken = 'OTMwODI3Mzg1MzI5MzA3NzMx.GQPatL.q0qjstbgFANq6d21rMjZK7A4v__UmNNxF0dti8' -- Discord bot token
 

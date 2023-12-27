@@ -174,6 +174,24 @@ function OpenBankUI()
         billstheme = Config.InvoiceTheme,
         billsframe = getframe,
         billsdata = billsdata,
+        ffastaction = Config.FirstFastAction,
+        sfastaction = Config.SecondFastAction,
+        tfastaction = Config.ThirdFastAction,
+        transferlist = data.transferlist
+    })
+end
+
+function OpenBankAnotherAccount(pidata)
+    local data = Callback('real-bank:ATMLoginAnotherAccount', pidata)
+    SendNUIMessage({
+        action = 'OpenAnotherAccount',
+        infodata = data.infodata,
+        targetmoney = data.targetmoney,
+        transaction = data.transaction,
+        iban = data.iban,
+        loginlimit = data.loginlimit,
+        withdrawlimit = data.withdrawlimit,
+        cardstyle = Config.CardStyle,
     })
 end
 
@@ -227,6 +245,11 @@ AddEventHandler('real-bank:OpenBank', function()
     OpenBankUI()
 end)
 
+RegisterNetEvent('real-bank:Close')
+AddEventHandler('real-bank:Close', function()
+    SetNuiFocus(false, false)
+end)
+
 RegisterNUICallback('CreatePassword', function(data, cb)
     TriggerServerEvent("real-bank:CreateAccount", data)
     SetNuiFocus(false, false)
@@ -263,8 +286,23 @@ RegisterNUICallback('ATMLoginToOwnAccount', function(data, cb)
 end)
 
 RegisterNUICallback('ATMLoginAnotherAccount', function(data, cb)
-    TriggerServerEvent('real-bank:ATMLoginAnotherAccount', data.iban, data.password)
-    SetNuiFocus(false, false)
+    OpenBankAnotherAccount(data)
+end)
+
+RegisterNUICallback('WithdrawHackedAccount', function(data, cb)
+    TriggerServerEvent('real-bank:WithdrawHackedAccount', data)
+end)
+
+RegisterNUICallback('WithdrawFastAction', function(data, cb)
+    TriggerServerEvent('real-bank:WithdrawFastAction', data)
+end)
+
+RegisterNUICallback('DepositFastAction', function(data, cb)
+    TriggerServerEvent('real-bank:DepositFastAction', data)
+end)
+
+RegisterNUICallback('TransferMoney', function(data, cb)
+    TriggerServerEvent('real-bank:TransferMoney', data.iban, data.amount)
 end)
 
 RegisterNUICallback('Logout', function(data, cb)

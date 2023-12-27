@@ -30,27 +30,6 @@ Citizen.CreateThread(function()
     GetSQLTable = data
 end)
 
-RegisterNetEvent('real-bank:ATMLoginAnotherAccount', function(targetiban, password)
-    local src = source
-    local PlayerIdent = GetIdentifier(src)
-    local data = ExecuteSql("SELECT * FROM `real_bank` WHERE `iban` = '"..targetiban.."'")
-    local targetidentity = data[1].identifier
-    local targetinfo = json.decode(data[1].info)
-    local accountusedtable = json.decode(data[1].AccountUsed)
-    local targetaccountmoney = GetPlayerMoneyOffline(targetidentity)
-    if data[1] then
-        if tonumber(password) == tonumber(data[1].password) then
-            if accountusedtable.loginlimit ~= 0 then
-                DataTable = {
-                    infodata = targetinfo,
-                    targetmoney = targetaccountmoney,
-                }
-                cb(DataTable)
-            end
-        end
-    end
-end)
-
 Citizen.CreateThread(function()
     RegisterCallback("real-bank:GetPlayerData", function(source, cb)
         local src = source
@@ -60,6 +39,7 @@ Citizen.CreateThread(function()
         local PlayersCash = GetPlayerMoneyOnline("cash", src)
         local checkdebts = CheckDebts()
         local data = ExecuteSql("SELECT * FROM `real_bank` WHERE `identifier` = '"..PlayerIdent.."'")
+        local transferplayersdata = GetPlayers()
         if #data > 0 then
             if Config.CreditSystem == true then
                 if StatusThing == 'donthave' then
@@ -70,7 +50,8 @@ Citizen.CreateThread(function()
                     DataTable = {
                         data = data,
                         PlayerMoney = tonumber(PlayerMoney),
-                        PlayerCash = tonumber(PlayersCash)
+                        PlayerCash = tonumber(PlayersCash),
+                        transferlist = transferplayersdata
                     }
                     cb(DataTable)
                 else
@@ -82,7 +63,8 @@ Citizen.CreateThread(function()
                         DataTable = {
                             data = data,
                             PlayerMoney = tonumber(PlayerMoney),
-                            PlayerCash = tonumber(PlayersCash)
+                            PlayerCash = tonumber(PlayersCash),
+                            transferlist = transferplayersdata
                         }
                         cb(DataTable)
                     else
@@ -121,6 +103,44 @@ Citizen.CreateThread(function()
             else
                 cb(false)
             end
+        end
+    end)
+
+    frameworkObject.Functions.CreateCallback("real-bank:ATMLoginAnotherAccount", function(source, cb, getdata)
+        local src = source
+        local PlayerIdent = GetIdentifier(src)
+        local targetiban = getdata.iban
+        local data = ExecuteSql("SELECT * FROM `real_bank` WHERE `iban` = '"..targetiban.."'")
+        if data and data[1] then
+            local targetidentity = data[1].identifier
+            local targetinfo = json.decode(data[1].info)
+            local targettransaction = json.decode(data[1].transaction)
+            local accountusedtable = json.decode(data[1].AccountUsed)
+            local targetaccountmoney = GetPlayerMoneyOffline(targetidentity)
+            
+            if tonumber(getdata.password) == tonumber(data[1].password) then
+                if accountusedtable.loginlimit ~= 0 then
+                    DataTable = {
+                        infodata = targetinfo,
+                        targetmoney = targetaccountmoney,
+                        transaction = targettransaction,
+                        loginlimit = accountusedtable.loginlimit,
+                        withdrawlimit = accountusedtable.withdrawlimit,
+                        iban = targetiban
+                    }
+                    cb(DataTable)
+                    accountusedtable.loginlimit = accountusedtable.loginlimit - 1
+                    ExecuteSql("UPDATE `real_bank` SET `AccountUsed` = '"..json.encode(accountusedtable).."' WHERE `identifier` = '"..targetidentity.."'")
+                else
+                    print('This account has been hacked so many times that it cannot be hacked anymore.')
+                end
+            else
+                TriggerClientEvent('real-bank:Close', src)
+                print('Wrong password')
+            end
+        else
+            TriggerClientEvent('real-bank:Close', src)
+            print('Wrong iban')
         end
     end)
 end)
@@ -423,6 +443,149 @@ RegisterNetEvent('real-bank:WithdrawMoney', function(amount)
     end
 end)
 
+RegisterNetEvent('real-bank:WithdrawFastAction', function(amount)
+    local src = source
+    if Config.Framework == 'newqb' or Config.Framework == 'oldqb' then
+        local Player = frameworkObject.Functions.GetPlayer(src)
+        local playermoney = Player.PlayerData.money.bank
+        if tonumber(amount) > 0 then
+            if tonumber(playermoney) >= tonumber(amount) then
+                Player.Functions.RemoveMoney('bank', tonumber(amount))
+                Player.Functions.AddMoney('cash', tonumber(amount))
+            else
+                print('Not enough money on player')
+            end
+        else
+            return
+        end
+    else
+        local Player = frameworkObject.GetPlayerFromId(src)
+        local playermoney = Player.getAccount("bank").money
+        if tonumber(amount) > 0 then
+            if tonumber(playermoney) >= tonumber(amount) then
+                Player.removeAccountMoney('bank', tonumber(amount))
+                Player.addMoney(tonumber(amount))
+            else
+                print('Not enough money on you')
+            end
+        else
+            return
+        end
+    end
+end)
+
+RegisterNetEvent('real-bank:DepositFastAction', function(amount)
+    local src = source
+    if Config.Framework == 'newqb' or Config.Framework == 'oldqb' then
+        local Player = frameworkObject.Functions.GetPlayer(src)
+        local playermoney = Player.PlayerData.money.cash
+        if tonumber(amount) > 0 then
+            if tonumber(playermoney) >= tonumber(amount) then
+                Player.Functions.AddMoney('bank', tonumber(amount))
+                Player.Functions.RemoveMoney('cash', tonumber(amount))
+            else
+                print('Not enough money on player')
+            end
+        else
+            return
+        end
+    else
+        local Player = frameworkObject.GetPlayerFromId(src)
+        local playermoney = Player.getMoney()
+        if tonumber(amount) > 0 then
+            if tonumber(playermoney) >= tonumber(amount) then
+                Player.addAccountMoney('bank', tonumber(amount))
+                Player.RemoveMoney(tonumber(amount))
+            else
+                print('Not enough money on you')
+            end
+        else
+            return
+        end
+    end
+end)
+
+RegisterNetEvent('real-bank:WithdrawHackedAccount', function(getdata)
+    local src = source
+    local targetiban = getdata.iban
+    local data = ExecuteSql("SELECT * FROM `real_bank` WHERE `iban` = '"..targetiban.."'")
+    if data and data[1] then
+        local targetidentity = data[1].identifier
+        local accountusedtable = json.decode(data[1].AccountUsed)
+        local targetplayermoney = GetPlayerMoneyOffline(targetidentity)
+        if tonumber(getdata.amount) > 0 then
+            if tonumber(targetplayermoney) >= tonumber(getdata.amount) then
+                RemoveBankMoneyOffline(targetidentity, tonumber(getdata.amount))
+                if Config.Framework == 'newqb' or Config.Framework == 'oldqb' then
+                    local Player = frameworkObject.Functions.GetPlayer(src)
+                    Player.Functions.AddMoney("cash", tonumber(getdata.amount))
+                else
+                    local Player = frameworkObject.GetPlayerFromId(src)
+                    Player.addMoney(tonumber(getdata.amount))
+                end
+                accountusedtable.withdrawlimit = accountusedtable.withdrawlimit - getdata.amount
+                ExecuteSql("UPDATE `real_bank` SET `AccountUsed` = '"..json.encode(accountusedtable).."' WHERE `identifier` = '"..targetidentity.."'")
+            else
+                print("Not enough money on the account")
+            end
+        else
+            print("Amount must be higher than 0")
+        end
+    else
+        print("IBAN not found")
+    end
+end)
+
+RegisterNetEvent('real-bank:TransferMoney', function(iban, amount)
+    local src = source
+    local data = ExecuteSql("SELECT * FROM `real_bank` WHERE `iban` = '"..iban.."'")
+
+    for k, v in pairs(data) do
+        if v.iban == iban then
+            if Config.Framework == 'newqb' or Config.Framework == 'oldqb' then
+                local Player = frameworkObject.Functions.GetPlayer(src)
+                local playermoney = Player.PlayerData.money.bank
+                local getplayeraccount = GetPlayerAccount(Player.PlayerData.citizenid)
+                local gettargetplayer = frameworkObject.Functions.GetPlayerByCitizenId(v.identifier)
+                local targetplayersource = frameworkObject.Functions.GetPlayer(gettargetplayer.PlayerData.source)
+                
+                if tonumber(playermoney) >= tonumber(amount) then
+                    if gettargetplayer then
+                        Player.Functions.RemoveMoney('bank', tonumber(amount))
+                        targetplayersource.Functions.AddMoney('bank', tonumber(amount))
+                    else
+                        Player.Functions.RemoveMoney('bank', tonumber(amount))
+                        local targetplayermoney = ExecuteSql("SELECT `money` FROM `players` WHERE `citizenid` = '"..v.identifier.."'")
+                        local targetplayerbankmoney = json.decode(targetplayermoney[1].money)
+                        targetplayerbankmoney.bank = tonumber(targetplayerbankmoney.bank) + tonumber(amount)
+                        ExecuteSql("UPDATE `players` SET `money` = '"..targetplayerbankmoney.."' WHERE  `citizenid` = '"..v.identifier.."'")
+                    end
+                end
+            else
+                local Player = frameworkObject.GetPlayerFromId(src)
+                local playermoney = Player.getAccount('bank').money
+                local getplayeraccount = GetPlayerAccount(Player.identifier)
+                local gettargetplayer = frameworkObject.GetPlayerFromIdentifier(v.identifier)
+                local targetplayersource = frameworkObject.GetPlayerFromId(gettargetplayer.source)
+                
+                if tonumber(playermoney) >= tonumber(amount) then
+                    if gettargetplayer then
+                        Player.removeAccountMoney('bank', tonumber(amount))
+                        Citizen.Wait(100)
+                        targetplayersource.addAccountMoney('bank', tonumber(amount))
+                    else
+                        Player.removeAccountMoney('bank', tonumber(amount))
+                        local targetplayermoney = ExecuteSql("SELECT * FROM `users` WHERE `iban` = '"..iban.."'")
+                        local targetplayerbankmoney = json.decode(targetplayermoney[1].accounts)
+                        targetplayerbankmoney.bank = tonumber(targetplayerbankmoney.bank) + tonumber(amount)
+                        ExecuteSql("UPDATE `users` SET `accounts` = '"..json.encode(targetplayerbankmoney).."' WHERE `identifier` = '"..v.identifier.."'")
+                    end
+                end
+            end
+        end
+    end
+end)
+
 function GetCurrentDate()
     local currentTime = os.time()
     local formattedDate = os.date("%d.%m.%Y", currentTime)
@@ -470,11 +633,10 @@ function GetPlayerAccount(identifier)
     local ident = identifier
     for k, v in pairs(GetSQLTable) do
         if v.identifier == ident then
-            return k, v
-        else
-            return false
+            return v, k
         end
     end
+    return false
 end
 
 function RegisterCallback(name, cbFunc, data)
@@ -571,6 +733,29 @@ function GetPlayerMoneyOnline(type, id)
         elseif type == 'cash' then
             return tonumber(Player.getMoney())
         end
+    end
+end
+
+function GetPlayers()
+    if Config.Framework == 'newqb' or Config.Framework == 'oldqb' then
+        local Players = frameworkObject.Functions.GetPlayers()
+        local resulttable = {}
+        for k, v in pairs(Players) do
+            GetPlayer = frameworkObject.Functions.GetPlayer(v)
+            local PlayerCitizenid = GetPlayer.PlayerData.citizenid
+            local data = ExecuteSql("SELECT * FROM `real_bank` WHERE `identifier` = '"..PlayerCitizenid.."'")
+            if data or data[1] then
+                local a = json.decode(data[1].info)
+                table.insert(resulttable, {
+                    id = #data + 1,
+                    pp = a.playerpfp,
+                    playername = a.playername,
+                    iban = data[1].iban
+                })
+            end
+        end
+        return resulttable
+    else
     end
 end
 
