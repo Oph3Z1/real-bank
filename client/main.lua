@@ -30,9 +30,9 @@ end)
 
 function OpenBank()
     if Config.Drawtext == 'qb-target' then
-        for k, v in pairs(Config.BankLocations) do
-            exports['qb-target']:AddBoxZone("bank" .. k, vector3(v.Coords.x,v.Coords.y, v.Coords.z), 1.5, 1.5, {
-                name = "bank" .. k,
+        for _,v in pairs(Config.BankLocations) do
+            exports['qb-target']:AddBoxZone("rbank" .. _, vector3(v.Coords.x, v.Coords.y, v.Coords.z), 1.5, 1.5, {
+                name = "rbank" .. _,
                 debugPoly = false,
                 heading = -20,
                 minZ = v.Coords.z - 2,
@@ -40,8 +40,8 @@ function OpenBank()
             }, {
                 options = {
                     {
-                        type = "server",
-                        event = "real-bank:CheckAccountExistens",
+                        type = "client",
+                        event = "real-bank:OpenNormalBank",
                         icon = "fas fa-hand-point-up",
                         label = "Open Bank",
                         
@@ -63,8 +63,9 @@ function OpenBank()
                     local DistanceToATMs = #(PlayerCoords - GetATMCoords)
 
                     if DistanceToATMs < 1.5 then
-                        exports['qb-target']:AddBoxZone("bank" .. k, vector3(GetATMCoords.x, GetATMCoords.y, GetATMCoords.z), 1.5, 1.5, {
-                            name = "bank" .. k,
+                        sleep = 4
+                        exports['qb-target']:AddBoxZone("real-bankN" .. k, vector3(GetATMCoords.x, GetATMCoords.y, GetATMCoords.z), 1.5, 1.5, {
+                            name = "real-bankN" .. k,
                             debugPoly = false,
                             heading = -20,
                             minZ = GetATMCoords.z - 2,
@@ -264,6 +265,11 @@ end
 RegisterNetEvent('real-bank:OpenATMFunction')
 AddEventHandler('real-bank:OpenATMFunction', function()
     OpenATM()
+end)
+
+RegisterNetEvent('real-bank:OpenNormalBank')
+AddEventHandler('real-bank:OpenNormalBank', function()
+    TriggerServerEvent('real-bank:CheckAccountExistens', nil)
 end)
 
 RegisterNetEvent('real-bank:UpdateUITransaction')
