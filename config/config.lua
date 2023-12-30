@@ -2,7 +2,7 @@ Config = {}
 
 Config.Framework = 'autodetect' -- newesx, oldesx, newqb, oldqb, autodetect
 Config.MySQL = 'oxmysql' -- oxmysql, ghamattimysql, mysql-async | Don't forget to edit fxmanifest.lua
-Config.Drawtext = 'drawtext' -- bt-target, qb-target, drawtext, qtarget
+Config.Drawtext = 'qb-target' -- qb-target, drawtext
 
 Config.CardStyle = 1 -- '1' => 'img/FirstCard.png' | '2' => 'img/SecondCard.png'
 Config.InvoiceTheme = 'blue' -- 'blue', 'lightblue', 'red', 'yellow'
@@ -29,9 +29,6 @@ Config.AvailableCredits = {
 Config.FirstFastAction = {type = 'withdraw', amount = 100}
 Config.SecondFastAction = {type = 'deposit', amount = 500}
 Config.ThirdFastAction = {type = 'withdraw', amount = 1000}
-
--- Discord Settings
-Config.DiscordBotToken = 'OTMwODI3Mzg1MzI5MzA3NzMx.GQPatL.q0qjstbgFANq6d21rMjZK7A4v__UmNNxF0dti8' -- Discord bot token
 
 Config.GetCreditCard = vector3(247.49, 223.2, 106.29)
 

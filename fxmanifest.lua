@@ -17,18 +17,20 @@ files {
 }
 
 shared_script{
-    'config/*.lua',
+    'config/config.lua',
     'GetFrameworkObject.lua',
 }
 
 client_scripts {
+    'config/config_client.lua',
     'client/*.lua',
 }
 
 server_scripts {
 	-- '@mysql-async/lib/MySQL.lua', --⚠️PLEASE READ⚠️; Uncomment this line if you use 'mysql-async'.⚠️
     '@oxmysql/lib/MySQL.lua', --⚠️PLEASE READ⚠️; Uncomment this line if you use 'oxmysql'.⚠️
-    'server/*.lua'
+    'config/config_server.lua',
+    'server/*.lua',
 }
 
 export 'SendLog'

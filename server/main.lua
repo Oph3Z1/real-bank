@@ -26,6 +26,11 @@ Citizen.CreateThread(function()
         else
             v.info = json.decode(v.info)
         end
+        if v.AccountUsed == nil then
+            v.AccountUsed = {}
+        else
+            v.AccountUsed = json.decode(v.AccountUsed)
+        end
     end
     GetSQLTable = data
 end)
@@ -38,8 +43,10 @@ Citizen.CreateThread(function()
         local PlayerMoney = GetPlayerMoneyOnline("bank", src)
         local PlayersCash = GetPlayerMoneyOnline("cash", src)
         local checkdebts = CheckDebts()
+        local dcpfp = GetDiscordAvatar(src)
         local data = ExecuteSql("SELECT * FROM `real_bank` WHERE `identifier` = '"..PlayerIdent.."'")
         local transferplayersdata = GetPlayers()
+
         if #data > 0 then
             if Config.CreditSystem == true then
                 if StatusThing == 'donthave' then
@@ -47,6 +54,12 @@ Citizen.CreateThread(function()
                     local b = json.decode(data[1].credit)
                     data[1].info = a
                     data[1].credit = b
+
+                    if tostring(a.playerpfp) ~= tostring(dcpfp) then
+                        a.playerpfp = dcpfp
+                        ExecuteSql("UPDATE `real_bank` SET `info` = '"..json.encode(data[1].info).."' WHERE `identifier` = '"..PlayerIdent.."' ")
+                    end
+
                     DataTable = {
                         data = data,
                         PlayerMoney = tonumber(PlayerMoney),
@@ -60,6 +73,12 @@ Citizen.CreateThread(function()
                         local b = json.decode(data[1].credit)
                         data[1].info = a
                         data[1].credit = b
+
+                        if tostring(a.playerpfp) ~= tostring(dcpfp) then
+                            a.playerpfp = dcpfp
+                            ExecuteSql("UPDATE `real_bank` SET `info` = '"..json.encode(data[1].info).."' WHERE `identifier` = '"..PlayerIdent.."' ")
+                        end
+
                         DataTable = {
                             data = data,
                             PlayerMoney = tonumber(PlayerMoney),
@@ -76,6 +95,12 @@ Citizen.CreateThread(function()
                 local b = json.decode(data[1].credit)
                 data[1].info = a
                 data[1].credit = b
+
+                if tostring(a.playerpfp) ~= tostring(dcpfp) then
+                    a.playerpfp = dcpfp
+                    ExecuteSql("UPDATE `real_bank` SET `info` = '"..json.encode(data[1].info).."' WHERE `identifier` = '"..PlayerIdent.."' ")
+                end
+
                 DataTable = {
                     data = data,
                     PlayerMoney = tonumber(PlayerMoney),
@@ -85,6 +110,7 @@ Citizen.CreateThread(function()
             end
         end
     end)
+
     RegisterCallback("real-bank:GetBills", function(source, cb)
         local src = source
         if Config.Framework == 'newqb' or Config.Framework == 'oldqb' then
@@ -107,6 +133,44 @@ Citizen.CreateThread(function()
     end)
 
     frameworkObject.Functions.CreateCallback("real-bank:ATMLoginAnotherAccount", function(source, cb, getdata)
+        local src = source
+        local PlayerIdent = GetIdentifier(src)
+        local targetiban = getdata.iban
+        local data = ExecuteSql("SELECT * FROM `real_bank` WHERE `iban` = '"..targetiban.."'")
+        if data and data[1] then
+            local targetidentity = data[1].identifier
+            local targetinfo = json.decode(data[1].info)
+            local targettransaction = json.decode(data[1].transaction)
+            local accountusedtable = json.decode(data[1].AccountUsed)
+            local targetaccountmoney = GetPlayerMoneyOffline(targetidentity)
+            
+            if tonumber(getdata.password) == tonumber(data[1].password) then
+                if accountusedtable.loginlimit ~= 0 then
+                    DataTable = {
+                        infodata = targetinfo,
+                        targetmoney = targetaccountmoney,
+                        transaction = targettransaction,
+                        loginlimit = accountusedtable.loginlimit,
+                        withdrawlimit = accountusedtable.withdrawlimit,
+                        iban = targetiban
+                    }
+                    cb(DataTable)
+                    accountusedtable.loginlimit = accountusedtable.loginlimit - 1
+                    ExecuteSql("UPDATE `real_bank` SET `AccountUsed` = '"..json.encode(accountusedtable).."' WHERE `identifier` = '"..targetidentity.."'")
+                else
+                    print('This account has been hacked so many times that it cannot be hacked anymore.')
+                end
+            else
+                TriggerClientEvent('real-bank:Close', src)
+                print('Wrong password')
+            end
+        else
+            TriggerClientEvent('real-bank:Close', src)
+            print('Wrong iban')
+        end
+    end)
+
+    frameworkObject.RegisterServerCallback("real-bank:ESX:ATMLoginAnotherAccount", function(source, cb, getdata)
         local src = source
         local PlayerIdent = GetIdentifier(src)
         local targetiban = getdata.iban
@@ -280,6 +344,7 @@ RegisterNetEvent('real-bank:CreditConfirm', function(data)
 end)
 
 RegisterNetEvent('real-bank:PayCreditDebts', function()
+    print("kjasndkljaskjldnlaksjd")
     local ident = GetIdentifier(PlayerSource)
     local data = ExecuteSql("SELECT `credit` FROM `real_bank` WHERE `identifier` = '"..ident.."'")
     local GetPlayerMoney = GetPlayerMoneyOnline('bank', PlayerSource)
@@ -299,7 +364,8 @@ RegisterNetEvent('real-bank:PayCreditDebts', function()
             StatusThing = false
             print("You don't have enough money to pay you'r debts")
         end
-    elseif a.debt <= 0 then
+    elseif a.debt <= 0 or a.debt == 0 then
+        print("You don't have enough money to pay you'r debts")
         StatusThing = 'donthave'
     end
 end)
@@ -326,22 +392,26 @@ function CheckDebts()
     local getdata = json.decode(data[1].credit)
     local getdatefromdata = getdata.creditlastdate
     local currenttime = GetCurrentDate()
-    if getdatefromdata ~= 0 or getdatefromdata ~= '' or getdatefromdata ~= "" or getdatefromdata ~= nil then
-        if currenttime < tostring(getdatefromdata) then
-            TriggerEvent('real-bank:PayCreditDebts')
-            if StatusThing == true then
-                print('All your debts have been paid automatically because the due date has passed.')
-                return true
-            elseif StatusThing == false then
-                return false
-            elseif StatusThing == 'donthave' then
+    if getdata.debt > 0 then
+        if getdatefromdata ~= 0 or getdatefromdata ~= '' or getdatefromdata ~= "" or getdatefromdata ~= nil then
+            if tostring(currenttime) < tostring(getdatefromdata) then
+                TriggerEvent('real-bank:PayCreditDebts')
+                if StatusThing == true then
+                    print('All your debts have been paid automatically because the due date has passed.')
+                    return true
+                elseif StatusThing == false then
+                    return false
+                elseif StatusThing == 'donthave' then
+                    return true
+                end
+            else
                 return true
             end
         else
             return true
         end
     else
-        return true
+        StatusThing = 'donthave'
     end
 end
 
@@ -558,7 +628,7 @@ RegisterNetEvent('real-bank:TransferMoney', function(iban, amount)
                         local targetplayermoney = ExecuteSql("SELECT `money` FROM `players` WHERE `citizenid` = '"..v.identifier.."'")
                         local targetplayerbankmoney = json.decode(targetplayermoney[1].money)
                         targetplayerbankmoney.bank = tonumber(targetplayerbankmoney.bank) + tonumber(amount)
-                        ExecuteSql("UPDATE `players` SET `money` = '"..targetplayerbankmoney.."' WHERE  `citizenid` = '"..v.identifier.."'")
+                        ExecuteSql("UPDATE `players` SET `money` = '"..json.encode(targetplayerbankmoney).."' WHERE  `citizenid` = '"..v.identifier.."'")
                     end
                 end
             else
@@ -756,6 +826,23 @@ function GetPlayers()
         end
         return resulttable
     else
+        local Players = frameworkObject.GetPlayers()
+        local resulttable = {}
+        for k, v in pairs(Players) do
+            GetPlayer = frameworkObject.GetPlayerFromId(v)
+            local PlayerIdentifier = GetPlayer.getIdentifier()
+            local data = ExecuteSql("SELECT * FROM `real_bank` WHERE `identifier` = '"..PlayerIdentifier.."'")
+            if data or data[1] then
+                local a = json.decode(data[1].info)
+                table.insert(resulttable, {
+                    id = #data + 1,
+                    pp = a.playerpfp,
+                    playername = a.playername,
+                    iban = data[1].iban
+                })
+            end
+        end
+        return resulttable
     end
 end
 

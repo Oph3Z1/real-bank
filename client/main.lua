@@ -30,8 +30,63 @@ end)
 
 function OpenBank()
     if Config.Drawtext == 'qb-target' then
-    elseif Config.Drawtext == 'bt-target' then
-    elseif Config.Drawtext == 'qtarget' then
+        for k, v in pairs(Config.BankLocations) do
+            exports['qb-target']:AddBoxZone("bank" .. k, vector3(v.Coords.x,v.Coords.y, v.Coords.z), 1.5, 1.5, {
+                name = "bank" .. k,
+                debugPoly = false,
+                heading = -20,
+                minZ = v.Coords.z - 2,
+                maxZ = v.Coords.z + 2,
+            }, {
+                options = {
+                    {
+                        type = "server",
+                        event = "real-bank:CheckAccountExistens",
+                        icon = "fas fa-hand-point-up",
+                        label = "Open Bank",
+                        
+                    },
+                },
+                distance = 8
+            })
+        end
+
+        Citizen.CreateThread(function()
+            while true do
+                local sleep = 2000
+                local Player = PlayerPedId()
+                local PlayerCoords = GetEntityCoords(Player)
+
+                for k, v in pairs(Config.ATMs) do
+                    local ATMEntity = GetClosestObjectOfType(PlayerCoords, 2.0, GetHashKey(v))
+                    local GetATMCoords = GetEntityCoords(ATMEntity)
+                    local DistanceToATMs = #(PlayerCoords - GetATMCoords)
+
+                    if DistanceToATMs < 1.5 then
+                        exports['qb-target']:AddBoxZone("bank" .. k, vector3(GetATMCoords.x, GetATMCoords.y, GetATMCoords.z), 1.5, 1.5, {
+                            name = "bank" .. k,
+                            debugPoly = false,
+                            heading = -20,
+                            minZ = GetATMCoords.z - 2,
+                            maxZ = GetATMCoords.z + 2,
+                        }, {
+                            options = {
+                                {
+                                    type = "client",
+                                    event = "real-bank:OpenATMFunction",
+                                    icon = "fas fa-hand-point-up",
+                                    label = "Open Bank",
+                                    
+                                },
+                            },
+                            distance = 8
+                        })
+                    end
+                end
+                Citizen.Wait(sleep)
+            end
+        end)
+
     elseif Config.Drawtext == 'drawtext' then
         Citizen.CreateThread(function()
             while true do
@@ -156,7 +211,7 @@ end
 function OpenBankUI()
     local data = Callback('real-bank:GetPlayerData')
     local billsdata = Callback('real-bank:GetBills')
-    getframe = null
+    getframe = nil
     if Config.Framework == 'newqb' or Config.Framework == 'oldqb' then
         getframe = 'qb'
     else
@@ -182,7 +237,14 @@ function OpenBankUI()
 end
 
 function OpenBankAnotherAccount(pidata)
-    local data = Callback('real-bank:ATMLoginAnotherAccount', pidata)
+    local data
+
+    if Config.Framework == 'newqb' or Config.Framework == 'oldqb' then
+        data = Callback('real-bank:ATMLoginAnotherAccount', pidata)
+    else
+        data = Callback('real-bank:ATMLoginAnotherAccount', pidata)
+    end
+
     SendNUIMessage({
         action = 'OpenAnotherAccount',
         infodata = data.infodata,
@@ -198,6 +260,11 @@ end
 function SendLog(received, sendedto, type, amount, pp)
     TriggerServerEvent('real-bank:SendLog', received, sendedto, type, amount, pp)
 end
+
+RegisterNetEvent('real-bank:OpenATMFunction')
+AddEventHandler('real-bank:OpenATMFunction', function()
+    OpenATM()
+end)
 
 RegisterNetEvent('real-bank:UpdateUITransaction')
 AddEventHandler('real-bank:UpdateUITransaction', function()
@@ -307,6 +374,20 @@ end)
 
 RegisterNUICallback('Logout', function(data, cb)
     SetNuiFocus(false, false)
+end)
+
+RegisterNUICallback('CloseBankUI', function(data, cb)
+    SetNuiFocus(false, false)
+    SendNUIMessage({
+        action = 'CloseBankUI'
+    })
+end)
+
+RegisterNUICallback('CloseATM', function(data, cb)
+    SetNuiFocus(false, false)
+    SendNUIMessage({
+        action = 'CloseATMUI'
+    })
 end)
 
 function Callback(name, payload)
