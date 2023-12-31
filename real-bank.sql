@@ -1,4 +1,3 @@
-
 CREATE TABLE IF NOT EXISTS `real_bank` (
   `identifier` varchar(50) DEFAULT NULL,
   `info` longtext DEFAULT NULL,
