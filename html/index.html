@@ -71,12 +71,12 @@
 
                         @click="ConfirmPassword()"
                         >
-                        Confirm
+                        {{Language['confirm']}}
                         </div>
                     </div>
                     <div class="w-full h-[1%]" v-if="PasswordScreenType == 'Normal'"></div>
                     <div class="w-full h-[4%] flex items-center justify-center" v-if="PasswordScreenType == 'Normal'">
-                        <span class="hover:cursor-pointer" style="font-size: 1vw; font-family: regular;" @click="ChangePasswordScreen('IBAN')">Want to login with iban?</span>
+                        <span class="hover:cursor-pointer" style="font-size: 1vw; font-family: regular;" @click="ChangePasswordScreen('IBAN')">{{Language['login_with_iban']}}</span>
                     </div>
                     <div class="w-full h-[5.2%]" v-if="PasswordScreenType == 'Normal'"></div>
                     <div class="w-full h-[10.2%]" v-else></div>
@@ -141,12 +141,12 @@
 
                         @click="ConfirmLoginAnotherAccount()"
                         >
-                        Confirm
+                        {{Language['confirm']}}
                         </div>
                     </div>
                     <div class="w-full h-[1%]"></div>
                     <div class="w-full h-[4%] flex items-center justify-center">
-                        <span class="hover:cursor-pointer" style="font-size: 1vw; font-family: regular;" @click="ChangePasswordScreen('Password')">Want to login with your account?</span>
+                        <span class="hover:cursor-pointer" style="font-size: 1vw; font-family: regular;" @click="ChangePasswordScreen('Password')">{{Language['login_with_normal']}}</span>
                     </div>
                     <div class="w-full h-[5.2%]"></div>
                 </div>
@@ -187,7 +187,7 @@
                                     font-weight: 500;
                                     line-height: normal;
                                     ">
-                                    Welcome to the City Bank!
+                                    {{Language['welcome']}}
                                     </span>
                                 </div>
                             </div>
@@ -206,7 +206,7 @@
                                     <div class="w-[15%] h-full"></div>
                                     <div class="w-[50%] h-full flex items-center">
                                         <span class="dashboard-label" :style="{color: MiddleMenuSection == 'Main' ? '#000' : '#959595'}">
-                                        Dashboard
+                                        {{Language['dashboard']}}
                                         </span>
                                     </div>
                                     <div class="w-[15%] h-full"></div>
@@ -222,7 +222,7 @@
                                     <div class="w-[15%] h-full"></div>
                                     <div class="w-[50%] h-full flex items-center ">
                                         <span class="invoices-label" :style="{color: MiddleMenuSection == 'Invoices' ? '#000' : '#959595'}">
-                                        Invoices
+                                        {{Language['invoices']}}
                                         </span>
                                     </div>
                                     <div class="w-[15%] h-full"></div>
@@ -238,7 +238,7 @@
                                     <div class="w-[15%] h-full"></div>
                                     <div class="w-[50%] h-full flex items-center ">
                                         <span class="loans-label" :style="{color: MiddleMenuSection == 'Credit' ? '#000' : '#959595'}">
-                                        Credits
+                                        {{Language['credits']}}
                                         </span>
                                     </div>
                                     <div class="w-[15%] h-full"></div>
@@ -370,19 +370,19 @@
                         <div class="w-full h-[2%] flex flex-wrap">  <!-- Actions Name Box -->
                             <div class="w-[12.5%] h-full"></div>
                             <div class="w-[9%] h-full flex items-center justify-start">  <!-- Send Text -->
-                                <span class="send-text">Send</span>
+                                <span class="send-text">{{Language['send']}}</span>
                             </div>
                             <div class="w-[8%] h-full"></div>
                             <div class="w-[16%] h-full flex items-center justify-start">  <!-- Withdraw Text -->
-                                <span class="withdraw-text">Withdraw</span>
+                                <span class="withdraw-text">{{Language['withdraw']}}</span>
                             </div>
                             <div class="w-[5.7%] h-full"></div>
                             <div class="w-[13%] h-full flex items-center justify-start">  <!-- Deposit Text -->
-                                <span class="deposit-text">Deposit</span>
+                                <span class="deposit-text">{{Language['deposit']}}</span>
                             </div>
                             <div class="w-[6.3%] h-full"></div>
                             <div class="w-[14%] h-full flex items-center justify-start">  <!-- Log Out Text -->
-                                <span class="logout-text">Log Out</span>
+                                <span class="logout-text">{{Language['logout']}}</span>
                             </div>
                             <div class="w-[15.6%] h-full"></div>
                         </div>
@@ -392,7 +392,7 @@
                                 <div class="w-full h-[6%] flex flex-wrap" v-if="Logintype !== 'hacker'">  <!-- Fast Action Text -->
                                     <div class="w-[10%] h-full"></div>
                                     <div class="w-[33%] h-full flex items-center justify-start"> <!-- FAT - Content  -->
-                                        <span class="fast-action-text">Fast Actions</span>
+                                        <span class="fast-action-text">{{Language['fast_actions']}}</span>
                                     </div>
                                     <div class="w-[57%] h-full"></div>
                                 </div>
@@ -413,7 +413,7 @@
                                                     <span class="action-s-text">{{ FirstFastAction.type[0].toUpperCase() + FirstFastAction.type.slice(1) }}</span>
                                                 </div>
                                                 <div class="w-full h-[6.5%] flex items-center justify-center">
-                                                    <span class="action-s-text2">{{ FirstFastAction.amount }}$ Fast {{ FirstFastAction.type[0].toUpperCase() + FirstFastAction.type.slice(1) }}</span>
+                                                    <span class="w-full action-s-text2">{{ FirstFastAction.amount }}$ {{ FirstFastAction.type[0].toUpperCase() + FirstFastAction.type.slice(1) }}</span>
                                                 </div>
                                                 <div class="w-full h-[9%]"></div>
                                                 <div class="w-full h-[10%] flex items-center justify-center">
@@ -443,7 +443,7 @@
                                                     <span class="action-s-text">{{ SecondFastAction.type[0].toUpperCase() + SecondFastAction.type.slice(1) }}</span>
                                                 </div>
                                                 <div class="w-full h-[6.5%] flex items-center justify-center">
-                                                    <span class="action-s-text2">{{ SecondFastAction.amount }}$ Fast {{ SecondFastAction.type[0].toUpperCase() + SecondFastAction.type.slice(1) }}</span>
+                                                    <span class="w-full action-s-text2">{{ SecondFastAction.amount }}$ {{ SecondFastAction.type[0].toUpperCase() + SecondFastAction.type.slice(1) }}</span>
                                                 </div>
                                                 <div class="w-full h-[9%]"></div>
                                                 <div class="w-full h-[10%] flex items-center justify-center">
@@ -473,7 +473,7 @@
                                                     <span class="action-s-text">{{ ThirdFastAction.type[0].toUpperCase() + ThirdFastAction.type.slice(1) }}</span>
                                                 </div>
                                                 <div class="w-full h-[6.5%] flex items-center justify-center">
-                                                    <span class="action-s-text2">{{ ThirdFastAction.amount }}$ Fast {{ ThirdFastAction.type[0].toUpperCase() + ThirdFastAction.type.slice(1) }}</span>
+                                                    <span class="w-full action-s-text2">{{ ThirdFastAction.amount }}$ {{ ThirdFastAction.type[0].toUpperCase() + ThirdFastAction.type.slice(1) }}</span>
                                                 </div>
                                                 <div class="w-full h-[9%]"></div>
                                                 <div class="w-full h-[10%] flex items-center justify-center">
@@ -566,11 +566,11 @@
                             <div class="w-[5.5%] h-full"></div>
                             <div class="w-[77.5%] h-full flex flex-col">
                                 <div class="w-full h-[35%] flex items-center justify-center">
-                                    <h1 class="w-full send-money-text">Send Money</h1>
+                                    <h1 class="w-full send-money-text">{{Language['send_money']}}</h1>
                                 </div>
                                 <div class="w-full h-[16%]"></div>
                                 <div class="w-full h-[49%] flex items-center justify-start">
-                                    <span class="w-full send-money-description-text">You can send money to others in this section!</span>  <!-- Max 18-20 words -->
+                                    <span class="w-full send-money-description-text">{{Language['send_money_desc']}}</span>  <!-- Max 18-20 words -->
                                 </div>
                             </div>
                             <div class="w-[17%] h-full"></div>
@@ -612,14 +612,14 @@
                                             </div>
                                             <div class="w-full h-[5%]"></div>
                                             <div class="w-full h-[18%] flex items-center justify-start">
-                                                <span class="search-bar-user w-full">User</span>
+                                                <span class="search-bar-user w-full">{{Language['user']}}</span>
                                             </div>
                                             <div class="w-full h-[28%]"></div>
                                         </div>
                                         <div class="w-[24%] h-full"></div>
                                         <div class="w-[23.5%] h-full flex items-center justify-center" v-if="SelectPlayer != data.id">
                                             <div class="w-full h-[40%] flex items-center justify-center bg-black rounded-[.2vw] hover:cursor-pointer" @click="SelectTransferPlayer(data.id)">
-                                                <span style="color: #FFF; text-align: center; font-family: regular; font-size: .6054vw; font-style: normal; font-weight: 600; line-height: .773vw;">Select</span>
+                                                <span style="color: #FFF; text-align: center; font-family: regular; font-size: .6054vw; font-style: normal; font-weight: 600; line-height: .773vw;">{{Language['select']}}</span>
                                             </div>
                                         </div>
                                         <div class="w-[23.5%] h-full flex items-center justify-end" v-else>
@@ -645,7 +645,7 @@
                                             <div class="w-[4%] h-full"></div>
                                             <div class="w-[50%] h-full flex items-center justify-center">
                                                 <div class="w-full h-full flex items-center justify-center rounded-[.1vw] bg-[#000000] hover:cursor-pointer" @click="TransferMoney(data.id, data.iban)">
-                                                    <span class="w-full" style="color: #FFF; text-align: center; font-family: regular; font-size: .5996vw; font-style: normal; font-weight: 700; line-height: .6379vw;">Send Money</span>
+                                                    <span class="w-full" style="color: #FFF; text-align: center; font-family: regular; font-size: .5996vw; font-style: normal; font-weight: 700; line-height: .6379vw;">{{Language['send_money']}}</span>
                                                 </div>
                                             </div>
                                             <div class="w-[46%] h-full"></div>
@@ -664,11 +664,11 @@
                             <div class="w-[5.5%] h-full"></div>
                             <div class="w-[77.5%] h-full flex flex-col">
                                 <div class="w-full h-[35%] flex items-center justify-center">
-                                    <h1 class="w-full send-money-text">Your İnvoices</h1>
+                                    <h1 class="w-full send-money-text">{{Language['your_invoices']}}</h1>
                                 </div>
                                 <div class="w-full h-[16%]"></div>
                                 <div class="w-full h-[49%] flex items-center justify-start">
-                                    <span class="w-full send-money-description-text">You can check and pay your bills in this section!</span>  <!-- Max 18-20 words -->
+                                    <span class="w-full send-money-description-text">{{Language['invoices_desc']}}</span>  <!-- Max 18-20 words -->
                                 </div>
                             </div>
                             <div class="w-[17%] h-full"></div>
@@ -706,7 +706,7 @@
                                             <div class="w-[2%] h-full"></div>
                                             <div class="w-[49%] h-full flex items-center justify-center">
                                                 <div class="w-full h-[50%] flex items-center justify-center bg-[#5EA7C7] rounded-[.2vw] hover:cursor-pointer" :class="{'bg-[#5EA7C7]': Billstheme == 'blue', 'bg-[#C75E5E]': Billstheme == 'red', 'bg-[#5EC7C0]': Billstheme == 'lightblue', 'bg-[#C7A95E]': Billstheme == 'yellow'}" @click="PayBill(data.id, data.amount)">
-                                                    <span class="w-full" style="color: #FFF; text-align: center; font-family: regular; font-size: .6367vw; font-style: normal; font-weight: 600; line-height: .813vw;">Pay</span>
+                                                    <span class="w-full" style="color: #FFF; text-align: center; font-family: regular; font-size: .6367vw; font-style: normal; font-weight: 600; line-height: .813vw;">{{Language['pay']}}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -717,7 +717,7 @@
                             </div>
                         </div>
                         <div class="w-full h-[73.5%] flex items-start justify-center" v-else>
-                            <span style="color: #B3B3B3; text-align: center; font-family: regular; font-size: 1.6299vw; font-style: normal; font-weight: 600; line-height: 2.0811vw;">You don't have an invoice</span>
+                            <span style="color: #B3B3B3; text-align: center; font-family: regular; font-size: 1.6299vw; font-style: normal; font-weight: 600; line-height: 2.0811vw;">{{Language['no_invoices']}}</span>
                         </div>
                         <div class="w-full h-[6.5%]"></div>
                     </div>
@@ -727,11 +727,11 @@
                             <div class="w-[5.5%] h-full"></div>
                             <div class="w-[77.5%] h-full flex flex-col">
                                 <div class="w-full h-[35%] flex items-center justify-center">
-                                    <h1 class="w-full send-money-text">Get Credit</h1>
+                                    <h1 class="w-full send-money-text">{{Language['get_credit']}}</h1>
                                 </div>
                                 <div class="w-full h-[16%]"></div>
                                 <div class="w-full h-full flex items-center justify-start">
-                                    <span class="w-full credit-description">Unlock financial possibilities with our hassle-free loan options. Borrow the money you need and repay it later.</span>  <!-- Max 20 words -->
+                                    <span class="w-full credit-description">{{Language['get_credit_desc']}}</span>  <!-- Max 20 words -->
                                 </div>
                             </div>
                             <div class="w-[17%] h-full"></div>
@@ -770,15 +770,15 @@
                             <div class="w-full h-[2.2%] flex flex-wrap">  <!-- Credit Content - Info -->
                                 <div class="w-[4.5%] h-full"></div>
                                 <div class="w-[22%] h-full flex items-center justify-start">
-                                    <span style="color: #000; text-align: center; font-family: regular; font-size: .9356vw; font-style: normal; font-weight: 600; line-height: 1.1946vw;">Select Credit</span>
+                                    <span style="color: #000; text-align: center; font-family: regular; font-size: .9356vw; font-style: normal; font-weight: 600; line-height: 1.1946vw;">{{Language['select_credit']}}</span>
                                 </div>
                                 <div class="w-[12.5%] h-full"></div>
                                 <div class="w-[19%] h-full flex items-center justify-start">
-                                    <span style="color: #000; text-align: center; font-family: regular; font-size: .9356vw; font-style: normal; font-weight: 600; line-height: 1.1946vw; margin-left: .6vw;">Accept</span>
+                                    <span style="color: #000; text-align: center; font-family: regular; font-size: .9356vw; font-style: normal; font-weight: 600; line-height: 1.1946vw; margin-left: .6vw;">{{Language['accept']}}</span>
                                 </div>
                                 <div class="w-[14.5%] h-full"></div>
                                 <div class="w-[21%] h-full flex items-center justify-start">
-                                    <span style="color: #000; text-align: center; font-family: regular; font-size: .9356vw; font-style: normal; font-weight: 600; line-height: 1.1946vw;">Get Money</span>
+                                    <span style="color: #000; text-align: center; font-family: regular; font-size: .9356vw; font-style: normal; font-weight: 600; line-height: 1.1946vw;">{{Language['get_money']}}</span>
                                 </div>
                                 <div class="w-[6.5%] h-full"></div>
                             </div>
@@ -799,11 +799,11 @@
                                         </div>
                                         <div class="w-full h-[9%]"></div>
                                         <div class="w-full h-[7%] flex items-center justify-center">
-                                            <span style="color: #000; text-align: center; font-family: regular; font-size: 1.0607vw; font-style: normal; font-weight: 600; line-height: 1.3544vw;">Home Credit</span>
+                                            <span style="color: #000; text-align: center; font-family: regular; font-size: 1.0607vw; font-style: normal; font-weight: 600; line-height: 1.3544vw;">{{Language['home_credit']}}</span>
                                         </div>
                                         <div class="w-full h-[3%]"></div>
                                         <div class="w-full h-[15%] flex items-center justify-center">
-                                            <span style="color: #595959; text-align: center; font-family: regular; font-size: .5835vw; font-style: normal; font-weight: 500; line-height: .5vw;">Different types of mortgage loans if you want to buy a house</span>
+                                            <span style="color: #595959; text-align: center; font-family: regular; font-size: .5835vw; font-style: normal; font-weight: 500; line-height: .5vw;">{{Language['home_credit_desc']}}</span>
                                         </div>
                                         <div class="w-full h-[11%]"></div>
                                         <div class="w-full h-[10%] flex items-center justify-center">
@@ -829,11 +829,11 @@
                                         </div>
                                         <div class="w-full h-[9%]"></div>
                                         <div class="w-full h-[7%] flex items-center justify-center">
-                                            <span style="color: #000; text-align: center; font-family: regular; font-size: 1.0607vw; font-style: normal; font-weight: 600; line-height: 1.3544vw;">Car Credit</span>
+                                            <span style="color: #000; text-align: center; font-family: regular; font-size: 1.0607vw; font-style: normal; font-weight: 600; line-height: 1.3544vw;">{{Language['car_credit']}}</span>
                                         </div>
                                         <div class="w-full h-[3%]"></div>
                                         <div class="w-full h-[15%] flex items-center justify-center">
-                                            <span style="color: #595959; text-align: center; font-family: regular; font-size: .5835vw; font-style: normal; font-weight: 500; line-height: .5vw;">Different types of car/installment loans if you want to buy a vehicle</span>
+                                            <span style="color: #595959; text-align: center; font-family: regular; font-size: .5835vw; font-style: normal; font-weight: 500; line-height: .5vw;">{{Language['car_credit_desc']}}</span>
                                         </div>
                                         <div class="w-full h-[11%]"></div>
                                         <div class="w-full h-[10%] flex items-center justify-center">
@@ -859,11 +859,11 @@
                                         </div>
                                         <div class="w-full h-[9%]"></div>
                                         <div class="w-full h-[7%] flex items-center justify-center">
-                                            <span style="color: #000; text-align: center; font-family: regular; font-size: 1.0607vw; font-style: normal; font-weight: 600; line-height: .9544vw;">Open Credit</span>
+                                            <span style="color: #000; text-align: center; font-family: regular; font-size: 1.0607vw; font-style: normal; font-weight: 600; line-height: .9544vw;">{{Language['open_credit']}}</span>
                                         </div>
                                         <div class="w-full h-[3%]"></div>
                                         <div class="w-full h-[15%] flex items-center justify-center">
-                                            <span style="color: #595959; text-align: center; font-family: regular; font-size: .5835vw; font-style: normal; font-weight: 500; line-height: .5vw;">Different types of open credit where you can do anything</span>
+                                            <span style="color: #595959; text-align: center; font-family: regular; font-size: .5835vw; font-style: normal; font-weight: 500; line-height: .5vw;">{{Language['open_credit_desc']}}</span>
                                         </div>
                                         <div class="w-full h-[11%]"></div>
                                         <div class="w-full h-[10%] flex items-center justify-center">
@@ -879,7 +879,7 @@
                             <div class="w-full h-[2.7%] flex flex-wrap" v-if="!ConfirmCredit">  <!-- Credit Lower - Header -->
                                 <div class="w-[5%] h-full"></div>
                                 <div class="w-[40%] h-full flex items-center justify-start">
-                                    <span style="color: #000; text-align: center; font-family: regular; font-size: 1.3137vw; font-style: normal; font-weight: 600; line-height: 1.6774vw;">Home Credit</span>
+                                    <span style="color: #000; text-align: center; font-family: regular; font-size: 1.3137vw; font-style: normal; font-weight: 600; line-height: 1.6774vw;">{{Language['home_credit']}}</span>
                                 </div>
                                 <div class="w-[55%] h-full"></div>
                             </div>
@@ -887,7 +887,7 @@
                             <div class="w-full h-[6%] flex flex-wrap" v-if="!ConfirmCredit">  <!-- Credit Lower - Description -->
                                 <div class="w-[5%] h-full"></div>
                                 <div class="w-[80%] h-full flex items-center justify-start">
-                                    <span style="color: #222; font-family: regular; font-size: .7945vw; font-style: normal; font-weight: 600; line-height: .8145vw;">Select the loan that suits you below. And please look twice before you approve everything. There is no turning back.</span>
+                                    <span style="color: #222; font-family: regular; font-size: .7945vw; font-style: normal; font-weight: 600; line-height: .8145vw;">{{Language['credit_mini_desc']}}</span>
                                 </div>
                                 <div class="w-[15%] h-full"></div>
                             </div>
@@ -923,10 +923,10 @@
                                                     </div>
                                                     <div class="w-[50%] h-full flex items-center justify-center">
                                                         <div class="w-full h-[60%] flex items-center justify-center bg-[#9E5EC7] rounded-[.2vw] hover:cursor-pointer" v-if="SelectCredit != k" @click="SelectCreditFunction(k, data.price, data.requiredcreditpoint, data.paybacktime, data.paybackpercent, data.id)">
-                                                            <span class="w-full" style="color: #FFF; text-align: center; font-family: regular; font-size: .6054vw; font-style: normal; font-weight: 600; line-height: .773vw; letter-spacing: .03vw;">Select</span>
+                                                            <span class="w-full" style="color: #FFF; text-align: center; font-family: regular; font-size: .6054vw; font-style: normal; font-weight: 600; line-height: .773vw; letter-spacing: .03vw;">{{Language['select']}}</span>
                                                         </div>
                                                         <div class="w-full h-[60%] flex items-center justify-center bg-[#9E5EC7] rounded-[.2vw] hover:cursor-pointer" v-if="SelectCredit == k" @click="ConfirmCreditWithdraw()">
-                                                            <span class="w-full" style="color: #FFF; text-align: center; font-family: regular; font-size: .6054vw; font-style: normal; font-weight: 600; line-height: .773vw; letter-spacing: .03vw;">Confirm</span>
+                                                            <span class="w-full" style="color: #FFF; text-align: center; font-family: regular; font-size: .6054vw; font-style: normal; font-weight: 600; line-height: .773vw; letter-spacing: .03vw;">{{Language['confirm']}}</span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -946,7 +946,7 @@
                                                                 <span style="color: #393939; text-align: center; font-family: regular; font-size: .773vw; font-style: normal; font-weight: 600; line-height: 1.1147vw;">{{data.paybacktime > 1 ? ''+data.paybacktime+' Weeks ' : ''+data.paybacktime+' Week '}} {{CalculateCreditPercent(data.paybackpercent)}} = <span style="color: #9E5EC7; text-align: center; font-family: regular; font-size: .773vw; font-style: normal; font-weight: 600; line-height: 1.1147vw;"> ${{ PE3D(data.price*data.paybackpercent) }}</span></span>
                                                             </div>
                                                             <div class="w-[50%] h-full flex items-center justify-start">
-                                                                <span style="color: #222; font-family: regular; font-size: .46vw; font-style: normal; font-weight: 400; line-height: .4851vw; margin-left: .5vw;">Read everything and think carefully before you approve. Once you approve, there is no going back!</span>
+                                                                <span style="color: #222; font-family: regular; font-size: .46vw; font-style: normal; font-weight: 400; line-height: .4851vw; margin-left: .5vw;">{{Language['credit_warning_text']}}</span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -965,7 +965,7 @@
                                 </div>
                                 <div class="w-full h-[25%] flex flex-col">
                                     <div class="w-full h-[50%] flex items-center justify-center">
-                                        <span style="color: #000; text-align: center; font-family: regular; font-size: 2.3069vw; font-style: normal; font-weight: 500; line-height: normal;">Withdrawed Money!</span>
+                                        <span style="color: #000; text-align: center; font-family: regular; font-size: 2.3069vw; font-style: normal; font-weight: 500; line-height: normal;">{{Language['withdrawed_money']}}</span>
                                     </div>
                                     <div class="w-full h-[50%] flex items-start justify-center">
                                         <span style="color: #000; font-family: regular; font-size: 2.3069vw; font-style: normal; font-weight: 700; line-height: normal;">${{PE3D(SelectedCreditPrice)}}</span>
@@ -988,11 +988,11 @@
                             <div class="w-[5.5%] h-full"></div>
                             <div class="w-[77.5%] h-full flex flex-col">
                                 <div class="w-full h-[35%] flex items-center justify-center">
-                                    <h1 class="w-full send-money-text">You already have a credit plan</h1>
+                                    <h1 class="w-full send-money-text">{{Language['already_have_credit']}}</h1>
                                 </div>
                                 <div class="w-full h-[16%]"></div>
                                 <div class="w-full h-full flex items-center justify-start">
-                                    <span class="w-full credit-description">Here you can take a look at information about your current credit plan.</span>  <!-- Max 20 words -->
+                                    <span class="w-full credit-description">{{Language['active_credit_information_text']}}</span>  <!-- Max 20 words -->
                                 </div>
                             </div>
                             <div class="w-[17%] h-full"></div>
@@ -1014,7 +1014,7 @@
                         <div class="w-full h-[25%] flex items-center justify-center">
                             <div class="w-[88%] h-[80%] flex items-center justify-start">
                                 <span class="w-full h-full payback-text">
-                                    GENERAL INFORMATION: If you do not pay your credit on time, your account will be blocked and you will not be able to log in until you pay your credit. If you have enough money, it will pay automatically when you log in.
+                                    {{Language['general_information']}}
                                 </span>
                             </div>
                         </div>
@@ -1025,15 +1025,15 @@
                         <div class="w-full h-[3.5%] flex flex-wrap">  <!-- Headers -->
                             <div class="w-[10.5%] h-full"></div>
                             <div class="w-[20%] h-full flex items-center justify-start">
-                                <span style="color: #000; text-align: center; font-family: regular; font-size: 1.3063vw; font-style: normal; font-weight: 600; line-height: 1.668vw;">Personal Balance</span>
+                                <span style="color: #000; text-align: center; font-family: regular; font-size: 1.3063vw; font-style: normal; font-weight: 600; line-height: 1.668vw;">{{Language['personal_balance']}}</span>
                             </div>
                             <div class="w-[18%] h-full"></div>
                             <div class="w-[12%] h-full flex items-center justify-start" v-if="Logintype != 'hacker' || CreditSystem != false">
-                                <span style="color: #000; font-family: regular; font-size: 1.3063vw; font-style: normal; font-weight: 600; line-height: 1.668vw;">Debts</span>
+                                <span style="color: #000; font-family: regular; font-size: 1.3063vw; font-style: normal; font-weight: 600; line-height: 1.668vw;">{{Language['debts']}}</span>
                             </div>
                             <div class="w-[12%] h-full"></div>
                             <div class="w-[15%] h-full flex items-center justify-start" v-if="Logintype != 'hacker' || CreditSystem != false">
-                                <span style="color: #000; font-family: regular; font-size: 1.3063vw; font-style: normal; font-weight: 600; line-height: 1.668vw;">Credit Point</span>
+                                <span style="color: #000; font-family: regular; font-size: 1.3063vw; font-style: normal; font-weight: 600; line-height: 1.668vw;">{{Language['credit_point']}}</span>
                             </div>
                             <div class="w-[12.5%] h-full"></div>
                         </div>
@@ -1047,7 +1047,7 @@
                             <div class="w-[19.5%] h-full flex items-center justify-start" :class="{ 'justify-start': Debts > 0, 'justify-center': Debts <= 0, 'ml-[-1.7vw]': Debts <= 0}" v-if="Logintype != 'hacker' || CreditSystem != false">
                                 <span style="color: #000; text-align: center; font-family: regular; font-size: 2.1548vw; font-style: normal; font-weight: 600; line-height: 4.0283vw;">{{ DebtsCurrency(Debts) }}</span>
                                 <div class="w-[35%] h-[70%] flex items-center justify-center hover:cursor-pointer bg-[#000]" style="margin-left: 1vw;" @click="PayDebts()" v-if="Debts > 0">
-                                    <span class="w-full" style="color: white; text-align: center; font-family: regular; font-size: .7257vw; font-style: normal; font-weight: 600; line-height: normal;">Pay</span>
+                                    <span class="w-full" style="color: white; text-align: center; font-family: regular; font-size: .7257vw; font-style: normal; font-weight: 600; line-height: normal;">{{Language['pay']}}</span>
                                 </div>
                             </div>
                             <div class="w-[8%] h-full"></div>
@@ -1061,7 +1061,7 @@
                             <div class="w-[10%] h-full"></div>
                             <div class="w-[9%] h-full flex items-center justify-center">
                                 <div class="w-full h-full flex items-center justify-center bg-[#D9D9D9] rounded-[.2vw] hover:cursor-pointer">
-                                    <span style="color: #4A4A4A; text-align: center; font-family: regular; font-size: .8645vw; font-style: normal; font-weight: 600; line-height: normal;">Monthly</span>
+                                    <span style="color: #4A4A4A; text-align: center; font-family: regular; font-size: .8645vw; font-style: normal; font-weight: 600; line-height: normal;">{{Language['monthly']}}</span>
                                 </div>
                             </div>
                             <div class="w-[81%] h-full"></div>
@@ -1077,7 +1077,7 @@
                             <div class="w-[80%] h-full flex flex-col">
                                 <div class="w-full h-[4%]"></div>
                                 <div class="w-full h-[9%] flex items-start justify-start">
-                                    <span style="color: #000; font-family: regular; font-size: 1.3061vw; font-style: normal; font-weight: 600; line-height: normal; margin-top: -.4vw;">Last Transactions</span>
+                                    <span style="color: #000; font-family: regular; font-size: 1.3061vw; font-style: normal; font-weight: 600; line-height: normal; margin-top: -.4vw;">{{Language['last_transactions']}}</span>
                                 </div>
                                 <div class="w-full h-[5%]"></div>
                                 <div class="w-full h-[82%] block overflow-y-auto overflow-x-hidden">
@@ -1095,9 +1095,9 @@
                                             <div class="w-full h-[50%] flex items-start justify-start">
                                                 <span class="w-full h-full" style="color: #424242; text-align: start; font-family: regular; font-size: .7188vw; font-style: normal; font-weight: 500; line-height: normal;" v-if="data.type == 'Transfer'">Send To: {{ data.sendedto }}</span>
                                                 <span class="w-full h-full" style="color: #424242; text-align: start; font-family: regular; font-size: .7188vw; font-style: normal; font-weight: 500; line-height: normal;" v-if="data.type == 'Received'">From: {{ data.received }}</span>
-                                                <span class="w-full h-full" style="color: #424242; text-align: start; font-family: regular; font-size: .7188vw; font-style: normal; font-weight: 500; line-height: normal;" v-if="data.type == 'Withdraw'">Withdrawed</span>
-                                                <span class="w-full h-full" style="color: #424242; text-align: start; font-family: regular; font-size: .7188vw; font-style: normal; font-weight: 500; line-height: normal;" v-if="data.type == 'Deposit'">Deposited</span>
-                                                <span class="w-full h-full" style="color: #424242; text-align: start; font-family: regular; font-size: .7188vw; font-style: normal; font-weight: 500; line-height: normal;" v-if="data.type == 'Shopping'">Shopping</span>
+                                                <span class="w-full h-full" style="color: #424242; text-align: start; font-family: regular; font-size: .7188vw; font-style: normal; font-weight: 500; line-height: normal;" v-if="data.type == 'Withdraw'">{{Language['withdrawed']}}</span>
+                                                <span class="w-full h-full" style="color: #424242; text-align: start; font-family: regular; font-size: .7188vw; font-style: normal; font-weight: 500; line-height: normal;" v-if="data.type == 'Deposit'">{{Language['deposited']}}</span>
+                                                <span class="w-full h-full" style="color: #424242; text-align: start; font-family: regular; font-size: .7188vw; font-style: normal; font-weight: 500; line-height: normal;" v-if="data.type == 'Shopping'">{{Language['shopping']}}</span>
                                             </div>
                                         </div>
                                         <div class="w-[6%] h-full"></div>

@@ -113,6 +113,7 @@ const app = Vue.createApp({
         NotifyActive: false,
         NotifyBGColor: '',
         NotifyText: '',
+        Language: '',
     }),
 
     methods: {
@@ -214,7 +215,7 @@ const app = Vue.createApp({
                     this.Debts = this.SelectedCreditPrice * this.CreditPayback
                     this.ConfirmCredit = true
                 } else {
-                    this.ShowNotify('red', "You don't have enough credit point to withdraw money. Required Credit Point: " + this.SelectedCreditReq, 3000)
+                    this.ShowNotify('red', this.Language['not_enough_creditpoint'] + this.SelectedCreditReq, 3000)
                 }
             } else {
                 postNUI('ConfirmCredit', {
@@ -265,28 +266,28 @@ const app = Vue.createApp({
                 this.PlayersMoney -= this.Debts
                 this.Debts = 0
                 postNUI('PayDebts')
-                this.ShowNotify('green', "Congrats! You paid your debts!", 3000)
+                this.ShowNotify('green', this.Language['debts_paid'], 3000)
             } else {
-                this.ShowNotify('red', "You don't have enough money to pay your debts!", 5000)
+                this.ShowNotify('red', this.Language['no_money_to_pay_debts'], 5000)
             }
         },
 
         PasswordScreenTypeFunction(type) {
             if (type == 'First') {
                 if (this.PasswordScreenType == 'Normal') {
-                    return 'Two-Factor Authentication'
+                    return this.Language['twofactorauth']
                 } else if (this.PasswordScreenType == 'Create') {
-                    return 'Create Password'
+                    return this.Language['create_password']
                 } else if (this.PasswordScreenType == 'Change') {
-                    return 'Change Password'
+                    return this.Language['change_password']
                 }
             } else {
                 if (this.PasswordScreenType == 'Normal') {
-                    return 'Please enter your 8-digit password.'
+                    return this.Language['enter_eightdigit']
                 } else if (this.PasswordScreenType == 'Create') {
-                    return 'Please enter your 8-digit password.'
+                    return this.Language['enter_eightdigit']
                 } else if (this.PasswordScreenType == 'Change') {
-                    return 'Please enter your new 8-digit password.'
+                    return this.Language['enter_eightdigit']
                 }
             }
         },
@@ -345,7 +346,7 @@ const app = Vue.createApp({
                     this.PasswordScreenType = ''
                     this.PinInput = ''
                 } else {
-                    this.ShowNotify('red', 'You need to enter 8 digits', 3000)
+                    this.ShowNotify('red', this.Language['enter_eightdigit'], 3000)
                 }
             } else if (this.PasswordScreenType == 'Change') {
                 if (this.PinInput.toString().length == 8) {
@@ -355,7 +356,7 @@ const app = Vue.createApp({
                     this.PasswordScreenType = ''
                     this.PinInput = ''
                 } else {
-                    this.ShowNotify('red', 'You need to enter 8 digits', 3000)
+                    this.ShowNotify('red', this.Language['enter_eightdigit'], 3000)
                 }
             } else if (this.PasswordScreenType == 'Normal') {
                 postNUI('ATMLoginToOwnAccount', this.PinInput)
@@ -408,7 +409,7 @@ const app = Vue.createApp({
                 if (this.DWInput.toString().length > 0 ) {
                     postNUI("DepositMoney", this.DWInput)
                 } else {
-                    this.ShowNotify('red', 'You need to enter amount!', 3000)
+                    this.ShowNotify('red', this.Language['enter_amount'], 3000)
                 }
             }
         },
@@ -420,7 +421,7 @@ const app = Vue.createApp({
                 if (this.Logintype != 'hacker') {
                     this.MiddleMenuSection = 'Transfer'
                 } else {
-                    this.ShowNotify('red', 'You cant see Invoices because you are not the owner of this account', 5000)
+                    this.ShowNotify('red', this.Language['cant_see_invoices'], 5000)
                 }
             } else if (type == 'Invoices') {
                 if (this.Logintype != 'hacker') {
@@ -430,7 +431,7 @@ const app = Vue.createApp({
                 if (this.Logintype != 'hacker') {
                     this.MiddleMenuSection = 'Credit'
                 } else {
-                    this.ShowNotify('red', 'You cant see Invoices because you are not the owner of this account', 5000)
+                    this.ShowNotify('red', this.Language['cant_see_invoices'], 5000)
                 }
             }
             
@@ -486,9 +487,9 @@ const app = Vue.createApp({
                             postNUI('DepositMoney', this.DWInput)
                             this.PlayersMoney += this.DWInput
                             this.SelectActionMethod(false, '')
-                            this.ShowNotify('green', "You successfully deposited money", 4000)
+                            this.ShowNotify('green', this.Language['successfully_deposited'], 4000)
                         } else {
-                            this.ShowNotify('red', "You don't have enough money to deposit", 4000)
+                            this.ShowNotify('red', this.Language['no_money'], 4000)
                         }
                     } else {
                         this.ShowNotify('red', "Enter a number", 3000)
@@ -499,17 +500,17 @@ const app = Vue.createApp({
                             postNUI('WithdrawMoney', this.DWInput)
                             this.PlayersMoney -= this.DWInput
                             this.SelectActionMethod(false, '')
-                            this.ShowNotify('green', "You successfully withdrawed money", 4000)
+                            this.ShowNotify('green', this.Language['successfylly_withdrawed'], 4000)
                         } else {
-                            this.ShowNotify('red', "You don't have enough money on you to deposit", 4000)
+                            this.ShowNotify('red', this.Language['no_money'], 4000)
                         }
                     } else {
-                        this.ShowNotify('red', "Enter a number", 3000)
+                        this.ShowNotify('red', this.Language['enter_amount'], 3000)
                     }
                 }
             } else {
                 if (this.DWType == 'deposit') {
-                    this.ShowNotify('red', "You can't deposit money into a hacked account", 4000)
+                    this.ShowNotify('red', this.Language['cant_deposit_hackedaccount'], 4000)
                 } else if (this.DWType == 'withdraw') {
                     if (this.DWInput > 0) {
                         if (this.PlayersMoney >= this.DWInput) {
@@ -522,14 +523,14 @@ const app = Vue.createApp({
                                     this.PlayersMoney -= this.DWInput
                                     this.HackedAccountWithdrawLimit -= this.DWInput
                                     this.SelectActionMethod(false, '')
-                                    this.ShowNotify('green', "You successfully withdrawed money from this account", 4000)
+                                    this.ShowNotify('green', this.Language['successfylly_withdrawed_hackedaccount'], 4000)
                                 }
                             }
                         } else {
-                            this.ShowNotify('red', "The account has not enough money to withdraw money", 4000)
+                            this.ShowNotify('red', this.Language['hackedaccount_no_money'], 4000)
                         }
                     } else {
-                        this.ShowNotify('red', "Enter a number", 3000)
+                        this.ShowNotify('red', this.Language['enter_amount'], 3000)
                     }
                 }
             }
@@ -542,18 +543,18 @@ const app = Vue.createApp({
                         postNUI('WithdrawFastAction', amount)
                         this.PlayersMoney -= amount
                         this.PlayerCash += amount
-                        this.ShowNotify('green', "You successfully withdrawed money", 4000)
+                        this.ShowNotify('green', this.Language['successfylly_withdrawed'], 4000)
                     } else {
-                        this.ShowNotify('red', "You don't have enough money to withdraw", 4000)
+                        this.ShowNotify('red', this.Language['no_money'], 4000)
                     }
                 } else if (type == 'deposit') {
                     if (this.PlayerCash >= amount) {
                         postNUI('DepositFastAction', amount)
                         this.PlayersMoney += amount
                         this.PlayerCash -= amount
-                        this.ShowNotify('green', "You successfully deposited money", 4000)
+                        this.ShowNotify('green', this.Language['successfully_deposited'], 4000)
                     } else {
-                        this.ShowNotify('red', "You don't have enough money on you to deposit", 4000)
+                        this.ShowNotify('red', this.Language['no_money'], 4000)
                     }
                 }
             }
@@ -569,12 +570,12 @@ const app = Vue.createApp({
                     this.PlayersMoney -= this.transferInput
                     this.transferInput = ''
                     this.SelectTransferPlayer(id)
-                    this.ShowNotify('green', "You successfully transfered money", 4000)
+                    this.ShowNotify('green', this.Language['successfully_transfered'], 4000)
                 } else {
-                    this.ShowNotify('red', "You don't have enough money to transfer", 4000)
+                    this.ShowNotify('red', this.Language['transfer_no_money'], 4000)
                 }
             } else {
-                this.ShowNotify('red', "Enter a number", 4000)
+                this.ShowNotify('red', this.Language['enter_amount'], 4000)
             }
         },
 
@@ -627,7 +628,7 @@ const app = Vue.createApp({
             const allMonths = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
 
             const monthlyWithdrawals = this.LastTransactions
-            .filter(transaction => transaction.type === 'Withdraw')
+            .filter(transaction => transaction.type === 'Withdraw' || transaction.type === 'Transfer')
             .sort((a, b) => {
                 const dateA = new Date(a.date.split('.').reverse().join('-'));
                 const dateB = new Date(b.date.split('.').reverse().join('-'));
@@ -717,19 +718,12 @@ const app = Vue.createApp({
                 this.PlayerIBAN = PlayerData.iban
                 this.PlayersProfilePicture = info.playerpfp
                 this.LastTransactions = JSON.parse(PlayerData.transaction)
-                this.CardStyle = data.cardstyle
                 this.PlayersCreditPoint = credit.playercreditpoint
                 this.Debts = credit.debt
-                this.AvailableCredits = data.credittable
-                this.RequireCreditPoint = data.requirecreditpoint
                 this.CreditLastDate = credit.creditlastdate
                 this.CurrentActiveCredit = credit.activecredit
-                this.Billstheme = data.billstheme
                 this.Billsframe = data.billsframe
                 this.PlayerCash = data.playercash
-                this.FirstFastAction = data.ffastaction
-                this.SecondFastAction = data.sfastaction
-                this.ThirdFastAction = data.tfastaction
                 this.SearchPlayers = data.transferlist
                 this.SelectPlayer = -1
 
@@ -744,6 +738,17 @@ const app = Vue.createApp({
                 }, 10);
             }
 
+            if (data.action == 'Setup') {
+                this.FirstFastAction = data.first
+                this.SecondFastAction = data.second
+                this.ThirdFastAction = data.third
+                this.Billstheme = data.invoicetheme
+                this.AvailableCredits = data.credittable
+                this.RequireCreditPoint = data.requirecreditpoint
+                this.CardStyle = data.cardstyle
+                this.CreditSystem = data.creditsystem
+                this.Language = data.language
+            }
             
             if (data.action == 'OpenAnotherAccount') {
                 const info = data.infodata

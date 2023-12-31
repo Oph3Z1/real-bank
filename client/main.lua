@@ -6,6 +6,20 @@ Citizen.CreateThread(function()
     while not response do
         Citizen.Wait(0)
     end
+    Citizen.Wait(1500)
+    SendNUIMessage({
+        action = 'Setup',
+        first = Config.FirstFastAction,
+        second = Config.SecondFastAction,
+        third = Config.ThirdFastAction,
+        language = Config.Language,
+        invoicetheme = Config.InvoiceTheme,
+        cardstyle = Config.CardStyle,
+        credittable = Config.AvailableCredits,
+        requirecreditpoint = Config.RequireCreditPoint,
+        creditsystem = Config.CreditSystem,
+    })
+    Citizen.Wait(1500)
     OpenBank()
 end)
 
@@ -181,7 +195,7 @@ RegisterNetEvent('real-bank:CheckAccountExistensResult', function(result, data)
                 })
                 SetNuiFocus(true, true)
             else
-                print('You already have an account')
+                Config.Notification(Config.Language['already_have_account'], 'error', false)
             end
         elseif data.value == 'Change' then
             if result then
@@ -190,14 +204,14 @@ RegisterNetEvent('real-bank:CheckAccountExistensResult', function(result, data)
                 })
                 SetNuiFocus(true, true)
             else
-                print("You don't have an account. Please create one first.")
+                Config.Notification(Config.Language['no_account'], 'error', false)
             end
         end
     else
         if result then
             OpenBankUI()
         else
-            print("You don't have an account. Please create one first.")
+            Config.Notification(Config.Language['no_account'], 'error', false)
         end
     end
 end)
@@ -224,15 +238,8 @@ function OpenBankUI()
         data = data.data,
         playermoney = data.PlayerMoney,
         playercash = data.PlayerCash,
-        cardstyle = Config.CardStyle,
-        credittable = Config.AvailableCredits,
-        requirecreditpoint = Config.RequireCreditPoint,
-        billstheme = Config.InvoiceTheme,
         billsframe = getframe,
         billsdata = billsdata,
-        ffastaction = Config.FirstFastAction,
-        sfastaction = Config.SecondFastAction,
-        tfastaction = Config.ThirdFastAction,
         transferlist = data.transferlist
     })
 end
@@ -243,19 +250,21 @@ function OpenBankAnotherAccount(pidata)
     if Config.Framework == 'newqb' or Config.Framework == 'oldqb' then
         data = Callback('real-bank:ATMLoginAnotherAccount', pidata)
     else
-        data = Callback('real-bank:ATMLoginAnotherAccount', pidata)
+        data = Callback('real-bank:ESX:ATMLoginAnotherAccount', pidata)
     end
 
-    SendNUIMessage({
-        action = 'OpenAnotherAccount',
-        infodata = data.infodata,
-        targetmoney = data.targetmoney,
-        transaction = data.transaction,
-        iban = data.iban,
-        loginlimit = data.loginlimit,
-        withdrawlimit = data.withdrawlimit,
-        cardstyle = Config.CardStyle,
-    })
+    if data then
+        SendNUIMessage({
+            action = 'OpenAnotherAccount',
+            infodata = data.infodata,
+            targetmoney = data.targetmoney,
+            transaction = data.transaction,
+            iban = data.iban,
+            loginlimit = data.loginlimit,
+            withdrawlimit = data.withdrawlimit,
+        })
+        SetNuiFocus(true, true)
+    end
 end
 
 function SendLog(received, sendedto, type, amount, pp)
@@ -359,6 +368,7 @@ RegisterNUICallback('ATMLoginToOwnAccount', function(data, cb)
 end)
 
 RegisterNUICallback('ATMLoginAnotherAccount', function(data, cb)
+    SetNuiFocus(false, false)
     OpenBankAnotherAccount(data)
 end)
 
