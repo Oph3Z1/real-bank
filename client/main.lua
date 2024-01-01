@@ -290,11 +290,6 @@ AddEventHandler('real-bank:UpdateUITransaction', function()
     })
 end)
 
-RegisterNetEvent('real-bank:SendLog')
-AddEventHandler('real-bank:SendLog', function(received, sendedto, type, amount, pp)
-    SendLog(received, sendedto, type, amount, pp)
-end)
-
 RegisterNetEvent('real-bank:BankSettings')
 AddEventHandler('real-bank:BankSettings', function(data)
     if data.value == 'Get' or data.value == 'Change' then

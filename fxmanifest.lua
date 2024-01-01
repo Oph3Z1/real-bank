@@ -1,7 +1,7 @@
 fx_version 'cerulean'
 game 'gta5'
 author 'oph3z'
-description 'Advanced bank system | Made by Oph3Z'
+description 'Advanced bank system | Made by codeReal'
 
 ui_page {
 	'html/index.html',
@@ -32,7 +32,5 @@ server_scripts {
     'config/config_server.lua',
     'server/*.lua',
 }
-
-export 'SendLog'
 
 lua54 'yes'

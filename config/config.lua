@@ -178,6 +178,7 @@ Config.Language = {
     ['no_money_to_pay_bills'] = "You don't have enough money to pay you'r bills",
     ['paid_your_debts'] = 'All your debts have been paid automatically because the due date has passed.',
     ['not_enough_money'] = 'Not enough money on you',
+    ['successfully_created_account'] = "You have successfully created an account",
 }
 
 Config.Notification = function(msg, type, server, src)
