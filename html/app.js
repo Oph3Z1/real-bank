@@ -384,6 +384,7 @@ const app = Vue.createApp({
             postNUI("Logout")
             this.show = false
             this.CurrentScreen = ''
+            this.MiddleMenuSection = 'Main'
             this.DWType = null
             this.DWPopup = false
             this.DWInput = ''

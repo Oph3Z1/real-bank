@@ -21,6 +21,7 @@ Citizen.CreateThread(function()
     })
     Citizen.Wait(1500)
     OpenBank()
+    CreateBlips()
 end)
 
 RegisterNUICallback('GetResponse', function(data, cb)
@@ -41,6 +42,20 @@ Citizen.CreateThread(function()
         end
     end
 end)
+
+function CreateBlips()
+    for k, v in pairs(Config.BankLocations) do
+        blip = AddBlipForCoord(v.Coords.x, v.Coords.y, v.Coords.z)
+        SetBlipSprite(blip, v.BlipType)
+        SetBlipDisplay(blip, 4)
+        SetBlipScale(blip, v.BlipScale)
+        SetBlipColour(blip, v.BlipColor)
+        SetBlipAsShortRange(blip, true)
+        BeginTextCommandSetBlipName("STRING")
+        AddTextComponentString(v.Blipname)
+        EndTextCommandSetBlipName(blip)
+    end
+end
 
 function OpenBank()
     if Config.Drawtext == 'qb-target' then

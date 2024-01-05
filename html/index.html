@@ -50,10 +50,7 @@
                     </div>
                     <div class="w-full h-[10%]"></div>
                     <div class="w-full h-[25%] flex flex-wrap items-center justify-center">
-                        <input class="w-[90%] h-[95%] pin-input" v-model="PinInput" :type="ShowPin ? 'number' : 'password'" style="border: .0618vw solid #8B8B8B; border-radius: .1853vw;" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length == 8) return false;">
-                        <div class="w-[10%] h-[95%] flex items-center justify-center">
-                            <i class="fa-solid fa-eye fa-2x hover:cursor-pointer" @click="ShowPin = !ShowPin"></i>
-                        </div>
+                        <input class="w-full h-[95%] pin-input" v-model="PinInput" :type="ShowPin ? 'number' : 'password'" style="border: .0618vw solid #8B8B8B; border-radius: .1853vw;" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length == 8) return false;" @mouseover="ShowPin = true" @mouseleave="ShowPin = false">
                     </div>
                     <div class="w-full h-[8%]"></div>
                     <div class="w-full h-[16.8%] flex items-center justify-center">
@@ -114,14 +111,11 @@
                     <div class="w-full h-[10%]"></div>
                     <div class="w-full h-[25%] flex flex-col items-center justify-center">
                         <div class="w-full h-[49%] flex items-center justify-center">
-                            <input class="w-full h-[80%] mb-[1%] iban-input" placeholder="IBAN" v-model="IBANInput" type="number" style="border: .0618vw solid #8B8B8B; border-radius: .1853vw;" pattern="/^-?\d+\.?\d*$/">
+                            <input class="w-full h-[80%] mb-[1%] iban-input" placeholder="IBAN" v-model="IBANInput" type="number" style="border: .0618vw solid #8B8B8B; border-radius: .1853vw;" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length == 4) return false;">
                         </div>
                         <div class="w-full h-[49%] flex flex-wrap">
-                            <div class="w-[90%] h-full flex items-center justify-center">
-                                <input class="w-full h-[80%] password-input" placeholder="PASSWORD" v-model="PasswordInput" :type="ShowPin ? 'number' : 'password'" style="border: .0618vw solid #8B8B8B; border-radius: .1853vw;" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length == 8) return false;">
-                            </div>
-                            <div class="w-[10%] h-full flex items-center justify-center">
-                                <i class="fa-solid fa-eye fa-2x hover:cursor-pointer" @click="ShowPin = !ShowPin"></i>
+                            <div class="w-full h-full flex items-center justify-center">
+                                <input class="w-full h-[80%] password-input" placeholder="PASSWORD" v-model="PasswordInput" :type="ShowPin ? 'number' : 'password'" style="border: .0618vw solid #8B8B8B; border-radius: .1853vw;" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length == 8) return false;" @mouseover="ShowPin = true" @mouseleave="ShowPin = false">
                             </div>
                         </div>
                     </div>

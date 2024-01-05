@@ -911,11 +911,25 @@ function SendOfflineLog(sendersource, identifier, playername, received, sendedto
     end
 end
 
-exports('GiveCredit', GiveCredit)
-exports('SendLog', SendLog)
-exports('SendOfflineLog', SendOfflineLog)
-exports('GetPassword', GetPassword)
-exports('GetIBAN', GetIBAN)
+exports('GiveCredit', function(source, amount)
+    GiveCredit(source, amount)
+end)
+
+exports('SendLog', function(source, received, sendedto, type, amount, pp)
+    SendLog(source, received, sendedto, type, amount, pp)
+end)
+
+exports('SendOfflineLog', function(sendersource, identifier, playername, received, sendedto, type, amount, pp)
+    SendOfflineLog(sendersource, identifier, playername, received, sendedto, type, amount, pp)
+end)
+
+exports('GetPassword', function(iban)
+    GetPassword(iban)
+end)
+
+exports('GetIBAN', function(source, identifier, IsSoruce)
+    GetIBAN(source, identifier, IsSoruce)
+end)
 
 function ExecuteSql(query)
     local IsBusy = true
