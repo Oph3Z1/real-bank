@@ -57,103 +57,6 @@ function CreateBlips()
     end
 end
 
-function OpenBank()
-    if Config.Drawtext == 'qb-target' then
-        for _,v in pairs(Config.BankLocations) do
-            exports['qb-target']:AddBoxZone("rbank" .. _, vector3(v.Coords.x, v.Coords.y, v.Coords.z), 1.5, 1.5, {
-                name = "rbank" .. _,
-                debugPoly = false,
-                heading = -20,
-                minZ = v.Coords.z - 2,
-                maxZ = v.Coords.z + 2,
-            }, {
-                options = {
-                    {
-                        type = "client",
-                        event = "real-bank:OpenNormalBank",
-                        icon = "fas fa-hand-point-up",
-                        label = "Open Bank",
-                        
-                    },
-                },
-                distance = 8
-            })
-        end
-
-        Citizen.CreateThread(function()
-            while true do
-                local sleep = 2000
-                local Player = PlayerPedId()
-                local PlayerCoords = GetEntityCoords(Player)
-
-                for k, v in pairs(Config.ATMs) do
-                    local ATMEntity = GetClosestObjectOfType(PlayerCoords, 2.0, GetHashKey(v))
-                    local GetATMCoords = GetEntityCoords(ATMEntity)
-                    local DistanceToATMs = #(PlayerCoords - GetATMCoords)
-
-                    if DistanceToATMs < 1.5 then
-                        sleep = 4
-                        exports['qb-target']:AddBoxZone("real-bankN" .. k, vector3(GetATMCoords.x, GetATMCoords.y, GetATMCoords.z), 1.5, 1.5, {
-                            name = "real-bankN" .. k,
-                            debugPoly = false,
-                            heading = -20,
-                            minZ = GetATMCoords.z - 2,
-                            maxZ = GetATMCoords.z + 2,
-                        }, {
-                            options = {
-                                {
-                                    type = "client",
-                                    event = "real-bank:OpenATMFunction",
-                                    icon = "fas fa-hand-point-up",
-                                    label = "Open Bank",
-                                    
-                                },
-                            },
-                            distance = 8
-                        })
-                    end
-                end
-                Citizen.Wait(sleep)
-            end
-        end)
-
-    elseif Config.Drawtext == 'drawtext' then
-        Citizen.CreateThread(function()
-            while true do
-                local sleep = 2000
-                local Player = PlayerPedId()
-                local PlayerCoords = GetEntityCoords(Player)
-                
-                for k, v in pairs(Config.ATMs) do
-                    local ATMEntity = GetClosestObjectOfType(PlayerCoords, 2.0, GetHashKey(v))
-                    local GetATMCoords = GetEntityCoords(ATMEntity)
-                    local DistanceToATMs = #(PlayerCoords - GetATMCoords)
-
-                    if DistanceToATMs < 1.5 then
-                        sleep = 4
-                        Config.DrawText3D("~INPUT_PICKUP~ - Open ATM", vector3(GetATMCoords.x, GetATMCoords.y, GetATMCoords.z + 1.0))
-                        if IsControlJustReleased(0, 38) then
-                            OpenATM()
-                        end
-                    end
-                end
-
-                for k, v in pairs(Config.BankLocations) do
-                    local DistanceToBanks = #(PlayerCoords - v.Coords)
-                    if DistanceToBanks < 1.5 then
-                        sleep = 4
-                        Config.DrawText3D("~INPUT_PICKUP~ - Open Bank", vector3(v.Coords.x, v.Coords.y, v.Coords.z))
-                        if IsControlJustReleased(0, 38) then
-                            TriggerServerEvent('real-bank:CheckAccountExistens', nil)
-                        end
-                    end
-                end
-                Citizen.Wait(sleep)
-            end
-        end)
-    end
-end
-
 Citizen.CreateThread(function()
     while true do
         local sleep = 2000
@@ -165,36 +68,56 @@ Citizen.CreateThread(function()
             sleep = 4
             Config.DrawText3D("~INPUT_PICKUP~ - Open Bank Settings", Config.GetCreditCard)
             if IsControlJustReleased(0, 38) then
-                local QBMenu = {
-                    {
-                        header = ' Bank Settings',
-                        icon = 'fa-solid fa-building-columns',
-                        isMenuHeader = true,
-                    },
-                    {
-                        header = 'Get Credit Card',
-                        text = 'Get your first credit card',
-                        icon = 'fa-solid fa-credit-card',
-                        params = {
-                            event = 'real-bank:BankSettings',
-                            args = {
-                                value = 'Get'
-                            }   
-                        }
-                    },
-                    {
-                        header = 'Change Password',
-                        text = 'Change your password asap if your credit card is stolen',
-                        icon = 'fa-solid fa-credit-card',
-                        params = {
-                            event = 'real-bank:BankSettings',
-                            args = {
-                                value = 'Change'
-                            }   
-                        }
-                    },
-                }
-                exports['qb-menu']:openMenu(QBMenu)
+                if Config.Framework == 'newqb' or Config.Framework == 'oldqb' then
+                    local QBMenu = {
+                        {
+                            header = ' Bank Settings',
+                            icon = 'fa-solid fa-building-columns',
+                            isMenuHeader = true,
+                        },
+                        {
+                            header = 'Get Credit Card',
+                            text = 'Get your first credit card',
+                            icon = 'fa-solid fa-credit-card',
+                            params = {
+                                event = 'real-bank:BankSettings',
+                                args = {
+                                    value = 'Get'
+                                }   
+                            }
+                        },
+                        {
+                            header = 'Change Password',
+                            text = 'Change your password asap if your credit card is stolen',
+                            icon = 'fa-solid fa-credit-card',
+                            params = {
+                                event = 'real-bank:BankSettings',
+                                args = {
+                                    value = 'Change'
+                                }   
+                            }
+                        },
+                    }
+                    exports['qb-menu']:openMenu(QBMenu)
+                else
+                    local elements = {
+                        {label = "Get Credit Card", value = "GetCard"},
+                        {label = "Change Password", value = "ChangePassword"},
+                    }
+                    frameworkObject.UI.Menu.Open('default', GetCurrentResourceName(), 'bank', {
+                        title = 'Bank Settings',
+                        align = 'top-left',
+                        elements = elements
+                    }, function(data, menu)
+                        if data.current.value == 'GetCard' then
+                            TriggerEvent('real-bank:BankSettings', 'Get')
+                        elseif data.current.value == 'ChangePassword' then
+                            TriggerEvent('real-bank:BankSettings', 'Change')
+                        end
+                    end, function(data, menu)
+                        menu.close()
+                    end)
+                end
             end
         end
         Citizen.Wait(sleep)
@@ -203,23 +126,45 @@ end)
 
 RegisterNetEvent('real-bank:CheckAccountExistensResult', function(result, data)
     if data then
-        if data.value == 'Get' then
-            if not result then
-                SendNUIMessage({
-                    action = 'OpenCreatePasswordScreen'
-                })
-                SetNuiFocus(true, true)
-            else
-                Config.Notification(Config.Language['already_have_account'], 'error', false)
+        if Config.Framework == 'newqb' or Config.Framework == 'oldqb' then
+            if data.value == 'Get' then
+                if not result then
+                    SendNUIMessage({
+                        action = 'OpenCreatePasswordScreen'
+                    })
+                    SetNuiFocus(true, true)
+                else
+                    Config.Notification(Config.Language['already_have_account'], 'error', false)
+                end
+            elseif data.value == 'Change' then
+                if result then
+                    SendNUIMessage({
+                        action = 'OpenChangePasswordScreen'
+                    })
+                    SetNuiFocus(true, true)
+                else
+                    Config.Notification(Config.Language['no_account'], 'error', false)
+                end
             end
-        elseif data.value == 'Change' then
-            if result then
-                SendNUIMessage({
-                    action = 'OpenChangePasswordScreen'
-                })
-                SetNuiFocus(true, true)
-            else
-                Config.Notification(Config.Language['no_account'], 'error', false)
+        else
+            if data == 'Get' then
+                if not result then
+                    SendNUIMessage({
+                        action = 'OpenCreatePasswordScreen'
+                    })
+                    SetNuiFocus(true, true)
+                else
+                    Config.Notification(Config.Language['already_have_account'], 'error', false)
+                end
+            elseif data == 'Change' then
+                if result then
+                    SendNUIMessage({
+                        action = 'OpenChangePasswordScreen'
+                    })
+                    SetNuiFocus(true, true)
+                else
+                    Config.Notification(Config.Language['no_account'], 'error', false)
+                end
             end
         end
     else
@@ -307,8 +252,14 @@ end)
 
 RegisterNetEvent('real-bank:BankSettings')
 AddEventHandler('real-bank:BankSettings', function(data)
-    if data.value == 'Get' or data.value == 'Change' then
-        TriggerServerEvent('real-bank:CheckAccountExistens', data)
+    if Config.Framework == 'newqb' or Config.Framework == 'oldqb' then
+        if data.value == 'Get' or data.value == 'Change' then
+            TriggerServerEvent('real-bank:CheckAccountExistens', data)
+        end
+    else
+        if data == 'Get' or data == 'Change' then
+            TriggerServerEvent('real-bank:CheckAccountExistens', data)
+        end
     end
 end)
 
